@@ -30,11 +30,12 @@
   .input-dark { background: #0a0a0a; border: 2px solid #2a2a2a; color: white; }
   .input-dark:focus { border-color: #f59e0b; outline: none; }
   .whatsapp-float { position: fixed; bottom: 24px; right: 24px; z-index: 999; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 10px 30px rgba(37,211,102,0.5); text-decoration: none; }
+  .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(245,158,11,0.3); border-radius: 50%; border-top-color: #f59e0b; animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body class="text-white min-h-screen">
 
-<!-- HEADER -->
 <header class="backdrop-blur-xl bg-black/80 shadow-lg sticky top-0 z-50 border-b border-gold-500/20">
   <div class="container mx-auto px-4 py-3 flex justify-between items-center">
     <a href="index.html" class="flex items-center gap-3">
@@ -44,11 +45,10 @@
         <p class="text-xs text-gold-400">Buy USDT</p>
       </div>
     </a>
-    <a href="index.html" class="text-gray-300 hover:text-gold-400 text-sm font-medium">← Back</a>
+    <a href="dashboard.html" class="text-gray-300 hover:text-gold-400 text-sm font-medium">← Dashboard</a>
   </div>
 </header>
 
-<!-- BUY FORM -->
 <main class="py-10 px-4">
   <div class="container mx-auto max-w-2xl">
     <div class="text-center mb-8">
@@ -57,7 +57,7 @@
       <p class="text-gold-400 font-semibold">Rate: Rs. 290 per USDT</p>
     </div>
 
-    <!-- STEP 1: Amount -->
+    <!-- STEP 1 -->
     <div class="black-card rounded-3xl p-6 mb-6">
       <div class="flex items-center gap-2 mb-4">
         <div class="w-8 h-8 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">1</div>
@@ -78,12 +78,12 @@
         </div>
         <div class="flex justify-between text-xs text-gray-500">
           <span>Rate: Rs. 290/USDT</span>
-          <span id="feeInfo">No hidden fees</span>
+          <span>No hidden fees</span>
         </div>
       </div>
     </div>
 
-    <!-- STEP 2: Payment Info -->
+    <!-- STEP 2 -->
     <div class="black-card rounded-3xl p-6 mb-6">
       <div class="flex items-center gap-2 mb-4">
         <div class="w-8 h-8 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">2</div>
@@ -115,7 +115,7 @@
       </div>
     </div>
 
-    <!-- STEP 3: Wallet + TXID -->
+    <!-- STEP 3 -->
     <div class="black-card rounded-3xl p-6 mb-6">
       <div class="flex items-center gap-2 mb-4">
         <div class="w-8 h-8 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">3</div>
@@ -139,15 +139,10 @@
           <label class="block text-gray-400 text-sm mb-2">JazzCash TRX ID *</label>
           <input type="text" id="trxId" placeholder="Transaction ID" class="input-dark w-full px-4 py-3 rounded-xl">
         </div>
-        <div>
-          <label class="block text-gray-400 text-sm mb-2">Payment Screenshot (optional)</label>
-          <input type="file" id="screenshot" accept="image/*" class="input-dark w-full px-4 py-3 rounded-xl text-sm">
-        </div>
       </div>
     </div>
 
-    <!-- SUBMIT -->
-    <button onclick="submitOrder()" class="w-full gold-gradient text-black font-bold py-5 rounded-2xl text-lg shadow-xl hover:shadow-2xl transition">
+    <button onclick="submitOrder()" id="submitBtn" class="w-full gold-gradient text-black font-bold py-5 rounded-2xl text-lg shadow-xl hover:shadow-2xl transition">
       🚀 Submit Order on WhatsApp
     </button>
 
@@ -157,8 +152,39 @@
 
 <a href="https://wa.me/923169113663" class="whatsapp-float" target="_blank">💬</a>
 
-<script>
-function calculateUSDT() {
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDPFC3gtvKQxmlddLpabMYx6IZe0B0I9zE",
+  authDomain: "usdt-exchange-24226.firebaseapp.com",
+  projectId: "usdt-exchange-24226",
+  storageBucket: "usdt-exchange-24226.firebasestorage.app",
+  messagingSenderId: "1024697758253",
+  appId: "1:1024697758253:web:8894b945db08d6536e3ea4"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    const userData = userDoc.data() || {};
+    if (userData.name) document.getElementById('userName').value = userData.name;
+    if (userData.phone) document.getElementById('userPhone').value = userData.phone;
+  } else {
+    window.location.href = 'login.html';
+  }
+});
+
+window.calculateUSDT = function() {
   const pkr = parseFloat(document.getElementById('pkrAmount').value) || 0;
   const rate = 290;
   const usdt = pkr / rate;
@@ -166,12 +192,18 @@ function calculateUSDT() {
   document.getElementById('payAmount').textContent = 'Rs. ' + pkr.toLocaleString();
 }
 
-function copyText(text) {
+window.copyText = function(text) {
   navigator.clipboard.writeText(text);
-  alert('Copied: ' + text);
+  alert('✅ Copied: ' + text);
 }
 
-function submitOrder() {
+window.submitOrder = async function() {
+  if (!currentUser) {
+    alert('❌ Pehle login karein');
+    window.location.href = 'login.html';
+    return;
+  }
+
   const name = document.getElementById('userName').value;
   const phone = document.getElementById('userPhone').value;
   const wallet = document.getElementById('userWallet').value;
@@ -184,22 +216,53 @@ function submitOrder() {
     return;
   }
 
-  let text = `🛒 *NEW BUY ORDER — USDT EXCHANGE PK*\n\n`;
-  text += `📦 *Type:* Buy USDT\n`;
-  text += `💰 *PKR Amount:* Rs. ${pkr}\n`;
-  text += `💎 *USDT Amount:* ${usdt}\n`;
-  text += `📊 *Rate:* Rs. 290/USDT\n\n`;
-  text += `👤 *Name:* ${name}\n`;
-  text += `📱 *WhatsApp:* ${phone}\n`;
-  text += `💼 *Wallet:* ${wallet}\n`;
-  text += `🔢 *TRX ID:* ${trxId}\n\n`;
-  text += `━━━━━━━━━━━━━━━\n`;
-  text += `✅ Please verify my payment and send USDT.`;
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = '⏳ Submitting...';
+  btn.disabled = true;
 
-  window.open(`https://wa.me/923169113663?text=${encodeURIComponent(text)}`, '_blank');
+  const orderData = {
+    userId: currentUser.uid,
+    userEmail: currentUser.email,
+    type: 'Buy',
+    pkrAmount: parseFloat(pkr),
+    usdtAmount: parseFloat(usdt),
+    rate: 290,
+    customerName: name,
+    customerPhone: phone,
+    wallet: wallet,
+    trxId: trxId,
+    paymentMethod: 'JazzCash',
+    status: 'Pending',
+    date: new Date().toLocaleDateString('en-PK'),
+    createdAt: new Date().toISOString()
+  };
+
+  try {
+    await addDoc(collection(db, 'orders'), orderData);
+    alert('✅ Order submitted! Admin verify karega.');
+
+    let text = `🛒 *NEW BUY ORDER — USDT EXCHANGE PK*\n\n`;
+    text += `📦 *Type:* Buy USDT\n`;
+    text += `💰 *PKR Amount:* Rs. ${pkr}\n`;
+    text += `💎 *USDT Amount:* ${usdt}\n`;
+    text += `📊 *Rate:* Rs. 290/USDT\n\n`;
+    text += `👤 *Name:* ${name}\n`;
+    text += `📱 *WhatsApp:* ${phone}\n`;
+    text += `💼 *Wallet:* ${wallet}\n`;
+    text += `🔢 *TRX ID:* ${trxId}\n\n`;
+    text += `━━━━━━━━━━━━━━━\n`;
+    text += `✅ Please verify my payment and send USDT.`;
+
+    window.open(`https://wa.me/923169113663?text=${encodeURIComponent(text)}`, '_blank');
+    
+    setTimeout(() => window.location.href = 'dashboard.html', 1500);
+  } catch (err) {
+    console.error(err);
+    alert('❌ Error: ' + err.message);
+    btn.textContent = '🚀 Submit Order on WhatsApp';
+    btn.disabled = false;
+  }
 }
-
-setTimeout(() => calculateUSDT(), 500);
 </script>
 
 </body>
