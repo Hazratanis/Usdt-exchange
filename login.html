@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0a0a0a">
-<meta name="apple-mobile-web-app-capable" content="yes">
 <title>Login — USDT Exchange PK</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💎</text></svg>">
 <script src="https://cdn.tailwindcss.com"></script>
@@ -24,127 +23,41 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  * {
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    box-sizing: border-box;
-  }
-  
-  html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-  
+  * { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; width: 100%; min-height: 100%; overflow-x: hidden; }
   body {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: #0a0a0a;
-    touch-action: pan-y;
-  }
-  
-  input, textarea {
-    -webkit-user-select: text;
-    -moz-user-select: text;
-    -ms-user-select: text;
-    user-select: text;
-  }
-  
-  h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; }
-  
-  .gold-gradient { 
-    background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #d97706 100%); 
-  }
-  .gold-text { 
-    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%); 
-    -webkit-background-clip: text; 
-    -webkit-text-fill-color: transparent; 
-    background-clip: text;
-  }
-  .black-card { 
-    background: linear-gradient(135deg, #141414 0%, #1a1a1a 100%); 
-    border: 1px solid #2a2a2a; 
-  }
-  .gold-glow { box-shadow: 0 0 30px rgba(245, 158, 11, 0.3); }
-  
-  .input-dark { 
-    background: #0a0a0a; 
-    border: 2px solid #2a2a2a; 
-    color: white; 
-    font-size: 16px;
-    -webkit-appearance: none;
-    appearance: none;
-    outline: none;
-  }
-  .input-dark:focus { 
-    border-color: #f59e0b; 
-  }
-  .input-dark::placeholder { color: #4a4a4a; }
-  
-  .scroll-container {
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
+    min-height: 100vh;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px 16px;
-    min-height: 100%;
+    padding: 16px;
+    -webkit-user-select: none;
+    user-select: none;
   }
-  
+  input { -webkit-user-select: text; user-select: text; }
+  h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; }
+  .gold-gradient { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #d97706 100%); }
+  .black-card { background: linear-gradient(135deg, #141414 0%, #1a1a1a 100%); border: 1px solid #2a2a2a; }
+  .gold-glow { box-shadow: 0 0 30px rgba(245, 158, 11, 0.3); }
+  .input-dark { 
+    background: #0a0a0a; border: 2px solid #2a2a2a; color: white; font-size: 16px;
+    -webkit-appearance: none; appearance: none; outline: none;
+  }
+  .input-dark:focus { border-color: #f59e0b; }
+  .input-dark::placeholder { color: #4a4a4a; }
   .blob { 
-    position: fixed; 
-    border-radius: 50%; 
-    filter: blur(80px); 
-    opacity: 0.25; 
-    animation: blobFloat 8s ease-in-out infinite; 
-    pointer-events: none;
-    z-index: 0;
+    position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.25; 
+    animation: blobFloat 8s ease-in-out infinite; pointer-events: none; z-index: 0;
   }
   @keyframes blobFloat { 
     0%,100%{transform:translate(0,0) scale(1)} 
     33%{transform:translate(30px,-30px) scale(1.1)} 
     66%{transform:translate(-20px,20px) scale(0.9)} 
   }
-  
-  .btn-primary { 
-    transition: all 0.2s ease; 
-    -webkit-tap-highlight-color: transparent;
-  }
-  .btn-primary:active { transform: scale(0.98); }
-  
-  .modal-backdrop {
-    background: rgba(0, 0, 0, 0.92);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-  
-  @media screen and (max-width: 768px) {
-    input, select, textarea { font-size: 16px !important; }
-  }
-  
-  .scroll-container::-webkit-scrollbar { display: none; }
-  .scroll-container { -ms-overflow-style: none; scrollbar-width: none; }
-  
-  @supports (padding: max(0px)) {
-    .scroll-container {
-      padding-top: max(20px, env(safe-area-inset-top));
-      padding-bottom: max(20px, env(safe-area-inset-bottom));
-    }
-  }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+  @media screen and (max-width: 768px) { input { font-size: 16px !important; } }
 </style>
 </head>
 <body>
@@ -152,175 +65,164 @@
 <div class="blob bg-gold-500 w-64 h-64 -top-20 -left-20"></div>
 <div class="blob bg-yellow-500 w-64 h-64 -bottom-20 -right-20" style="animation-delay: 2s;"></div>
 
-<div class="scroll-container">
-  <main class="relative z-10 w-full max-w-sm mx-auto">
+<main class="relative z-10 w-full max-w-sm mx-auto">
 
-    <!-- LOGO -->
-    <div class="text-center mb-6">
-      <a href="index.html" class="inline-block">
-        <div class="w-16 h-16 gold-gradient rounded-2xl flex items-center justify-center text-black font-bold text-3xl shadow-lg gold-glow mx-auto">💎</div>
-      </a>
-      <h1 class="text-2xl font-bold text-white mt-4">Welcome Back</h1>
-      <p class="text-sm text-gray-400 mt-1">Login to your account</p>
-    </div>
+  <!-- LOGO -->
+  <div class="text-center mb-6">
+    <a href="index.html" class="inline-block">
+      <div class="w-16 h-16 gold-gradient rounded-2xl flex items-center justify-center text-black font-bold text-3xl shadow-lg gold-glow mx-auto">💎</div>
+    </a>
+    <h1 class="text-2xl font-bold text-white mt-4">Welcome Back</h1>
+    <p class="text-sm text-gray-400 mt-1">Login to your account</p>
+  </div>
 
-    <!-- LOGIN CARD -->
-    <div class="black-card rounded-2xl p-6 shadow-2xl">
+  <!-- LOGIN CARD -->
+  <div class="black-card rounded-2xl p-6 shadow-2xl">
 
-      <form onsubmit="handleLogin(event)" class="space-y-4">
+    <form onsubmit="handleLogin(event)" class="space-y-4">
 
-        <!-- EMAIL -->
-        <div>
-          <label class="block text-sm text-gray-300 font-medium mb-2">📧 Email</label>
-          <input 
-            type="email" 
-            id="loginEmail" 
-            required 
-            placeholder="your@email.com" 
-            autocomplete="email"
-            class="input-dark w-full px-4 py-3 rounded-xl">
-        </div>
-
-        <!-- PASSWORD -->
-        <div>
-          <label class="block text-sm text-gray-300 font-medium mb-2">🔒 Password</label>
-          <div class="relative">
-            <input 
-              type="password" 
-              id="loginPass" 
-              required 
-              placeholder="Enter your password" 
-              autocomplete="current-password"
-              class="input-dark w-full px-4 py-3 rounded-xl pr-12">
-            <button 
-              type="button" 
-              onclick="togglePass()" 
-              class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gold-400 text-lg p-2">
-              👁️
-            </button>
-          </div>
-        </div>
-
-        <!-- REMEMBER + FORGOT -->
-        <div class="flex items-center justify-between text-sm pt-1">
-          <label class="flex items-center gap-2 text-gray-400 cursor-pointer">
-            <input type="checkbox" class="accent-gold-500 w-4 h-4" checked>
-            <span>Remember me</span>
-          </label>
-          <button 
-            type="button" 
-            onclick="openForgotModal()" 
-            class="text-gold-400 hover:text-gold-300 font-medium">
-            Forgot?
-          </button>
-        </div>
-
-        <!-- LOGIN BUTTON -->
-        <button 
-          type="submit" 
-          id="loginBtn" 
-          class="btn-primary w-full gold-gradient text-black font-bold py-3.5 rounded-xl text-base shadow-lg">
-          🚀 Login
-        </button>
-
-      </form>
-
-      <p id="loginError" class="text-red-400 text-sm text-center mt-3 hidden"></p>
-
-      <!-- DIVIDER -->
-      <div class="flex items-center gap-3 my-5">
-        <div class="flex-1 h-px bg-gray-700"></div>
-        <span class="text-gray-500 text-xs uppercase tracking-wider">OR</span>
-        <div class="flex-1 h-px bg-gray-700"></div>
+      <div>
+        <label class="block text-sm text-gray-300 font-medium mb-2">📧 Email</label>
+        <input type="email" id="loginEmail" required placeholder="your@email.com" autocomplete="email"
+               class="input-dark w-full px-4 py-3 rounded-xl">
       </div>
 
-      <!-- GOOGLE BUTTON -->
-      <button 
-        onclick="loginWithGoogle()" 
-        id="googleBtn" 
-        class="btn-primary w-full bg-white hover:bg-gray-50 text-gray-800 font-semibold py-3.5 rounded-xl flex items-center justify-center gap-3 shadow-md">
-        <svg width="20" height="20" viewBox="0 0 24 24">
-          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-        </svg>
-        <span>Continue with Google</span>
+      <div>
+        <label class="block text-sm text-gray-300 font-medium mb-2">🔒 Password</label>
+        <div class="relative">
+          <input type="password" id="loginPass" required placeholder="Enter your password" autocomplete="current-password"
+                 class="input-dark w-full px-4 py-3 rounded-xl pr-12">
+          <button type="button" onclick="togglePass()" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gold-400 text-lg p-2">👁️</button>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between text-sm pt-1">
+        <label class="flex items-center gap-2 text-gray-400 cursor-pointer">
+          <input type="checkbox" class="accent-gold-500 w-4 h-4" checked>
+          <span>Remember me</span>
+        </label>
+        <button type="button" onclick="openForgotModal()" class="text-gold-400 hover:text-gold-300 font-medium">Forgot?</button>
+      </div>
+
+      <button type="submit" id="loginBtn" class="w-full gold-gradient text-black font-bold py-3.5 rounded-xl text-base shadow-lg">
+        🚀 Login
       </button>
 
-      <!-- CREATE ACCOUNT -->
-      <div class="mt-5 pt-5 border-t border-gold-500/20 text-center">
-        <p class="text-sm text-gray-400">Don't have an account?</p>
-        <a href="register.html" class="inline-block mt-1.5 text-gold-400 hover:text-gold-300 font-semibold text-sm">
-          Create Account →
-        </a>
-      </div>
+    </form>
 
+    <p id="loginError" class="text-red-400 text-sm text-center mt-3 hidden"></p>
+
+    <!-- DIVIDER -->
+    <div class="flex items-center gap-3 my-5">
+      <div class="flex-1 h-px bg-gray-700"></div>
+      <span class="text-gray-500 text-xs uppercase">OR</span>
+      <div class="flex-1 h-px bg-gray-700"></div>
     </div>
 
-    <!-- BACK TO HOME -->
-    <div class="text-center mt-5">
-      <a href="index.html" class="text-gray-500 hover:text-gold-400 text-xs transition">
-        ← Back to Home
+    <!-- GOOGLE -->
+    <button onclick="loginWithGoogle()" id="googleBtn" class="w-full bg-white hover:bg-gray-50 text-gray-800 font-semibold py-3.5 rounded-xl flex items-center justify-center gap-3 shadow-md">
+      <svg width="20" height="20" viewBox="0 0 24 24">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+      </svg>
+      <span>Continue with Google</span>
+    </button>
+
+    <!-- CREATE ACCOUNT -->
+    <div class="mt-5 pt-5 border-t border-gold-500/20 text-center">
+      <p class="text-sm text-gray-400">Don't have an account?</p>
+      <a href="register.html" class="inline-block mt-1.5 text-gold-400 hover:text-gold-300 font-semibold text-sm">
+        Create Account →
       </a>
     </div>
 
-  </main>
-</div>
+  </div>
+
+  <div class="text-center mt-5">
+    <a href="index.html" class="text-gray-500 hover:text-gold-400 text-xs transition">← Back to Home</a>
+  </div>
+
+</main>
 
 <!-- FORGOT PASSWORD MODAL -->
-<div id="forgotModal" class="hidden fixed inset-0 z-[9999] modal-backdrop items-center justify-center p-4">
+<div id="forgotModal" class="hidden fixed inset-0 z-[9999] items-center justify-center p-4" style="background: rgba(0,0,0,0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
   <div class="bg-gradient-to-br from-gray-900 to-black rounded-2xl p-6 max-w-sm w-full border-2 border-gold-500/40 shadow-2xl">
 
     <div class="text-center mb-5">
       <div class="w-14 h-14 gold-gradient rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl shadow-lg">🔐</div>
-      <h3 class="text-lg font-bold text-white mb-1">Reset Password</h3>
-      <p class="text-xs text-gray-400">Enter your email — we'll send a reset link</p>
+      <h3 class="text-lg font-bold text-white mb-1">Forgot Password</h3>
+      <p class="text-xs text-gray-400">Currently unavailable</p>
     </div>
 
-    <form onsubmit="sendResetLink(event)" class="space-y-3">
-      <div>
-        <label class="block text-xs text-gray-400 font-medium mb-2">📧 Email</label>
-        <input 
-          type="email" 
-          id="resetEmail" 
-          required 
-          placeholder="your@email.com" 
-          class="input-dark w-full px-4 py-3 rounded-xl">
+    <div class="bg-yellow-900/20 border-2 border-yellow-500/40 rounded-xl p-4 mb-5">
+      <p class="text-yellow-300 text-sm font-semibold mb-2">⚠️ Technical Issue</p>
+      <p class="text-gray-300 text-xs leading-relaxed mb-3">
+        Our password reset system is currently under maintenance. Please contact us directly on WhatsApp for immediate assistance.
+      </p>
+      <div class="bg-black/40 rounded-lg p-3">
+        <p class="text-gray-400 text-xs mb-1">📲 Contact us on WhatsApp:</p>
+        <p class="text-white font-bold text-base">0316-9113663</p>
       </div>
+    </div>
 
-      <button 
-        type="submit" 
-        id="resetBtn" 
-        class="w-full gold-gradient text-black font-bold py-3 rounded-xl text-sm shadow-lg">
-        📨 Send Reset Link
-      </button>
-    </form>
+    <a href="https://wa.me/923169113663?text=Assalam%20o%20Alaikum%2C%20mujhe%20password%20reset%20karna%20hai" 
+       target="_blank"
+       class="block w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white text-center font-bold py-3.5 rounded-xl text-sm shadow-lg mb-3">
+      📲 Contact on WhatsApp
+    </a>
 
-    <p id="resetMessage" class="text-xs text-center mt-3 hidden"></p>
-
-    <button 
-      onclick="closeForgotModal()" 
-      class="w-full mt-3 bg-white/10 border border-white/20 text-white font-medium py-2.5 rounded-xl hover:bg-white/20 transition text-sm">
-      Cancel
+    <button onclick="closeForgotModal()" class="w-full bg-white/10 border border-white/20 text-white font-medium py-3 rounded-xl hover:bg-white/20 transition text-sm">
+      Close
     </button>
+
+  </div>
+</div>
+
+<!-- PASSWORD WARNING MODAL -->
+<div id="passwordWarningModal" class="hidden fixed inset-0 z-[9999] items-center justify-center p-4" style="background: rgba(0,0,0,0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+  <div class="bg-gradient-to-br from-gray-900 to-black rounded-2xl p-6 max-w-sm w-full border-2 border-gold-500/40 shadow-2xl">
+
+    <div class="text-center mb-4">
+      <div class="w-20 h-20 gold-gradient rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-lg" style="animation: pulse 2s infinite;">
+        ⚠️
+      </div>
+      <h3 class="text-xl font-bold text-white mb-2">Important Warning!</h3>
+      <p class="text-sm text-gray-400">Please read carefully</p>
+    </div>
+
+    <div class="bg-yellow-900/20 border-2 border-yellow-500/40 rounded-xl p-4 mb-5">
+      <p class="text-yellow-300 text-sm font-semibold mb-3">🔐 Remember Your Password!</p>
+      
+      <p class="text-gray-300 text-sm leading-relaxed mb-3">
+        Your password is <strong class="text-white">safe and secure</strong> — but due to <strong class="text-yellow-300">technical reasons</strong>, if you forget your password — the <strong class="text-white">"Forgot Password"</strong> feature is <strong class="text-yellow-300">currently not working</strong>.
+      </p>
+      
+      <p class="text-gray-300 text-sm leading-relaxed mb-3">
+        <strong class="text-white">Please remember your password</strong> — or — <strong class="text-white">save it in a safe place</strong>.
+      </p>
+
+      <div class="bg-red-900/30 border border-red-500/40 rounded-lg p-3 mt-3">
+        <p class="text-red-300 text-xs font-semibold mb-1">⚠️ If you forget your password:</p>
+        <p class="text-gray-300 text-xs mb-1">Contact us on WhatsApp:</p>
+        <p class="text-white text-sm font-bold">📲 0316-9113663</p>
+        <p class="text-gray-400 text-xs mt-1">We will manually reset your account.</p>
+      </div>
+    </div>
+
+    <button onclick="closeWarningAndGo()" class="w-full gold-gradient text-black font-bold py-3.5 rounded-xl text-base shadow-lg">
+      ✅ I Understand — Continue
+    </button>
+
+    <p class="text-center text-xs text-gray-500 mt-3" id="countdown">Auto-redirect in 10 seconds...</p>
 
   </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { 
-  getAuth, 
-  signInWithEmailAndPassword, 
-  sendPasswordResetEmail, 
-  setPersistence, 
-  browserLocalPersistence, 
-  browserSessionPersistence, 
-  GoogleAuthProvider, 
-  signInWithPopup,
-  fetchSignInMethodsForEmail
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -336,27 +238,36 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// PREVENT ZOOM
-let lastTouchEnd = 0;
-document.addEventListener('touchend', function(event) {
-  const now = (new Date()).getTime();
-  if (now - lastTouchEnd <= 300) {
-    event.preventDefault();
-  }
-  lastTouchEnd = now;
-}, false);
-
-document.addEventListener('gesturestart', function(e) {
-  e.preventDefault();
-});
-
-// TOGGLE PASSWORD
 window.togglePass = function() {
   const pass = document.getElementById('loginPass');
   pass.type = pass.type === 'password' ? 'text' : 'password';
 }
 
-// EMAIL/PASSWORD LOGIN
+// SHOW WARNING MODAL
+function showPasswordWarning() {
+  document.getElementById('passwordWarningModal').classList.remove('hidden');
+  document.getElementById('passwordWarningModal').classList.add('flex');
+  
+  let countdown = 10;
+  const countdownEl = document.getElementById('countdown');
+  
+  const timer = setInterval(() => {
+    countdown--;
+    if (countdownEl) {
+      countdownEl.textContent = `Auto-redirect in ${countdown} seconds...`;
+    }
+    if (countdown <= 0) {
+      clearInterval(timer);
+      window.location.href = 'dashboard.html';
+    }
+  }, 1000);
+}
+
+window.closeWarningAndGo = function() {
+  window.location.href = 'dashboard.html';
+}
+
+// EMAIL LOGIN
 window.handleLogin = async function(e) {
   e.preventDefault();
   const email = document.getElementById('loginEmail').value.trim();
@@ -417,115 +328,35 @@ window.loginWithGoogle = async function() {
         authProvider: 'google',
         createdAt: new Date().toISOString()
       });
+
+      // SHOW WARNING FOR NEW USERS
+      showPasswordWarning();
+    } else {
+      window.location.href = 'dashboard.html';
     }
 
-    window.location.href = 'dashboard.html';
   } catch (err) {
     let msg = '❌ ';
     if (err.code === 'auth/popup-closed-by-user') msg += 'Login cancelled';
     else if (err.code === 'auth/popup-blocked') msg += 'Popup blocked. Allow popups.';
-    else if (err.code === 'auth/unauthorized-domain') msg += 'Domain not authorized';
     else msg += err.message;
     
     errEl.textContent = msg;
     errEl.classList.remove('hidden');
-    btn.innerHTML = `
-      <svg width="20" height="20" viewBox="0 0 24 24">
-        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-      </svg>
-      <span>Continue with Google</span>
-    `;
+    btn.innerHTML = '<span>Continue with Google</span>';
     btn.disabled = false;
   }
 }
 
-// FORGOT PASSWORD
+// FORGOT PASSWORD — INFO MODAL
 window.openForgotModal = function() {
-  const emailInput = document.getElementById('loginEmail').value;
-  if (emailInput) {
-    document.getElementById('resetEmail').value = emailInput;
-  }
   document.getElementById('forgotModal').classList.remove('hidden');
   document.getElementById('forgotModal').classList.add('flex');
-  document.getElementById('resetMessage').classList.add('hidden');
 }
 
 window.closeForgotModal = function() {
   document.getElementById('forgotModal').classList.add('hidden');
   document.getElementById('forgotModal').classList.remove('flex');
-}
-
-// SEND RESET LINK (with email check)
-window.sendResetLink = async function(e) {
-  e.preventDefault();
-  const email = document.getElementById('resetEmail').value.trim();
-  const btn = document.getElementById('resetBtn');
-  const msgEl = document.getElementById('resetMessage');
-
-  if (!email) {
-    msgEl.className = 'text-xs text-center mt-3 text-red-400';
-    msgEl.textContent = '❌ Please enter your email';
-    msgEl.classList.remove('hidden');
-    return;
-  }
-
-  btn.textContent = '⏳ Checking...';
-  btn.disabled = true;
-  msgEl.classList.add('hidden');
-
-  try {
-    // Step 1: Check if email exists
-    const methods = await fetchSignInMethodsForEmail(auth, email);
-    
-    if (methods.length === 0) {
-      msgEl.className = 'text-xs text-center mt-3 text-red-400';
-      msgEl.textContent = '❌ This email is not registered. Please create an account first.';
-      msgEl.classList.remove('hidden');
-      btn.textContent = '📨 Send Reset Link';
-      btn.disabled = false;
-      return;
-    }
-
-    // Step 2: If Google-only account
-    if (methods.includes('google.com') && !methods.includes('password')) {
-      msgEl.className = 'text-xs text-center mt-3 text-yellow-400';
-      msgEl.textContent = '⚠️ This email uses Google Sign-In. Please login with Google instead.';
-      msgEl.classList.remove('hidden');
-      btn.textContent = '📨 Send Reset Link';
-      btn.disabled = false;
-      return;
-    }
-
-    // Step 3: Send reset email
-    await sendPasswordResetEmail(auth, email);
-    msgEl.className = 'text-xs text-center mt-3 text-green-400';
-    msgEl.textContent = '✅ Reset link sent! Check your email inbox and spam folder.';
-    msgEl.classList.remove('hidden');
-    btn.textContent = '✅ Email Sent';
-    btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-
-    setTimeout(() => {
-      btn.textContent = '📨 Send Reset Link';
-      btn.style.background = '';
-      btn.disabled = false;
-    }, 30000);
-
-  } catch (err) {
-    let msg = '❌ ';
-    if (err.code === 'auth/user-not-found') msg += 'This email is not registered';
-    else if (err.code === 'auth/invalid-email') msg += 'Invalid email address';
-    else if (err.code === 'auth/too-many-requests') msg += 'Too many attempts. Wait a few minutes.';
-    else msg += err.message;
-    
-    msgEl.className = 'text-xs text-center mt-3 text-red-400';
-    msgEl.textContent = msg;
-    msgEl.classList.remove('hidden');
-    btn.textContent = '📨 Send Reset Link';
-    btn.disabled = false;
-  }
 }
 </script>
 
