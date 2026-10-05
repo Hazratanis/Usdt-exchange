@@ -30,8 +30,6 @@
   .input-dark { background: #0a0a0a; border: 2px solid #2a2a2a; color: white; }
   .input-dark:focus { border-color: #f59e0b; outline: none; }
   .whatsapp-float { position: fixed; bottom: 24px; right: 24px; z-index: 999; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 10px 30px rgba(37,211,102,0.5); text-decoration: none; }
-  .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(245,158,11,0.3); border-radius: 50%; border-top-color: #f59e0b; animation: spin 1s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
   .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(8px); }
   .modal.open { display: flex; animation: fadeIn 0.3s ease; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -122,28 +120,75 @@
     <div class="black-card rounded-3xl p-6 mb-6">
       <div class="flex items-center gap-2 mb-4">
         <div class="w-8 h-8 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">3</div>
-        <h3 class="font-bold text-lg text-white">Details Dein</h3>
+        <h3 class="font-bold text-lg text-white">Payment Details Dein</h3>
       </div>
 
-      <div class="space-y-4">
+      <div class="space-y-5">
+        <!-- FIELD 1 -->
         <div>
-          <label class="block text-gray-400 text-sm mb-2">Aapka Naam *</label>
-          <input type="text" id="userName" placeholder="Muhammad Ali" class="input-dark w-full px-4 py-3 rounded-xl">
+          <label class="block text-gray-300 text-sm mb-2 font-medium">👤 Jis account se payment bheji uska naam *</label>
+          <input type="text" id="senderName" placeholder="Jaise: Ali Ahmed" class="input-dark w-full px-4 py-3 rounded-xl">
+          <p class="text-xs text-gray-500 mt-1">JazzCash/Easypaisa account holder ka naam</p>
         </div>
+
+        <!-- FIELD 2 -->
         <div>
-          <label class="block text-gray-400 text-sm mb-2">WhatsApp Number *</label>
-          <input type="tel" id="userPhone" placeholder="03XX-XXXXXXX" class="input-dark w-full px-4 py-3 rounded-xl">
+          <label class="block text-gray-300 text-sm mb-2 font-medium">💰 Kitna amount bheja hai? *</label>
+          <input type="number" id="amountSent" placeholder="Jaise: 2000" class="input-dark w-full px-4 py-3 rounded-xl">
+          <p class="text-xs text-gray-500 mt-1">JazzCash se jo amount bheji</p>
         </div>
+
+        <!-- FIELD 3 -->
         <div>
-          <label class="block text-gray-400 text-sm mb-2">Binance UID / USDT Wallet Address *</label>
-          <input type="text" id="userWallet" placeholder="499961684 ya 0x..." class="input-dark w-full px-4 py-3 rounded-xl">
+          <label class="block text-gray-300 text-sm mb-2 font-medium">💎 USDT kahan receive karna hai? *</label>
+          
+          <div class="grid grid-cols-2 gap-3 mb-4">
+            <button type="button" onclick="selectMethod('binance')" id="btnBinance" 
+                    class="p-4 rounded-xl border-2 border-gold-500 bg-gold-500/20 transition text-center">
+              <div class="text-3xl mb-1">🟡</div>
+              <p class="font-bold text-sm text-white">Binance UID</p>
+              <p class="text-xs text-gray-400 mt-1">Binance par receive</p>
+            </button>
+            <button type="button" onclick="selectMethod('wallet')" id="btnWallet"
+                    class="p-4 rounded-xl border-2 border-gray-700 hover:border-gold-500/50 transition text-center">
+              <div class="text-3xl mb-1">💼</div>
+              <p class="font-bold text-sm text-white">Wallet Address</p>
+              <p class="text-xs text-gray-400 mt-1">Kisi bhi wallet par</p>
+            </button>
+          </div>
+
+          <!-- BINANCE FIELDS -->
+          <div id="binanceFields" class="space-y-4">
+            <div>
+              <label class="block text-gray-400 text-sm mb-2">Binance UID *</label>
+              <input type="text" id="binanceUid" placeholder="Jaise: 499961684" class="input-dark w-full px-4 py-3 rounded-xl">
+            </div>
+            <div>
+              <label class="block text-gray-400 text-sm mb-2">Binance Account Name *</label>
+              <input type="text" id="binanceName" placeholder="Jaise: Muhammad Ali" class="input-dark w-full px-4 py-3 rounded-xl">
+            </div>
+          </div>
+
+          <!-- WALLET FIELDS -->
+          <div id="walletFields" class="space-y-4 hidden">
+            <div>
+              <label class="block text-gray-400 text-sm mb-2">USDT Wallet Address (BEP20) *</label>
+              <input type="text" id="walletAddress" placeholder="0x..." class="input-dark w-full px-4 py-3 rounded-xl">
+              <p class="text-xs text-gray-500 mt-1">BEP20 network ka address</p>
+            </div>
+          </div>
         </div>
+
+        <!-- TRX ID -->
         <div>
-          <label class="block text-gray-400 text-sm mb-2">JazzCash TRX ID *</label>
+          <label class="block text-gray-300 text-sm mb-2 font-medium">🔢 JazzCash TRX ID *</label>
           <input type="text" id="trxId" placeholder="Transaction ID" class="input-dark w-full px-4 py-3 rounded-xl">
+          <p class="text-xs text-gray-500 mt-1">JazzCash app se transaction ID copy karein</p>
         </div>
+
+        <!-- Screenshot -->
         <div>
-          <label class="block text-gray-400 text-sm mb-2">Payment Screenshot *</label>
+          <label class="block text-gray-300 text-sm mb-2 font-medium">📸 Payment Screenshot *</label>
           <input type="file" id="screenshot" accept="image/*" class="input-dark w-full px-4 py-3 rounded-xl text-sm">
           <p class="text-xs text-gray-500 mt-1">Payment ka screenshot upload karein (Max 2MB)</p>
         </div>
@@ -188,21 +233,13 @@
         Aapka order <strong class="text-white">minimum 30 minutes</strong> se <strong class="text-white">maximum 2 hours</strong> tak complete ho jayega.
       </p>
       <p class="text-gray-300 text-sm leading-relaxed">
-        Agar 2 ghante ke baad bhi order complete nahi hota, toh <strong class="text-white">WhatsApp</strong> par contact karein.
+        Agar 2 ghante ke baad bhi order complete nahi hota, toh WhatsApp par contact karein.
       </p>
     </div>
 
-    <div class="flex flex-col gap-3">
-      <a href="#" 
-         target="_blank"
-         id="whatsappContactBtn"
-         class="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white text-center font-bold py-4 rounded-xl transition shadow-lg">
-        📲 Contact on WhatsApp
-      </a>
-      <button onclick="closeModal()" class="w-full bg-white/10 border-2 border-white/20 text-white font-bold py-4 rounded-xl hover:bg-white/20 transition">
-        Go to Dashboard →
-      </button>
-    </div>
+    <button onclick="closeModal()" class="w-full bg-white/10 border-2 border-white/20 text-white font-bold py-4 rounded-xl hover:bg-white/20 transition">
+      Go to Dashboard →
+    </button>
   </div>
 </div>
 
@@ -228,6 +265,7 @@ const db = getFirestore(app);
 
 let currentUser = null;
 let isSubmitting = false;
+let selectedMethod = 'binance';
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -236,6 +274,26 @@ onAuthStateChanged(auth, async (user) => {
     window.location.href = 'login.html';
   }
 });
+
+window.selectMethod = function(method) {
+  selectedMethod = method;
+  const btnBinance = document.getElementById('btnBinance');
+  const btnWallet = document.getElementById('btnWallet');
+  const binanceFields = document.getElementById('binanceFields');
+  const walletFields = document.getElementById('walletFields');
+
+  if (method === 'binance') {
+    btnBinance.className = 'p-4 rounded-xl border-2 border-gold-500 bg-gold-500/20 transition text-center';
+    btnWallet.className = 'p-4 rounded-xl border-2 border-gray-700 hover:border-gold-500/50 transition text-center';
+    binanceFields.classList.remove('hidden');
+    walletFields.classList.add('hidden');
+  } else {
+    btnWallet.className = 'p-4 rounded-xl border-2 border-gold-500 bg-gold-500/20 transition text-center';
+    btnBinance.className = 'p-4 rounded-xl border-2 border-gray-700 hover:border-gold-500/50 transition text-center';
+    walletFields.classList.remove('hidden');
+    binanceFields.classList.add('hidden');
+  }
+}
 
 window.calculateUSDT = function() {
   const pkr = parseFloat(document.getElementById('pkrAmount').value) || 0;
@@ -268,15 +326,31 @@ window.submitOrder = async function() {
     return;
   }
 
-  const name = document.getElementById('userName').value.trim();
-  const phone = document.getElementById('userPhone').value.trim();
-  const wallet = document.getElementById('userWallet').value.trim();
+  const senderName = document.getElementById('senderName').value.trim();
+  const amountSent = document.getElementById('amountSent').value;
   const trxId = document.getElementById('trxId').value.trim();
   const pkr = document.getElementById('pkrAmount').value;
   const usdt = document.getElementById('usdtReceive').textContent;
   const screenshotFile = document.getElementById('screenshot').files[0];
 
-  if (!name || !phone || !wallet || !trxId || !pkr) {
+  let binanceUid = '', binanceName = '', walletAddress = '';
+
+  if (selectedMethod === 'binance') {
+    binanceUid = document.getElementById('binanceUid').value.trim();
+    binanceName = document.getElementById('binanceName').value.trim();
+    if (!binanceUid || !binanceName) {
+      alert('❌ Binance UID aur Name bhar dein!');
+      return;
+    }
+  } else {
+    walletAddress = document.getElementById('walletAddress').value.trim();
+    if (!walletAddress) {
+      alert('❌ Wallet Address bhar dein!');
+      return;
+    }
+  }
+
+  if (!senderName || !amountSent || !trxId || !pkr) {
     alert('❌ Sab fields bhar dein!');
     return;
   }
@@ -322,10 +396,13 @@ window.submitOrder = async function() {
       type: 'Buy',
       pkrAmount: parseFloat(pkr),
       usdtAmount: parseFloat(usdt),
+      amountSent: parseFloat(amountSent),
       rate: 290,
-      customerName: name,
-      customerPhone: phone,
-      wallet: wallet,
+      senderName: senderName,
+      receiveMethod: selectedMethod,
+      binanceUid: binanceUid,
+      binanceName: binanceName,
+      walletAddress: walletAddress,
       trxId: trxId,
       paymentMethod: 'JazzCash',
       screenshot: screenshotBase64,
@@ -340,34 +417,21 @@ window.submitOrder = async function() {
     document.getElementById('orderIdDisplay').textContent = shortOrderId;
     document.getElementById('orderAmountDisplay').textContent = 'Rs. ' + parseInt(pkr).toLocaleString();
     
-    // WhatsApp message — website ka naam + user info
-    const waMessage = 
-      `🌐 *USDT EXCHANGE PK*\n` +
-      `━━━━━━━━━━━━━━━\n\n` +
-      `Assalam o Alaikum,\n` +
-      `Main *${name}* — website se order kiya tha.\n\n` +
-      `📋 *Order ID:* ${shortOrderId}\n` +
-      `💰 *Amount:* Rs. ${parseInt(pkr).toLocaleString()}\n` +
-      `💎 *USDT:* ${usdt}\n` +
-      `⏳ *Status:* Pending\n` +
-      `⏰ *Time:* 30 min - 2 hours\n\n` +
-      `Kya mera order complete ho gaya hai?\n\n` +
-      `━━━━━━━━━━━━━━━\n` +
-      `_Sent via USDT Exchange PK Website_`;
-
-    document.getElementById('whatsappContactBtn').href = `https://wa.me/923169113663?text=${encodeURIComponent(waMessage)}`;
     document.getElementById('successModal').classList.add('open');
     
     btn.textContent = '✅ Order Submitted';
     btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
     
-    document.getElementById('userName').value = '';
-    document.getElementById('userPhone').value = '';
-    document.getElementById('userWallet').value = '';
+    document.getElementById('senderName').value = '';
+    document.getElementById('amountSent').value = '';
+    document.getElementById('binanceUid').value = '';
+    document.getElementById('binanceName').value = '';
+    document.getElementById('walletAddress').value = '';
     document.getElementById('trxId').value = '';
     document.getElementById('pkrAmount').value = '';
     document.getElementById('screenshot').value = '';
     calculateUSDT();
+    selectMethod('binance');
   } catch (err) {
     console.error(err);
     alert('❌ Error: ' + err.message);
