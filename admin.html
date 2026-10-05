@@ -39,7 +39,6 @@
 </head>
 <body class="text-white">
 
-<!-- LOGIN SCREEN -->
 <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
   <div class="w-full max-w-md">
     <div class="text-center mb-8">
@@ -51,21 +50,24 @@
     <div class="black-card rounded-3xl p-8">
       <form onsubmit="adminLogin(event)" class="space-y-5">
         <div>
-          <label class="block text-gray-400 text-sm mb-2 font-medium">🔒 Admin Password</label>
-          <input type="password" id="adminPass" required placeholder="Enter admin password" 
+          <label class="block text-gray-400 text-sm mb-2 font-medium">📧 Email</label>
+          <input type="email" id="adminEmail" required placeholder="admin@usdtexchange.pk" 
                  class="input-dark w-full px-5 py-4 rounded-xl text-base">
         </div>
-        <button type="submit" class="w-full gold-gradient text-black font-bold py-4 rounded-xl text-lg shadow-lg gold-glow">
+        <div>
+          <label class="block text-gray-400 text-sm mb-2 font-medium">🔒 Password</label>
+          <input type="password" id="adminPass" required placeholder="Admin password" 
+                 class="input-dark w-full px-5 py-4 rounded-xl text-base">
+        </div>
+        <button type="submit" id="loginBtn" class="w-full gold-gradient text-black font-bold py-4 rounded-xl text-lg shadow-lg gold-glow">
           🚀 Login
         </button>
         <p id="adminError" class="text-red-400 text-sm text-center hidden"></p>
       </form>
-      <p class="text-center text-gray-500 text-xs mt-4">Demo password: <strong class="text-gold-400">admin123</strong></p>
     </div>
   </div>
 </div>
 
-<!-- ADMIN PANEL -->
 <div id="adminPanel" class="hidden">
   <header class="backdrop-blur-xl bg-black/80 shadow-lg sticky top-0 z-50 border-b border-gold-500/20">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -73,11 +75,11 @@
         <div class="w-10 h-10 gold-gradient rounded-xl flex items-center justify-center text-black font-bold text-lg">👑</div>
         <div>
           <h1 class="font-bold text-sm text-white leading-tight">Admin Panel</h1>
-          <p class="text-xs text-gold-400">USDT Exchange PK</p>
+          <p class="text-xs text-gold-400" id="adminEmailDisplay">Loading...</p>
         </div>
       </div>
       <div class="flex items-center gap-2">
-        <button onclick="loadOrders()" class="text-gold-400 hover:text-gold-300 text-sm font-medium bg-gold-500/10 px-4 py-2 rounded-lg border border-gold-500/30">🔄 Refresh</button>
+        <button onclick="loadOrders()" class="text-gold-400 hover:text-gold-300 text-sm font-medium bg-gold-500/10 px-4 py-2 rounded-lg border border-gold-500/30">🔄</button>
         <button onclick="adminLogout()" class="text-gray-300 hover:text-red-400 text-sm font-medium bg-red-500/10 px-4 py-2 rounded-lg border border-red-500/30">Logout</button>
       </div>
     </div>
@@ -86,7 +88,6 @@
   <main class="py-6 px-4 pb-24">
     <div class="container mx-auto max-w-4xl">
 
-      <!-- TABS -->
       <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
         <button onclick="showTab('all')" id="tabAll" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gold-500 text-black">📋 All</button>
         <button onclick="showTab('pending')" id="tabPending" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20">⏳ Pending</button>
@@ -94,12 +95,10 @@
         <button onclick="showTab('stats')" id="tabStats" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20">📊 Stats</button>
       </div>
 
-      <!-- ORDERS -->
       <div id="ordersContainer">
         <div class="text-center py-8"><span class="loading"></span></div>
       </div>
 
-      <!-- STATS -->
       <div id="statsContainer" class="hidden">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div class="black-card rounded-2xl p-5">
@@ -131,7 +130,8 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAqnJ03WOnX4_hlo4MK2Wc4ZJv8dCgDFgE",
@@ -143,36 +143,61 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const db = getFirestore(app);
 
 let allOrders = [];
 let currentFilter = 'all';
 
-// Check admin login
-if (localStorage.getItem('admin_logged_in') === 'true') {
-  document.getElementById('loginScreen').classList.add('hidden');
-  document.getElementById('adminPanel').classList.remove('hidden');
-  loadOrders();
-}
-
-window.adminLogin = function(e) {
-  e.preventDefault();
-  const pass = document.getElementById('adminPass').value;
-
-  if (pass === 'admin123') {
-    localStorage.setItem('admin_logged_in', 'true');
-    document.getElementById('loginScreen').classList.add('hidden');
-    document.getElementById('adminPanel').classList.remove('hidden');
-    loadOrders();
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const adminDoc = await getDoc(doc(db, 'admins', user.uid));
+    if (adminDoc.exists()) {
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('adminPanel').classList.remove('hidden');
+      document.getElementById('adminEmailDisplay').textContent = user.email;
+      loadOrders();
+    } else {
+      await signOut(auth);
+      const errEl = document.getElementById('adminError');
+      errEl.textContent = '❌ Aap admin nahi hain';
+      errEl.classList.remove('hidden');
+    }
   } else {
-    const errEl = document.getElementById('adminError');
-    errEl.textContent = '❌ Password ghalat hai';
+    document.getElementById('loginScreen').classList.remove('hidden');
+    document.getElementById('adminPanel').classList.add('hidden');
+  }
+});
+
+window.adminLogin = async function(e) {
+  e.preventDefault();
+  const email = document.getElementById('adminEmail').value;
+  const pass = document.getElementById('adminPass').value;
+  const errEl = document.getElementById('adminError');
+  const btn = document.getElementById('loginBtn');
+
+  errEl.classList.add('hidden');
+  btn.textContent = '⏳ Logging in...';
+  btn.disabled = true;
+
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch (err) {
+    let msg = '❌ ';
+    if (err.code === 'auth/user-not-found') msg += 'Yeh email registered nahi';
+    else if (err.code === 'auth/wrong-password') msg += 'Password ghalat hai';
+    else if (err.code === 'auth/invalid-credential') msg += 'Email ya password ghalat hai';
+    else msg += err.message;
+    
+    errEl.textContent = msg;
     errEl.classList.remove('hidden');
+    btn.textContent = '🚀 Login';
+    btn.disabled = false;
   }
 }
 
-window.adminLogout = function() {
-  localStorage.removeItem('admin_logged_in');
+window.adminLogout = async function() {
+  await signOut(auth);
   window.location.reload();
 }
 
@@ -205,7 +230,7 @@ window.loadOrders = async function() {
     renderOrders();
   } catch (err) {
     console.error(err);
-    container.innerHTML = '<p class="text-center text-red-400 py-8">Orders load nahi ho sake</p>';
+    container.innerHTML = '<p class="text-center text-red-400 py-8">Orders load nahi ho sake: ' + err.message + '</p>';
   }
 }
 
