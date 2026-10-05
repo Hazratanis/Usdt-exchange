@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buy USDT — USDT Exchange PK</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💎</text></svg>">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { 
+    theme: {
+      extend: {
+        colors: {
+          'gold': { 50:'#fffbeb',100:'#fef3c7',200:'#fde68a',300:'#fcd34d',400:'#fbbf24',500:'#f59e0b',600:'#d97706',700:'#b45309',800:'#92400e',900:'#78350f' }
+        },
+        fontFamily: { 'display': ['Poppins','sans-serif'], 'body': ['Inter','sans-serif'] }
+      }
+    }
+  }
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Inter', sans-serif; background: #0a0a0a; }
+  h1,h2,h3,h4,h5 { font-family: 'Poppins', sans-serif; }
+  .gold-gradient { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #d97706 100%); }
+  .gold-text { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .black-card { background: linear-gradient(135deg, #141414 0%, #1a1a1a 100%); border: 1px solid #2a2a2a; }
+  .gold-glow { box-shadow: 0 0 30px rgba(245, 158, 11, 0.4); }
+  .input-dark { background: #0a0a0a; border: 2px solid #2a2a2a; color: white; }
+  .input-dark:focus { border-color: #f59e0b; outline: none; }
+  .whatsapp-float { position: fixed; bottom: 24px; right: 24px; z-index: 999; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 10px 30px rgba(37,211,102,0.5); text-decoration: none; }
+</style>
+</head>
+<body class="text-white min-h-screen">
+
+<!-- HEADER -->
+<header class="backdrop-blur-xl bg-black/80 shadow-lg sticky top-0 z-50 border-b border-gold-500/20">
+  <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+    <a href="index.html" class="flex items-center gap-3">
+      <div class="w-10 h-10 gold-gradient rounded-xl flex items-center justify-center text-black font-bold text-lg shadow-lg">💎</div>
+      <div>
+        <h1 class="font-bold text-sm text-white leading-tight">USDT EXCHANGE PK</h1>
+        <p class="text-xs text-gold-400">Buy USDT</p>
+      </div>
+    </a>
+    <a href="index.html" class="text-gray-300 hover:text-gold-400 text-sm font-medium">← Back</a>
+  </div>
+</header>
+
+<!-- BUY FORM -->
+<main class="py-10 px-4">
+  <div class="container mx-auto max-w-2xl">
+    <div class="text-center mb-8">
+      <div class="w-16 h-16 gold-gradient rounded-2xl flex items-center justify-center text-3xl shadow-lg gold-glow mx-auto mb-4">💰</div>
+      <h2 class="text-3xl font-black text-white mb-2">Buy USDT</h2>
+      <p class="text-gold-400 font-semibold">Rate: Rs. 290 per USDT</p>
+    </div>
+
+    <!-- STEP 1: Amount -->
+    <div class="black-card rounded-3xl p-6 mb-6">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-8 h-8 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">1</div>
+        <h3 class="font-bold text-lg text-white">Amount Daalein</h3>
+      </div>
+      
+      <label class="block text-gray-400 text-sm mb-2">Kitne PKR ka USDT chahiye?</label>
+      <div class="relative">
+        <input type="number" id="pkrAmount" oninput="calculateUSDT()" placeholder="5000" 
+               class="input-dark w-full px-5 py-4 rounded-xl text-lg font-bold pr-20">
+        <span class="absolute right-5 top-1/2 -translate-y-1/2 text-gold-400 font-bold">PKR</span>
+      </div>
+
+      <div class="mt-4 p-4 bg-gold-500/10 border border-gold-500/30 rounded-xl">
+        <div class="flex justify-between items-center mb-2">
+          <span class="text-gray-400 text-sm">Aapko milega:</span>
+          <span class="text-2xl font-black gold-text" id="usdtReceive">0.00 USDT</span>
+        </div>
+        <div class="flex justify-between text-xs text-gray-500">
+          <span>Rate: Rs. 290/USDT</span>
+          <span id="feeInfo">No hidden fees</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: Payment Info -->
+    <div class="black-card rounded-3xl p-6 mb-6">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-8 h-8 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">2</div>
+        <h3 class="font-bold text-lg text-white">Payment Karein</h3>
+      </div>
+      
+      <div class="bg-gradient-to-br from-green-900/30 to-emerald-900/30 border-2 border-green-500/40 rounded-2xl p-5">
+        <p class="text-xs text-green-300 font-bold uppercase mb-3">💳 JazzCash Payment</p>
+        
+        <div class="space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-sm text-gray-400">Account Number:</span>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-white text-lg">03187193663</span>
+              <button onclick="copyText('03187193663')" class="text-gold-400 hover:text-gold-300 text-sm">📋</button>
+            </div>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-sm text-gray-400">Account Name:</span>
+            <span class="font-bold text-white">HAZRAT ANAS</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-sm text-gray-400">Amount:</span>
+            <span class="font-bold text-gold-400" id="payAmount">Rs. 0</span>
+          </div>
+        </div>
+        
+        <p class="text-xs text-green-400 mt-4">💡 Payment ke baad TRX ID aur screenshot neeche upload karein</p>
+      </div>
+    </div>
+
+    <!-- STEP 3: Wallet + TXID -->
+    <div class="black-card rounded-3xl p-6 mb-6">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-8 h-8 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">3</div>
+        <h3 class="font-bold text-lg text-white">Details Dein</h3>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-gray-400 text-sm mb-2">Aapka Naam *</label>
+          <input type="text" id="userName" placeholder="Muhammad Ali" class="input-dark w-full px-4 py-3 rounded-xl">
+        </div>
+        <div>
+          <label class="block text-gray-400 text-sm mb-2">WhatsApp Number *</label>
+          <input type="tel" id="userPhone" placeholder="03XX-XXXXXXX" class="input-dark w-full px-4 py-3 rounded-xl">
+        </div>
+        <div>
+          <label class="block text-gray-400 text-sm mb-2">Binance UID / USDT Wallet Address *</label>
+          <input type="text" id="userWallet" placeholder="499961684 ya 0x..." class="input-dark w-full px-4 py-3 rounded-xl">
+        </div>
+        <div>
+          <label class="block text-gray-400 text-sm mb-2">JazzCash TRX ID *</label>
+          <input type="text" id="trxId" placeholder="Transaction ID" class="input-dark w-full px-4 py-3 rounded-xl">
+        </div>
+        <div>
+          <label class="block text-gray-400 text-sm mb-2">Payment Screenshot (optional)</label>
+          <input type="file" id="screenshot" accept="image/*" class="input-dark w-full px-4 py-3 rounded-xl text-sm">
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <button onclick="submitOrder()" class="w-full gold-gradient text-black font-bold py-5 rounded-2xl text-lg shadow-xl hover:shadow-2xl transition">
+      🚀 Submit Order on WhatsApp
+    </button>
+
+    <p class="text-center text-xs text-gray-500 mt-4">Order submit karne ke baad admin verify karega — usually 5-30 minutes</p>
+  </div>
+</main>
+
+<a href="https://wa.me/923169113663" class="whatsapp-float" target="_blank">💬</a>
+
+<script>
+function calculateUSDT() {
+  const pkr = parseFloat(document.getElementById('pkrAmount').value) || 0;
+  const rate = 290;
+  const usdt = pkr / rate;
+  document.getElementById('usdtReceive').textContent = usdt.toFixed(2) + ' USDT';
+  document.getElementById('payAmount').textContent = 'Rs. ' + pkr.toLocaleString();
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text);
+  alert('Copied: ' + text);
+}
+
+function submitOrder() {
+  const name = document.getElementById('userName').value;
+  const phone = document.getElementById('userPhone').value;
+  const wallet = document.getElementById('userWallet').value;
+  const trxId = document.getElementById('trxId').value;
+  const pkr = document.getElementById('pkrAmount').value;
+  const usdt = document.getElementById('usdtReceive').textContent;
+
+  if (!name || !phone || !wallet || !trxId || !pkr) {
+    alert('❌ Sab fields bhar dein!');
+    return;
+  }
+
+  let text = `🛒 *NEW BUY ORDER — USDT EXCHANGE PK*\n\n`;
+  text += `📦 *Type:* Buy USDT\n`;
+  text += `💰 *PKR Amount:* Rs. ${pkr}\n`;
+  text += `💎 *USDT Amount:* ${usdt}\n`;
+  text += `📊 *Rate:* Rs. 290/USDT\n\n`;
+  text += `👤 *Name:* ${name}\n`;
+  text += `📱 *WhatsApp:* ${phone}\n`;
+  text += `💼 *Wallet:* ${wallet}\n`;
+  text += `🔢 *TRX ID:* ${trxId}\n\n`;
+  text += `━━━━━━━━━━━━━━━\n`;
+  text += `✅ Please verify my payment and send USDT.`;
+
+  window.open(`https://wa.me/923169113663?text=${encodeURIComponent(text)}`, '_blank');
+}
+
+setTimeout(() => calculateUSDT(), 500);
+</script>
+
+</body>
+</html>
