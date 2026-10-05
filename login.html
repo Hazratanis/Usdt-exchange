@@ -24,7 +24,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  /* RESET + NO SCROLL + NO ZOOM */
   * {
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
@@ -44,7 +43,6 @@
     bottom: 0;
   }
   
-  /* DISABLE TEXT SELECTION */
   body {
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -55,7 +53,6 @@
     touch-action: pan-y;
   }
   
-  /* ALLOW SELECTION IN INPUTS */
   input, textarea {
     -webkit-user-select: text;
     -moz-user-select: text;
@@ -94,7 +91,6 @@
   }
   .input-dark::placeholder { color: #4a4a4a; }
   
-  /* SCROLL CONTAINER */
   .scroll-container {
     width: 100%;
     height: 100%;
@@ -109,7 +105,6 @@
     min-height: 100%;
   }
   
-  /* BLOB */
   .blob { 
     position: fixed; 
     border-radius: 50%; 
@@ -125,30 +120,25 @@
     66%{transform:translate(-20px,20px) scale(0.9)} 
   }
   
-  /* BUTTON */
   .btn-primary { 
     transition: all 0.2s ease; 
     -webkit-tap-highlight-color: transparent;
   }
   .btn-primary:active { transform: scale(0.98); }
   
-  /* MODAL */
   .modal-backdrop {
     background: rgba(0, 0, 0, 0.92);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
   
-  /* PREVENT ZOOM ON INPUT FOCUS */
   @media screen and (max-width: 768px) {
     input, select, textarea { font-size: 16px !important; }
   }
   
-  /* SCROLLBAR HIDE */
   .scroll-container::-webkit-scrollbar { display: none; }
   .scroll-container { -ms-overflow-style: none; scrollbar-width: none; }
   
-  /* SAFE AREA FOR IPHONE */
   @supports (padding: max(0px)) {
     .scroll-container {
       padding-top: max(20px, env(safe-area-inset-top));
@@ -328,7 +318,8 @@ import {
   browserLocalPersistence, 
   browserSessionPersistence, 
   GoogleAuthProvider, 
-  signInWithPopup 
+  signInWithPopup,
+  fetchSignInMethodsForEmail
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -345,7 +336,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// PREVENT ZOOM ON DOUBLE TAP
+// PREVENT ZOOM
 let lastTouchEnd = 0;
 document.addEventListener('touchend', function(event) {
   const now = (new Date()).getTime();
@@ -355,7 +346,6 @@ document.addEventListener('touchend', function(event) {
   lastTouchEnd = now;
 }, false);
 
-// PREVENT ZOOM WITH GESTURES
 document.addEventListener('gesturestart', function(e) {
   e.preventDefault();
 });
@@ -468,27 +458,66 @@ window.closeForgotModal = function() {
   document.getElementById('forgotModal').classList.remove('flex');
 }
 
+// SEND RESET LINK (with email check)
 window.sendResetLink = async function(e) {
   e.preventDefault();
   const email = document.getElementById('resetEmail').value.trim();
   const btn = document.getElementById('resetBtn');
   const msgEl = document.getElementById('resetMessage');
 
-  btn.textContent = '⏳ Sending...';
+  if (!email) {
+    msgEl.className = 'text-xs text-center mt-3 text-red-400';
+    msgEl.textContent = '❌ Please enter your email';
+    msgEl.classList.remove('hidden');
+    return;
+  }
+
+  btn.textContent = '⏳ Checking...';
   btn.disabled = true;
   msgEl.classList.add('hidden');
 
   try {
+    // Step 1: Check if email exists
+    const methods = await fetchSignInMethodsForEmail(auth, email);
+    
+    if (methods.length === 0) {
+      msgEl.className = 'text-xs text-center mt-3 text-red-400';
+      msgEl.textContent = '❌ This email is not registered. Please create an account first.';
+      msgEl.classList.remove('hidden');
+      btn.textContent = '📨 Send Reset Link';
+      btn.disabled = false;
+      return;
+    }
+
+    // Step 2: If Google-only account
+    if (methods.includes('google.com') && !methods.includes('password')) {
+      msgEl.className = 'text-xs text-center mt-3 text-yellow-400';
+      msgEl.textContent = '⚠️ This email uses Google Sign-In. Please login with Google instead.';
+      msgEl.classList.remove('hidden');
+      btn.textContent = '📨 Send Reset Link';
+      btn.disabled = false;
+      return;
+    }
+
+    // Step 3: Send reset email
     await sendPasswordResetEmail(auth, email);
     msgEl.className = 'text-xs text-center mt-3 text-green-400';
-    msgEl.textContent = '✅ Reset link sent! Check your email.';
+    msgEl.textContent = '✅ Reset link sent! Check your email inbox and spam folder.';
     msgEl.classList.remove('hidden');
     btn.textContent = '✅ Email Sent';
     btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+
+    setTimeout(() => {
+      btn.textContent = '📨 Send Reset Link';
+      btn.style.background = '';
+      btn.disabled = false;
+    }, 30000);
+
   } catch (err) {
     let msg = '❌ ';
-    if (err.code === 'auth/user-not-found') msg += 'Email not registered';
-    else if (err.code === 'auth/invalid-email') msg += 'Invalid email';
+    if (err.code === 'auth/user-not-found') msg += 'This email is not registered';
+    else if (err.code === 'auth/invalid-email') msg += 'Invalid email address';
+    else if (err.code === 'auth/too-many-requests') msg += 'Too many attempts. Wait a few minutes.';
     else msg += err.message;
     
     msgEl.className = 'text-xs text-center mt-3 text-red-400';
