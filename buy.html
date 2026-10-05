@@ -62,10 +62,10 @@
     <div class="black-card rounded-3xl p-6 mb-6">
       <div class="flex items-center gap-2 mb-4">
         <div class="w-8 h-8 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">1</div>
-        <h3 class="font-bold text-lg text-white">Amount Daalein</h3>
+        <h3 class="font-bold text-lg text-white">Enter Amount</h3>
       </div>
       
-      <label class="block text-gray-400 text-sm mb-2">Kitne PKR ka USDT chahiye?</label>
+      <label class="block text-gray-400 text-sm mb-2">How much PKR do you want to spend?</label>
       <div class="relative">
         <input type="number" id="pkrAmount" oninput="calculateUSDT()" placeholder="5000" 
                class="input-dark w-full px-5 py-4 rounded-xl text-lg font-bold pr-20">
@@ -74,7 +74,7 @@
 
       <div class="mt-4 p-4 bg-gold-500/10 border border-gold-500/30 rounded-xl">
         <div class="flex justify-between items-center mb-2">
-          <span class="text-gray-400 text-sm">Aapko milega:</span>
+          <span class="text-gray-400 text-sm">You will receive:</span>
           <span class="text-2xl font-black gold-text" id="usdtReceive">0.00 USDT</span>
         </div>
         <div class="flex justify-between text-xs text-gray-500">
@@ -88,7 +88,7 @@
     <div class="black-card rounded-3xl p-6 mb-6">
       <div class="flex items-center gap-2 mb-4">
         <div class="w-8 h-8 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">2</div>
-        <h3 class="font-bold text-lg text-white">Payment Karein</h3>
+        <h3 class="font-bold text-lg text-white">Make Payment</h3>
       </div>
       
       <div class="bg-gradient-to-br from-green-900/30 to-emerald-900/30 border-2 border-green-500/40 rounded-2xl p-5">
@@ -112,7 +112,7 @@
           </div>
         </div>
         
-        <p class="text-xs text-green-400 mt-4">💡 Payment ke baad TRX ID aur screenshot neeche upload karein</p>
+        <p class="text-xs text-green-400 mt-4">💡 After payment, upload TRX ID and screenshot below</p>
       </div>
     </div>
 
@@ -120,40 +120,40 @@
     <div class="black-card rounded-3xl p-6 mb-6">
       <div class="flex items-center gap-2 mb-4">
         <div class="w-8 h-8 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">3</div>
-        <h3 class="font-bold text-lg text-white">Payment Details Dein</h3>
+        <h3 class="font-bold text-lg text-white">Enter Payment Details</h3>
       </div>
 
       <div class="space-y-5">
         <!-- FIELD 1 -->
         <div>
-          <label class="block text-gray-300 text-sm mb-2 font-medium">👤 Jis account se payment bheji uska naam *</label>
-          <input type="text" id="senderName" placeholder="Jaise: Ali Ahmed" class="input-dark w-full px-4 py-3 rounded-xl">
-          <p class="text-xs text-gray-500 mt-1">JazzCash/Easypaisa account holder ka naam</p>
+          <label class="block text-gray-300 text-sm mb-2 font-medium">👤 Account Holder Name (from which you sent payment) *</label>
+          <input type="text" id="senderName" placeholder="e.g., Ali Ahmed" class="input-dark w-full px-4 py-3 rounded-xl">
+          <p class="text-xs text-gray-500 mt-1">The name on the JazzCash/Easypaisa account you sent from</p>
         </div>
 
         <!-- FIELD 2 -->
         <div>
-          <label class="block text-gray-300 text-sm mb-2 font-medium">💰 Kitna amount bheja hai? *</label>
-          <input type="number" id="amountSent" placeholder="Jaise: 2000" class="input-dark w-full px-4 py-3 rounded-xl">
-          <p class="text-xs text-gray-500 mt-1">JazzCash se jo amount bheji</p>
+          <label class="block text-gray-300 text-sm mb-2 font-medium">💰 Amount You Sent *</label>
+          <input type="number" id="amountSent" placeholder="e.g., 2000" class="input-dark w-full px-4 py-3 rounded-xl">
+          <p class="text-xs text-gray-500 mt-1">The exact amount you transferred via JazzCash</p>
         </div>
 
         <!-- FIELD 3 -->
         <div>
-          <label class="block text-gray-300 text-sm mb-2 font-medium">💎 USDT kahan receive karna hai? *</label>
+          <label class="block text-gray-300 text-sm mb-2 font-medium">💎 Where should we send your USDT? *</label>
           
           <div class="grid grid-cols-2 gap-3 mb-4">
             <button type="button" onclick="selectMethod('binance')" id="btnBinance" 
                     class="p-4 rounded-xl border-2 border-gold-500 bg-gold-500/20 transition text-center">
               <div class="text-3xl mb-1">🟡</div>
               <p class="font-bold text-sm text-white">Binance UID</p>
-              <p class="text-xs text-gray-400 mt-1">Binance par receive</p>
+              <p class="text-xs text-gray-400 mt-1">Receive on Binance</p>
             </button>
             <button type="button" onclick="selectMethod('wallet')" id="btnWallet"
                     class="p-4 rounded-xl border-2 border-gray-700 hover:border-gold-500/50 transition text-center">
               <div class="text-3xl mb-1">💼</div>
               <p class="font-bold text-sm text-white">Wallet Address</p>
-              <p class="text-xs text-gray-400 mt-1">Kisi bhi wallet par</p>
+              <p class="text-xs text-gray-400 mt-1">Any USDT wallet</p>
             </button>
           </div>
 
@@ -161,11 +161,11 @@
           <div id="binanceFields" class="space-y-4">
             <div>
               <label class="block text-gray-400 text-sm mb-2">Binance UID *</label>
-              <input type="text" id="binanceUid" placeholder="Jaise: 499961684" class="input-dark w-full px-4 py-3 rounded-xl">
+              <input type="text" id="binanceUid" placeholder="e.g., 499961684" class="input-dark w-full px-4 py-3 rounded-xl">
             </div>
             <div>
               <label class="block text-gray-400 text-sm mb-2">Binance Account Name *</label>
-              <input type="text" id="binanceName" placeholder="Jaise: Muhammad Ali" class="input-dark w-full px-4 py-3 rounded-xl">
+              <input type="text" id="binanceName" placeholder="e.g., Muhammad Ali" class="input-dark w-full px-4 py-3 rounded-xl">
             </div>
           </div>
 
@@ -174,7 +174,7 @@
             <div>
               <label class="block text-gray-400 text-sm mb-2">USDT Wallet Address (BEP20) *</label>
               <input type="text" id="walletAddress" placeholder="0x..." class="input-dark w-full px-4 py-3 rounded-xl">
-              <p class="text-xs text-gray-500 mt-1">BEP20 network ka address</p>
+              <p class="text-xs text-gray-500 mt-1">Your BEP20 network wallet address</p>
             </div>
           </div>
         </div>
@@ -183,14 +183,14 @@
         <div>
           <label class="block text-gray-300 text-sm mb-2 font-medium">🔢 JazzCash TRX ID *</label>
           <input type="text" id="trxId" placeholder="Transaction ID" class="input-dark w-full px-4 py-3 rounded-xl">
-          <p class="text-xs text-gray-500 mt-1">JazzCash app se transaction ID copy karein</p>
+          <p class="text-xs text-gray-500 mt-1">Copy the transaction ID from your JazzCash app</p>
         </div>
 
         <!-- Screenshot -->
         <div>
           <label class="block text-gray-300 text-sm mb-2 font-medium">📸 Payment Screenshot *</label>
           <input type="file" id="screenshot" accept="image/*" class="input-dark w-full px-4 py-3 rounded-xl text-sm">
-          <p class="text-xs text-gray-500 mt-1">Payment ka screenshot upload karein (Max 2MB)</p>
+          <p class="text-xs text-gray-500 mt-1">Upload payment screenshot (Max 2MB)</p>
         </div>
       </div>
     </div>
@@ -199,7 +199,7 @@
       🚀 Submit Order
     </button>
 
-    <p class="text-center text-xs text-gray-500 mt-4">Order submit karne ke baad admin verify karega</p>
+    <p class="text-center text-xs text-gray-500 mt-4">After submitting, admin will verify your order</p>
   </div>
 </main>
 
@@ -209,7 +209,7 @@
     <div class="text-center mb-6">
       <div class="w-20 h-20 gold-gradient rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-lg gold-glow">✅</div>
       <h3 class="text-2xl font-black text-white mb-2">Order Submitted!</h3>
-      <p class="text-gray-400 text-sm">Aapka order successfully submit ho gaya hai</p>
+      <p class="text-gray-400 text-sm">Your order has been submitted successfully</p>
     </div>
 
     <div class="bg-gold-500/10 border-2 border-gold-500/30 rounded-2xl p-4 mb-5">
@@ -230,10 +230,10 @@
     <div class="bg-blue-900/20 border-2 border-blue-500/40 rounded-2xl p-4 mb-5">
       <p class="text-blue-300 text-sm font-semibold mb-2">⏰ Important Information:</p>
       <p class="text-gray-300 text-sm leading-relaxed mb-3">
-        Aapka order <strong class="text-white">minimum 30 minutes</strong> se <strong class="text-white">maximum 2 hours</strong> tak complete ho jayega.
+        Your order will be completed in <strong class="text-white">minimum 30 minutes</strong> to <strong class="text-white">maximum 2 hours</strong>.
       </p>
       <p class="text-gray-300 text-sm leading-relaxed">
-        Agar 2 ghante ke baad bhi order complete nahi hota, toh WhatsApp par contact karein.
+        If your order is not completed after 2 hours, please contact us on WhatsApp.
       </p>
     </div>
 
@@ -321,7 +321,7 @@ window.submitOrder = async function() {
   if (isSubmitting) return;
 
   if (!currentUser) {
-    alert('❌ Pehle login karein');
+    alert('❌ Please login first');
     window.location.href = 'login.html';
     return;
   }
@@ -339,29 +339,29 @@ window.submitOrder = async function() {
     binanceUid = document.getElementById('binanceUid').value.trim();
     binanceName = document.getElementById('binanceName').value.trim();
     if (!binanceUid || !binanceName) {
-      alert('❌ Binance UID aur Name bhar dein!');
+      alert('❌ Please fill in Binance UID and Name!');
       return;
     }
   } else {
     walletAddress = document.getElementById('walletAddress').value.trim();
     if (!walletAddress) {
-      alert('❌ Wallet Address bhar dein!');
+      alert('❌ Please fill in Wallet Address!');
       return;
     }
   }
 
   if (!senderName || !amountSent || !trxId || !pkr) {
-    alert('❌ Sab fields bhar dein!');
+    alert('❌ Please fill in all fields!');
     return;
   }
 
   if (!screenshotFile) {
-    alert('❌ Payment screenshot upload karein!');
+    alert('❌ Please upload payment screenshot!');
     return;
   }
 
   if (screenshotFile.size > 2 * 1024 * 1024) {
-    alert('❌ Screenshot 2MB se choti honi chahiye!');
+    alert('❌ Screenshot must be less than 2MB!');
     return;
   }
 
@@ -373,7 +373,7 @@ window.submitOrder = async function() {
     );
     const pendingSnap = await getDocs(pendingQuery);
     if (pendingSnap.size >= 3) {
-      alert('❌ Aapke paas 3 pending orders hain. Pehle unhe complete karwayein.');
+      alert('❌ You have 3 pending orders. Please wait for them to complete.');
       return;
     }
   } catch (err) {
