@@ -39,7 +39,6 @@
 <div class="blob bg-yellow-500 w-80 h-80 bottom-0 -right-20" style="animation-delay: 2s;"></div>
 
 <div class="w-full max-w-md relative z-10 py-6">
-  <!-- LOGO -->
   <div class="text-center mb-6">
     <a href="index.html" class="inline-flex items-center gap-3">
       <div class="w-16 h-16 gold-gradient rounded-2xl flex items-center justify-center text-black font-bold text-3xl shadow-lg gold-glow">💎</div>
@@ -48,7 +47,6 @@
     <p class="text-gray-400 text-sm mt-1">Join USDT Exchange PK</p>
   </div>
 
-  <!-- REGISTER FORM -->
   <div class="black-card rounded-3xl p-6">
     <form onsubmit="handleRegister(event)" class="space-y-4">
       <div>
@@ -91,7 +89,7 @@
         </label>
       </div>
 
-      <button type="submit" class="w-full gold-gradient text-black font-bold py-4 rounded-xl text-lg shadow-lg gold-glow hover:shadow-2xl transition">
+      <button type="submit" id="registerBtn" class="w-full gold-gradient text-black font-bold py-4 rounded-xl text-lg shadow-lg gold-glow hover:shadow-2xl transition">
         ✨ Create Account
       </button>
     </form>
@@ -106,19 +104,35 @@
     </div>
   </div>
 
-  <!-- BACK TO HOME -->
   <div class="text-center mt-6">
     <a href="index.html" class="text-gray-500 hover:text-gold-400 text-sm">← Back to Home</a>
   </div>
 </div>
 
-<script>
-function togglePass(id) {
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDPFC3gtvKQxmlddLpabMYx6IZe0B0I9zE",
+  authDomain: "usdt-exchange-24226.firebaseapp.com",
+  projectId: "usdt-exchange-24226",
+  storageBucket: "usdt-exchange-24226.firebasestorage.app",
+  messagingSenderId: "1024697758253",
+  appId: "1:1024697758253:web:8894b945db08d6536e3ea4"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.togglePass = function(id) {
   const pass = document.getElementById(id);
   pass.type = pass.type === 'password' ? 'text' : 'password';
 }
 
-function handleRegister(e) {
+window.handleRegister = async function(e) {
   e.preventDefault();
   const name = document.getElementById('regName').value;
   const email = document.getElementById('regEmail').value;
@@ -126,6 +140,9 @@ function handleRegister(e) {
   const pass = document.getElementById('regPass').value;
   const pass2 = document.getElementById('regPass2').value;
   const errEl = document.getElementById('registerError');
+  const btn = document.getElementById('registerBtn');
+
+  errEl.classList.add('hidden');
 
   if (pass !== pass2) {
     errEl.textContent = '❌ Passwords match nahi karte';
@@ -139,14 +156,36 @@ function handleRegister(e) {
     return;
   }
 
-  // Demo register (backend baad mein)
-  localStorage.setItem('user_name', name);
-  localStorage.setItem('user_email', email);
-  localStorage.setItem('user_phone', phone);
-  localStorage.setItem('user_logged_in', 'true');
+  btn.textContent = '⏳ Creating account...';
+  btn.disabled = true;
 
-  // Dashboard par le jao
-  window.location.href = 'dashboard.html';
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+    const user = userCredential.user;
+
+    await updateProfile(user, { displayName: name });
+
+    await setDoc(doc(db, 'users', user.uid), {
+      name: name,
+      email: email,
+      phone: phone,
+      balance: 0,
+      createdAt: new Date().toISOString()
+    });
+
+    window.location.href = 'dashboard.html';
+  } catch (err) {
+    let msg = '❌ ';
+    if (err.code === 'auth/email-already-in-use') msg += 'Yeh email pehle se registered hai. Login karein.';
+    else if (err.code === 'auth/invalid-email') msg += 'Email sahi nahi hai';
+    else if (err.code === 'auth/weak-password') msg += 'Password kamzor hai (6+ characters)';
+    else msg += err.message;
+    
+    errEl.textContent = msg;
+    errEl.classList.remove('hidden');
+    btn.textContent = '✨ Create Account';
+    btn.disabled = false;
+  }
 }
 </script>
 
