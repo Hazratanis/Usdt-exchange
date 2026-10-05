@@ -124,73 +124,80 @@
     </div>
 
     <!-- STEP 3 -->
-    <div class="black-card rounded-3xl p-6 mb-6">
-      <div class="flex items-center gap-2 mb-4">
-        <div class="w-8 h-8 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">3</div>
-        <h3 class="font-bold text-lg text-white">Enter Payment Details</h3>
+<div class="black-card rounded-3xl p-6 mb-6">
+  <div class="flex items-center gap-2 mb-4">
+    <div class="w-8 h-8 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">3</div>
+    <h3 class="font-bold text-lg text-white">Enter Payment Details</h3>
+  </div>
+
+  <div class="space-y-5">
+    <!-- SENDER NAME -->
+    <div>
+      <label class="block text-gray-300 text-sm mb-2 font-medium">👤 Account Holder Name (from which you sent payment) *</label>
+      <input type="text" id="senderName" placeholder="e.g., Ali Ahmed" class="input-dark w-full px-4 py-3 rounded-xl">
+    </div>
+
+    <!-- AMOUNT SENT -->
+    <div>
+      <label class="block text-gray-300 text-sm mb-2 font-medium">💰 Amount You Sent (PKR) *</label>
+      <input type="number" id="amountSent" placeholder="e.g., 2000" class="input-dark w-full px-4 py-3 rounded-xl">
+    </div>
+
+    <!-- TRX ID -->
+    <div>
+      <label class="block text-gray-300 text-sm mb-2 font-medium">🔢 JazzCash TRX ID *</label>
+      <input type="text" id="trxId" placeholder="Transaction ID" class="input-dark w-full px-4 py-3 rounded-xl">
+    </div>
+
+    <!-- SCREENSHOT -->
+    <div>
+      <label class="block text-gray-300 text-sm mb-2 font-medium">📸 Payment Screenshot *</label>
+      <input type="file" id="screenshot" accept="image/*" class="input-dark w-full px-4 py-3 rounded-xl text-sm">
+      <p class="text-xs text-gray-500 mt-1">Max 1MB — compress your screenshot</p>
+    </div>
+
+    <!-- RECEIVE METHOD -->
+    <div>
+      <label class="block text-gray-300 text-sm mb-2 font-medium">💎 Where should we send your USDT? *</label>
+      
+      <div class="grid grid-cols-2 gap-3 mb-4">
+        <button type="button" onclick="selectMethod('binance')" id="btnBinance" 
+                class="p-4 rounded-xl border-2 border-gold-500 bg-gold-500/20 transition text-center">
+          <div class="text-3xl mb-1">🟡</div>
+          <p class="font-bold text-sm text-white">Binance UID</p>
+          <p class="text-xs text-gray-400 mt-1">Receive on Binance</p>
+        </button>
+        <button type="button" onclick="selectMethod('wallet')" id="btnWallet"
+                class="p-4 rounded-xl border-2 border-gray-700 hover:border-gold-500/50 transition text-center">
+          <div class="text-3xl mb-1">💼</div>
+          <p class="font-bold text-sm text-white">Wallet Address</p>
+          <p class="text-xs text-gray-400 mt-1">Any USDT wallet</p>
+        </button>
       </div>
 
-      <div class="space-y-5">
+      <!-- BINANCE FIELDS -->
+      <div id="binanceFields" class="space-y-4">
         <div>
-          <label class="block text-gray-300 text-sm mb-2 font-medium">👤 Account Holder Name (from which you sent payment) *</label>
-          <input type="text" id="senderName" placeholder="e.g., Ali Ahmed" class="input-dark w-full px-4 py-3 rounded-xl">
+          <label class="block text-gray-400 text-sm mb-2">Binance UID *</label>
+          <input type="text" id="binanceUid" placeholder="e.g., 499961684" class="input-dark w-full px-4 py-3 rounded-xl">
         </div>
-
         <div>
-          <label class="block text-gray-300 text-sm mb-2 font-medium">💰 Amount You Sent (PKR) *</label>
-          <input type="number" id="amountSent" placeholder="e.g., 2000" class="input-dark w-full px-4 py-3 rounded-xl">
+          <label class="block text-gray-400 text-sm mb-2">Binance Account Name *</label>
+          <input type="text" id="binanceName" placeholder="e.g., Muhammad Ali" class="input-dark w-full px-4 py-3 rounded-xl">
         </div>
+      </div>
 
+      <!-- WALLET FIELDS -->
+      <div id="walletFields" class="space-y-4 hidden">
         <div>
-          <label class="block text-gray-300 text-sm mb-2 font-medium">💎 Where should we send your USDT? *</label>
-          
-          <div class="grid grid-cols-2 gap-3 mb-4">
-            <button type="button" onclick="selectMethod('binance')" id="btnBinance" 
-                    class="p-4 rounded-xl border-2 border-gold-500 bg-gold-500/20 transition text-center">
-              <div class="text-3xl mb-1">🟡</div>
-              <p class="font-bold text-sm text-white">Binance UID</p>
-              <p class="text-xs text-gray-400 mt-1">Receive on Binance</p>
-            </button>
-            <button type="button" onclick="selectMethod('wallet')" id="btnWallet"
-                    class="p-4 rounded-xl border-2 border-gray-700 hover:border-gold-500/50 transition text-center">
-              <div class="text-3xl mb-1">💼</div>
-              <p class="font-bold text-sm text-white">Wallet Address</p>
-              <p class="text-xs text-gray-400 mt-1">Any USDT wallet</p>
-            </button>
-          </div>
-
-          <div id="binanceFields" class="space-y-4">
-            <div>
-              <label class="block text-gray-400 text-sm mb-2">Binance UID *</label>
-              <input type="text" id="binanceUid" placeholder="e.g., 499961684" class="input-dark w-full px-4 py-3 rounded-xl">
-            </div>
-            <div>
-              <label class="block text-gray-400 text-sm mb-2">Binance Account Name *</label>
-              <input type="text" id="binanceName" placeholder="e.g., Muhammad Ali" class="input-dark w-full px-4 py-3 rounded-xl">
-            </div>
-          </div>
-
-          <div id="walletFields" class="space-y-4 hidden">
-            <div>
-              <label class="block text-gray-400 text-sm mb-2">USDT Wallet Address (BEP20) *</label>
-              <input type="text" id="walletAddress" placeholder="0x..." class="input-dark w-full px-4 py-3 rounded-xl">
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-gray-300 text-sm mb-2 font-medium">🔢 JazzCash TRX ID *</label>
-          <input type="text" id="trxId" placeholder="Transaction ID" class="input-dark w-full px-4 py-3 rounded-xl">
-        </div>
-
-        <div>
-          <label class="block text-gray-300 text-sm mb-2 font-medium">📸 Payment Screenshot *</label>
-          <input type="file" id="screenshot" accept="image/*" class="input-dark w-full px-4 py-3 rounded-xl text-sm">
-          <p class="text-xs text-gray-500 mt-1">Max 2MB</p>
+          <label class="block text-gray-400 text-sm mb-2">USDT Wallet Address (BEP20) *</label>
+          <input type="text" id="walletAddress" placeholder="0x..." class="input-dark w-full px-4 py-3 rounded-xl">
+          <p class="text-xs text-gray-500 mt-1">Your BEP20 network wallet address</p>
         </div>
       </div>
     </div>
-
+  </div>
+</div>
     <button onclick="submitOrder()" id="submitBtn" class="w-full gold-gradient text-black font-bold py-5 rounded-2xl text-lg shadow-xl hover:shadow-2xl transition">
       🚀 Submit Order
     </button>
