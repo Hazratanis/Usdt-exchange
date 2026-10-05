@@ -96,24 +96,21 @@
       <div class="bg-gradient-to-br from-green-900/30 to-emerald-900/30 border-2 border-green-500/40 rounded-2xl p-5">
         <p class="text-xs text-green-300 font-bold uppercase mb-3">💳 JazzCash Payment</p>
         
-        <div class="space-y-3">
-          <div class="flex justify-between items-center">
-            <span class="text-sm text-gray-400">Account Number:</span>
+        <div class="space-y-4">
+          <div>
+            <p class="text-xs text-gray-400 mb-1">Account Number:</p>
             <div class="flex items-center gap-2">
-              <span class="font-bold text-white text-lg">03187193663</span>
-              <button onclick="copyText('03187193663')" class="text-gold-400 hover:text-gold-300 text-sm bg-gold-500/20 px-2 py-1 rounded-lg">📋 Copy</button>
+              <span class="font-bold text-white text-lg flex-1">03187193663</span>
+              <button onclick="copyText('03187193663')" class="text-gold-400 hover:text-gold-300 text-sm bg-gold-500/20 px-3 py-2 rounded-lg font-semibold">📋 Copy</button>
             </div>
           </div>
-          <div class="flex justify-between items-center">
-            <span class="text-sm text-gray-400">Account Name:</span>
-            <div class="flex items-center gap-2">
-              <span class="font-bold text-white">HAZRAT ANAS</span>
-              <button onclick="copyText('HAZRAT ANAS')" class="text-gold-400 hover:text-gold-300 text-sm bg-gold-500/20 px-2 py-1 rounded-lg">📋 Copy</button>
-            </div>
+          <div>
+            <p class="text-xs text-gray-400 mb-1">Account Name:</p>
+            <p class="font-bold text-white">HAZRAT ANAS</p>
           </div>
-          <div class="flex justify-between items-center">
-            <span class="text-sm text-gray-400">Amount:</span>
-            <span class="font-bold text-gold-400" id="payAmount">Rs. 0</span>
+          <div>
+            <p class="text-xs text-gray-400 mb-1">Amount:</p>
+            <p class="font-bold text-gold-400 text-lg" id="payAmount">Rs. 0</p>
           </div>
         </div>
         
@@ -144,6 +141,11 @@
         <div>
           <label class="block text-gray-400 text-sm mb-2">JazzCash TRX ID *</label>
           <input type="text" id="trxId" placeholder="Transaction ID" class="input-dark w-full px-4 py-3 rounded-xl">
+        </div>
+        <div>
+          <label class="block text-gray-400 text-sm mb-2">Payment Screenshot *</label>
+          <input type="file" id="screenshot" accept="image/*" class="input-dark w-full px-4 py-3 rounded-xl text-sm">
+          <p class="text-xs text-gray-500 mt-1">Payment ka screenshot upload karein (Max 2MB)</p>
         </div>
       </div>
     </div>
@@ -191,7 +193,7 @@
     </div>
 
     <div class="flex flex-col gap-3">
-      <a href="https://wa.me/923169113663?text=Assalam%20o%20Alaikum%2C%20mera%20order%20ID%20hai%3A%20" 
+      <a href="#" 
          target="_blank"
          id="whatsappContactBtn"
          class="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white text-center font-bold py-4 rounded-xl transition shadow-lg">
@@ -225,6 +227,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 let currentUser = null;
+let isSubmitting = false;
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -247,7 +250,18 @@ window.copyText = function(text) {
   alert('✅ Copied: ' + text);
 }
 
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+}
+
 window.submitOrder = async function() {
+  if (isSubmitting) return;
+
   if (!currentUser) {
     alert('❌ Pehle login karein');
     window.location.href = 'login.html';
@@ -260,13 +274,23 @@ window.submitOrder = async function() {
   const trxId = document.getElementById('trxId').value.trim();
   const pkr = document.getElementById('pkrAmount').value;
   const usdt = document.getElementById('usdtReceive').textContent;
+  const screenshotFile = document.getElementById('screenshot').files[0];
 
   if (!name || !phone || !wallet || !trxId || !pkr) {
     alert('❌ Sab fields bhar dein!');
     return;
   }
 
-  // Check pending orders (max 3)
+  if (!screenshotFile) {
+    alert('❌ Payment screenshot upload karein!');
+    return;
+  }
+
+  if (screenshotFile.size > 2 * 1024 * 1024) {
+    alert('❌ Screenshot 2MB se choti honi chahiye!');
+    return;
+  }
+
   try {
     const pendingQuery = query(
       collection(db, 'orders'),
@@ -282,51 +306,76 @@ window.submitOrder = async function() {
     console.log('Pending check error:', err);
   }
 
+  isSubmitting = true;
   const btn = document.getElementById('submitBtn');
   btn.textContent = '⏳ Submitting...';
   btn.disabled = true;
-
-  const orderData = {
-    userId: currentUser.uid,
-    userEmail: currentUser.email,
-    type: 'Buy',
-    pkrAmount: parseFloat(pkr),
-    usdtAmount: parseFloat(usdt),
-    rate: 290,
-    customerName: name,
-    customerPhone: phone,
-    wallet: wallet,
-    trxId: trxId,
-    paymentMethod: 'JazzCash',
-    status: 'Pending',
-    date: new Date().toLocaleDateString('en-PK'),
-    createdAt: new Date().toISOString()
-  };
+  btn.style.opacity = '0.6';
+  btn.style.cursor = 'not-allowed';
 
   try {
+    const screenshotBase64 = await fileToBase64(screenshotFile);
+
+    const orderData = {
+      userId: currentUser.uid,
+      userEmail: currentUser.email,
+      type: 'Buy',
+      pkrAmount: parseFloat(pkr),
+      usdtAmount: parseFloat(usdt),
+      rate: 290,
+      customerName: name,
+      customerPhone: phone,
+      wallet: wallet,
+      trxId: trxId,
+      paymentMethod: 'JazzCash',
+      screenshot: screenshotBase64,
+      status: 'Pending',
+      date: new Date().toLocaleDateString('en-PK'),
+      createdAt: new Date().toISOString()
+    };
+
     const docRef = await addDoc(collection(db, 'orders'), orderData);
+    const shortOrderId = docRef.id.substring(0, 10).toUpperCase();
     
-    // Show success modal
-    document.getElementById('orderIdDisplay').textContent = docRef.id.substring(0, 10).toUpperCase();
+    document.getElementById('orderIdDisplay').textContent = shortOrderId;
     document.getElementById('orderAmountDisplay').textContent = 'Rs. ' + parseInt(pkr).toLocaleString();
-    document.getElementById('whatsappContactBtn').href = `https://wa.me/923169113663?text=${encodeURIComponent('Assalam o Alaikum, mera order ID hai: ' + docRef.id.substring(0, 10).toUpperCase() + '. Kya mera order complete ho gaya hai?')}`;
+    
+    // WhatsApp message — website ka naam + user info
+    const waMessage = 
+      `🌐 *USDT EXCHANGE PK*\n` +
+      `━━━━━━━━━━━━━━━\n\n` +
+      `Assalam o Alaikum,\n` +
+      `Main *${name}* — website se order kiya tha.\n\n` +
+      `📋 *Order ID:* ${shortOrderId}\n` +
+      `💰 *Amount:* Rs. ${parseInt(pkr).toLocaleString()}\n` +
+      `💎 *USDT:* ${usdt}\n` +
+      `⏳ *Status:* Pending\n` +
+      `⏰ *Time:* 30 min - 2 hours\n\n` +
+      `Kya mera order complete ho gaya hai?\n\n` +
+      `━━━━━━━━━━━━━━━\n` +
+      `_Sent via USDT Exchange PK Website_`;
+
+    document.getElementById('whatsappContactBtn').href = `https://wa.me/923169113663?text=${encodeURIComponent(waMessage)}`;
     document.getElementById('successModal').classList.add('open');
     
-    btn.textContent = '🚀 Submit Order';
-    btn.disabled = false;
+    btn.textContent = '✅ Order Submitted';
+    btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
     
-    // Reset form
     document.getElementById('userName').value = '';
     document.getElementById('userPhone').value = '';
     document.getElementById('userWallet').value = '';
     document.getElementById('trxId').value = '';
     document.getElementById('pkrAmount').value = '';
+    document.getElementById('screenshot').value = '';
     calculateUSDT();
   } catch (err) {
     console.error(err);
     alert('❌ Error: ' + err.message);
+    isSubmitting = false;
     btn.textContent = '🚀 Submit Order';
     btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
   }
 }
 
