@@ -23,12 +23,10 @@
   * { -webkit-tap-highlight-color: transparent; }
   body { font-family: 'Inter', sans-serif; background: #0a0a0a; }
   h1,h2,h3,h4,h5 { font-family: 'Poppins', sans-serif; }
-  .gold-gradient { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #d97706 100%); }
   .orange-gradient { background: linear-gradient(135deg, #f97316 0%, #fb923c 50%, #ea580c 100%); }
-  .gold-text { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .orange-text { background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .gold-gradient { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #d97706 100%); }
   .black-card { background: linear-gradient(135deg, #141414 0%, #1a1a1a 100%); border: 1px solid #2a2a2a; }
-  .gold-glow { box-shadow: 0 0 30px rgba(245, 158, 11, 0.4); }
   .input-dark { background: #0a0a0a; border: 2px solid #2a2a2a; color: white; }
   .input-dark:focus { border-color: #f97316; outline: none; }
   .whatsapp-float { position: fixed; bottom: 24px; right: 24px; z-index: 999; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 10px 30px rgba(37,211,102,0.5); text-decoration: none; }
@@ -79,7 +77,6 @@
 
       <p class="text-xs text-gray-500 mt-2">Tap the button to switch between USDT and PKR</p>
 
-      <!-- RESULT BOX -->
       <div class="mt-4 p-4 bg-orange-500/10 border border-orange-500/30 rounded-xl">
         <div class="flex justify-between items-center mb-2">
           <span class="text-gray-400 text-sm" id="resultLabel">You will receive:</span>
@@ -127,34 +124,50 @@
       </div>
 
       <div class="space-y-5">
+        <!-- SENDER (Binance) -->
         <div>
-          <label class="block text-gray-300 text-sm mb-2 font-medium">👤 Account Holder Name (where you want PKR) *</label>
-          <input type="text" id="receiverName" placeholder="e.g., Ali Ahmed" class="input-dark w-full px-4 py-3 rounded-xl">
-          <p class="text-xs text-gray-500 mt-1">The name on the JazzCash/Easypaisa account</p>
+          <label class="block text-gray-300 text-sm mb-2 font-medium">🟡 Sender Binance UID *</label>
+          <input type="text" id="senderBinanceUid" placeholder="e.g., 499961684" class="input-dark w-full px-4 py-3 rounded-xl">
+          <p class="text-xs text-gray-500 mt-1">The Binance UID from which you sent USDT</p>
         </div>
 
         <div>
-          <label class="block text-gray-300 text-sm mb-2 font-medium">📱 JazzCash/Easypaisa Number *</label>
+          <label class="block text-gray-300 text-sm mb-2 font-medium">👤 Sender Binance Name *</label>
+          <input type="text" id="senderBinanceName" placeholder="e.g., Muhammad Ali" class="input-dark w-full px-4 py-3 rounded-xl">
+          <p class="text-xs text-gray-500 mt-1">The name on your Binance account</p>
+        </div>
+
+        <!-- RECEIVER (PKR) -->
+        <div>
+          <label class="block text-gray-300 text-sm mb-2 font-medium">👤 Receiver Account Holder Name *</label>
+          <input type="text" id="receiverName" placeholder="e.g., Ali Ahmed" class="input-dark w-full px-4 py-3 rounded-xl">
+          <p class="text-xs text-gray-500 mt-1">The name on the JazzCash/Easypaisa account where you want PKR</p>
+        </div>
+
+        <div>
+          <label class="block text-gray-300 text-sm mb-2 font-medium">📱 Receiver JazzCash/Easypaisa Number *</label>
           <input type="tel" id="receiverPhone" placeholder="03XX-XXXXXXX" class="input-dark w-full px-4 py-3 rounded-xl">
           <p class="text-xs text-gray-500 mt-1">Where you want to receive PKR</p>
         </div>
 
+        <!-- TXID -->
         <div>
           <label class="block text-gray-300 text-sm mb-2 font-medium">🔢 USDT Transaction TXID *</label>
           <input type="text" id="trxId" placeholder="0xabc123..." class="input-dark w-full px-4 py-3 rounded-xl">
-          <p class="text-xs text-gray-500 mt-1">BEP20 transaction hash</p>
+          <p class="text-xs text-gray-500 mt-1">BEP20 transaction hash from your wallet</p>
         </div>
 
+        <!-- SCREENSHOT -->
         <div>
           <label class="block text-gray-300 text-sm mb-2 font-medium">📸 Transaction Screenshot *</label>
           <input type="file" id="screenshot" accept="image/*" class="input-dark w-full px-4 py-3 rounded-xl text-sm">
-          <p class="text-xs text-gray-500 mt-1">Max 2MB</p>
+          <p class="text-xs text-gray-500 mt-1">Upload screenshot of USDT transfer (Max 2MB)</p>
         </div>
       </div>
     </div>
 
     <button onclick="submitOrder()" id="submitBtn" class="w-full orange-gradient text-black font-bold py-5 rounded-2xl text-lg shadow-xl hover:shadow-2xl transition">
-      🚀 Submit Order
+      🚀 Submit Sell Order
     </button>
 
     <p class="text-center text-xs text-gray-500 mt-4">After submitting, admin will verify your USDT and send PKR</p>
@@ -166,7 +179,7 @@
   <div class="bg-gradient-to-br from-gray-900 to-black rounded-3xl p-8 max-w-md w-full border-2 border-orange-500/40 shadow-2xl max-h-[90vh] overflow-y-auto">
     <div class="text-center mb-6">
       <div class="w-20 h-20 orange-gradient rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-lg">✅</div>
-      <h3 class="text-2xl font-black text-white mb-2">Order Submitted!</h3>
+      <h3 class="text-2xl font-black text-white mb-2">Sell Order Submitted!</h3>
       <p class="text-gray-400 text-sm">Your sell order has been submitted successfully</p>
     </div>
 
@@ -293,6 +306,8 @@ window.submitOrder = async function() {
     return;
   }
 
+  const senderBinanceUid = document.getElementById('senderBinanceUid').value.trim();
+  const senderBinanceName = document.getElementById('senderBinanceName').value.trim();
   const receiverName = document.getElementById('receiverName').value.trim();
   const receiverPhone = document.getElementById('receiverPhone').value.trim();
   const trxId = document.getElementById('trxId').value.trim();
@@ -308,7 +323,7 @@ window.submitOrder = async function() {
     usdt = amount / RATE;
   }
 
-  if (!receiverName || !receiverPhone || !trxId || usdt <= 0) {
+  if (!senderBinanceUid || !senderBinanceName || !receiverName || !receiverPhone || !trxId || usdt <= 0) {
     alert('❌ Please fill in all fields!');
     return;
   }
@@ -355,6 +370,8 @@ window.submitOrder = async function() {
       usdtAmount: parseFloat(usdt.toFixed(2)),
       pkrAmount: parseFloat(pkr.toFixed(2)),
       rate: RATE,
+      senderBinanceUid: senderBinanceUid,
+      senderBinanceName: senderBinanceName,
       receiverName: receiverName,
       receiverPhone: receiverPhone,
       jazzcash: receiverPhone,
@@ -378,6 +395,8 @@ window.submitOrder = async function() {
     btn.textContent = '✅ Order Submitted';
     btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
     
+    document.getElementById('senderBinanceUid').value = '';
+    document.getElementById('senderBinanceName').value = '';
     document.getElementById('receiverName').value = '';
     document.getElementById('receiverPhone').value = '';
     document.getElementById('trxId').value = '';
@@ -390,7 +409,7 @@ window.submitOrder = async function() {
     console.error(err);
     alert('❌ Error: ' + err.message);
     isSubmitting = false;
-    btn.textContent = '🚀 Submit Order';
+    btn.textContent = '🚀 Submit Sell Order';
     btn.disabled = false;
     btn.style.opacity = '1';
   }
