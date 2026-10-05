@@ -39,7 +39,6 @@
 </head>
 <body class="text-white">
 
-<!-- LOGIN SCREEN -->
 <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
   <div class="w-full max-w-md">
     <div class="text-center mb-8">
@@ -69,7 +68,6 @@
   </div>
 </div>
 
-<!-- ADMIN PANEL -->
 <div id="adminPanel" class="hidden">
   <header class="backdrop-blur-xl bg-black/80 shadow-lg sticky top-0 z-50 border-b border-gold-500/20">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -81,7 +79,7 @@
         </div>
       </div>
       <div class="flex items-center gap-2">
-        <button onclick="loadOrders()" class="text-gold-400 hover:text-gold-300 text-sm font-medium bg-gold-500/10 px-4 py-2 rounded-lg border border-gold-500/30">🔄</button>
+        <button onclick="loadAllData()" class="text-gold-400 hover:text-gold-300 text-sm font-medium bg-gold-500/10 px-4 py-2 rounded-lg border border-gold-500/30">🔄</button>
         <button onclick="adminLogout()" class="text-gray-300 hover:text-red-400 text-sm font-medium bg-red-500/10 px-4 py-2 rounded-lg border border-red-500/30">Logout</button>
       </div>
     </div>
@@ -91,10 +89,10 @@
     <div class="container mx-auto max-w-4xl">
 
       <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
-        <button onclick="showTab('all')" id="tabAll" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gold-500 text-black">📋 All</button>
+        <button onclick="showTab('all')" id="tabAll" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gold-500 text-black">📋 Orders</button>
+        <button onclick="showTab('users')" id="tabUsers" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20">👥 Users</button>
         <button onclick="showTab('buy')" id="tabBuy" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20">💰 Buy</button>
         <button onclick="showTab('sell')" id="tabSell" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20">💵 Sell</button>
-        <button onclick="showTab('pending')" id="tabPending" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20">⏳ Pending</button>
         <button onclick="showTab('stats')" id="tabStats" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20">📊 Stats</button>
       </div>
 
@@ -102,11 +100,18 @@
         <div class="text-center py-8"><span class="loading"></span></div>
       </div>
 
+      <div id="usersContainer" class="hidden"></div>
+
       <div id="statsContainer" class="hidden">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div class="black-card rounded-2xl p-5">
+            <div class="text-2xl mb-2">👥</div>
+            <p class="text-gray-400 text-xs uppercase mb-1">Total Users</p>
+            <p class="text-2xl font-black gold-text" id="statUsers">0</p>
+          </div>
           <div class="black-card rounded-2xl p-5">
             <div class="text-2xl mb-2">📦</div>
-            <p class="text-gray-400 text-xs uppercase mb-1">Total</p>
+            <p class="text-gray-400 text-xs uppercase mb-1">Total Orders</p>
             <p class="text-2xl font-black gold-text" id="statTotal">0</p>
           </div>
           <div class="black-card rounded-2xl p-5">
@@ -124,6 +129,21 @@
             <p class="text-gray-400 text-xs uppercase mb-1">Pending</p>
             <p class="text-2xl font-black text-gold-400" id="statPending">0</p>
           </div>
+          <div class="black-card rounded-2xl p-5">
+            <div class="text-2xl mb-2">✅</div>
+            <p class="text-gray-400 text-xs uppercase mb-1">Completed</p>
+            <p class="text-2xl font-black text-green-400" id="statCompleted">0</p>
+          </div>
+          <div class="black-card rounded-2xl p-5">
+            <div class="text-2xl mb-2">❌</div>
+            <p class="text-gray-400 text-xs uppercase mb-1">Rejected</p>
+            <p class="text-2xl font-black text-red-400" id="statRejected">0</p>
+          </div>
+          <div class="black-card rounded-2xl p-5">
+            <div class="text-2xl mb-2">💎</div>
+            <p class="text-gray-400 text-xs uppercase mb-1">Total USDT</p>
+            <p class="text-2xl font-black text-gold-400" id="statUsdt">0</p>
+          </div>
         </div>
       </div>
 
@@ -131,7 +151,6 @@
   </main>
 </div>
 
-<!-- IMAGE VIEWER MODAL -->
 <div id="imageModal" class="hidden fixed inset-0 z-[9999] bg-black/95 items-center justify-center p-4" onclick="closeImage()">
   <div class="max-w-4xl max-h-screen w-full relative">
     <button onclick="closeImage()" class="absolute top-4 right-4 w-10 h-10 bg-white/10 rounded-full text-white text-xl z-10">✕</button>
@@ -158,6 +177,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 let allOrders = [];
+let allUsers = [];
 let currentFilter = 'all';
 
 onAuthStateChanged(auth, async (user) => {
@@ -167,7 +187,7 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById('loginScreen').classList.add('hidden');
       document.getElementById('adminPanel').classList.remove('hidden');
       document.getElementById('adminEmailDisplay').textContent = user.email;
-      loadOrders();
+      loadAllData();
     } else {
       await signOut(auth);
       const errEl = document.getElementById('adminError');
@@ -212,19 +232,29 @@ window.adminLogout = async function() {
   window.location.reload();
 }
 
+window.loadAllData = async function() {
+  await loadOrders();
+  await loadUsers();
+}
+
 window.showTab = function(tab) {
   document.querySelectorAll('.tab-btn').forEach(b => {
     b.className = 'tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20';
   });
   event.target.className = 'tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gold-500 text-black';
 
+  document.getElementById('ordersContainer').classList.add('hidden');
+  document.getElementById('usersContainer').classList.add('hidden');
+  document.getElementById('statsContainer').classList.add('hidden');
+
   if (tab === 'stats') {
-    document.getElementById('ordersContainer').classList.add('hidden');
     document.getElementById('statsContainer').classList.remove('hidden');
     loadStats();
+  } else if (tab === 'users') {
+    document.getElementById('usersContainer').classList.remove('hidden');
+    renderUsers();
   } else {
     document.getElementById('ordersContainer').classList.remove('hidden');
-    document.getElementById('statsContainer').classList.add('hidden');
     currentFilter = tab;
     renderOrders();
   }
@@ -232,6 +262,7 @@ window.showTab = function(tab) {
 
 window.loadOrders = async function() {
   const container = document.getElementById('ordersContainer');
+  if (!container) return;
   container.innerHTML = '<div class="text-center py-8"><span class="loading"></span></div>';
 
   try {
@@ -243,6 +274,76 @@ window.loadOrders = async function() {
     console.error(err);
     container.innerHTML = '<p class="text-center text-red-400 py-8">Failed to load orders: ' + err.message + '</p>';
   }
+}
+
+window.loadUsers = async function() {
+  try {
+    const snap = await getDocs(collection(db, 'users'));
+    allUsers = snap.docs.map(d => ({ uid: d.id, ...d.data() }));
+    allUsers.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function renderUsers() {
+  const container = document.getElementById('usersContainer');
+  
+  if (allUsers.length === 0) {
+    container.innerHTML = `
+      <div class="black-card rounded-2xl p-8 text-center">
+        <div class="text-5xl mb-3">👥</div>
+        <p class="text-gray-400 text-sm">No users registered yet</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="mb-4 p-4 bg-gold-500/10 border border-gold-500/30 rounded-xl">
+      <p class="text-gold-400 text-sm font-semibold">👥 Total Users: <span class="text-2xl font-black">${allUsers.length}</span></p>
+    </div>
+  ` + allUsers.map((user, index) => `
+    <div class="black-card rounded-2xl p-4 mb-3">
+      <div class="flex justify-between items-start mb-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-lg">
+            ${(user.name || 'U').charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <p class="font-bold text-white text-sm">${user.name || 'Unknown User'}</p>
+            <p class="text-gray-500 text-xs mt-0.5">#${index + 1}</p>
+          </div>
+        </div>
+        <span class="text-xs px-3 py-1 rounded-full font-semibold bg-green-500/20 text-green-400 border border-green-500/40">
+          Active
+        </span>
+      </div>
+      
+      <div class="grid grid-cols-2 gap-3 text-xs mb-2">
+        <div class="col-span-2">
+          <p class="text-gray-500">📧 Email</p>
+          <p class="text-white font-semibold break-all">${user.email || 'N/A'}</p>
+        </div>
+        <div>
+          <p class="text-gray-500">📱 Phone</p>
+          <p class="text-white font-semibold">${user.phone || 'N/A'}</p>
+        </div>
+        <div>
+          <p class="text-gray-500">💰 Balance</p>
+          <p class="text-white font-semibold">Rs. ${user.balance || 0}</p>
+        </div>
+        <div class="col-span-2">
+          <p class="text-gray-500">📅 Joined</p>
+          <p class="text-white font-semibold">${user.createdAt ? new Date(user.createdAt).toLocaleString('en-PK') : 'N/A'}</p>
+        </div>
+        <div class="col-span-2">
+          <p class="text-gray-500">🆔 User UID</p>
+          <p class="text-white font-semibold break-all text-xs font-mono">${user.uid}</p>
+        </div>
+      </div>
+    </div>
+  `).join('');
 }
 
 function renderOrders() {
@@ -284,7 +385,6 @@ function renderOrders() {
     let detailFields = '';
 
     if (!isSell) {
-      // BUY ORDER FIELDS
       detailFields = `
         <div>
           <p class="text-gray-500">Sender Name</p>
@@ -303,7 +403,6 @@ function renderOrders() {
         ${order.walletAddress ? `<div class="col-span-2"><p class="text-gray-500">Wallet Address</p><p class="text-white font-semibold break-all text-xs">${order.walletAddress}</p></div>` : ''}
       `;
     } else {
-      // SELL ORDER FIELDS
       detailFields = `
         <div>
           <p class="text-gray-500">Amount Sent (USDT)</p>
@@ -425,10 +524,18 @@ window.updateStatus = async function(orderId, newStatus) {
 }
 
 function loadStats() {
+  document.getElementById('statUsers').textContent = allUsers.length;
   document.getElementById('statTotal').textContent = allOrders.length;
   document.getElementById('statBuy').textContent = allOrders.filter(o => o.type === 'Buy').length;
   document.getElementById('statSell').textContent = allOrders.filter(o => o.type === 'Sell').length;
   document.getElementById('statPending').textContent = allOrders.filter(o => o.status === 'Pending').length;
+  document.getElementById('statCompleted').textContent = allOrders.filter(o => o.status === 'Completed').length;
+  document.getElementById('statRejected').textContent = allOrders.filter(o => o.status === 'Rejected').length;
+  
+  const totalUsdt = allOrders
+    .filter(o => o.status === 'Completed')
+    .reduce((sum, o) => sum + (parseFloat(o.usdtAmount) || 0), 0);
+  document.getElementById('statUsdt').textContent = totalUsdt.toFixed(2);
 }
 </script>
 
