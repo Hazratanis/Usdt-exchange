@@ -35,7 +35,6 @@
 </head>
 <body class="text-white min-h-screen">
 
-<!-- HEADER -->
 <header class="backdrop-blur-xl bg-black/80 shadow-lg sticky top-0 z-50 border-b border-gold-500/20">
   <div class="container mx-auto px-4 py-3 flex justify-between items-center">
     <a href="index.html" class="flex items-center gap-3">
@@ -45,11 +44,10 @@
         <p class="text-orange-400 text-xs">Sell USDT</p>
       </div>
     </a>
-    <a href="index.html" class="text-gray-300 hover:text-gold-400 text-sm font-medium">← Back</a>
+    <a href="dashboard.html" class="text-gray-300 hover:text-gold-400 text-sm font-medium">← Dashboard</a>
   </div>
 </header>
 
-<!-- SELL FORM -->
 <main class="py-10 px-4">
   <div class="container mx-auto max-w-2xl">
     <div class="text-center mb-8">
@@ -58,7 +56,7 @@
       <p class="text-orange-400 font-semibold">Rate: Rs. 278 per USDT</p>
     </div>
 
-    <!-- STEP 1: USDT Amount -->
+    <!-- STEP 1 -->
     <div class="black-card rounded-3xl p-6 mb-6">
       <div class="flex items-center gap-2 mb-4">
         <div class="w-8 h-8 orange-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">1</div>
@@ -84,7 +82,7 @@
       </div>
     </div>
 
-    <!-- STEP 2: Send USDT -->
+    <!-- STEP 2 -->
     <div class="black-card rounded-3xl p-6 mb-6">
       <div class="flex items-center gap-2 mb-4">
         <div class="w-8 h-8 orange-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">2</div>
@@ -111,7 +109,7 @@
       </div>
     </div>
 
-    <!-- STEP 3: Payment Details -->
+    <!-- STEP 3 -->
     <div class="black-card rounded-3xl p-6 mb-6">
       <div class="flex items-center gap-2 mb-4">
         <div class="w-8 h-8 orange-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">3</div>
@@ -135,15 +133,10 @@
           <label class="block text-gray-400 text-sm mb-2">USDT TXID (BEP20 Transaction Hash) *</label>
           <input type="text" id="trxId" placeholder="0xabc123..." class="input-dark w-full px-4 py-3 rounded-xl">
         </div>
-        <div>
-          <label class="block text-gray-400 text-sm mb-2">Transaction Screenshot (optional)</label>
-          <input type="file" id="screenshot" accept="image/*" class="input-dark w-full px-4 py-3 rounded-xl text-sm">
-        </div>
       </div>
     </div>
 
-    <!-- SUBMIT -->
-    <button onclick="submitOrder()" class="w-full orange-gradient text-black font-bold py-5 rounded-2xl text-lg shadow-xl hover:shadow-2xl transition">
+    <button onclick="submitOrder()" id="submitBtn" class="w-full orange-gradient text-black font-bold py-5 rounded-2xl text-lg shadow-xl hover:shadow-2xl transition">
       🚀 Submit Order on WhatsApp
     </button>
 
@@ -153,20 +146,60 @@
 
 <a href="https://wa.me/923169113663" class="whatsapp-float" target="_blank">💬</a>
 
-<script>
-function calculatePKR() {
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDPFC3gtvKQxmlddLpabMYx6IZe0B0I9zE",
+  authDomain: "usdt-exchange-24226.firebaseapp.com",
+  projectId: "usdt-exchange-24226",
+  storageBucket: "usdt-exchange-24226.firebasestorage.app",
+  messagingSenderId: "1024697758253",
+  appId: "1:1024697758253:web:8894b945db08d6536e3ea4"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    const userData = userDoc.data() || {};
+    if (userData.name) document.getElementById('userName').value = userData.name;
+    if (userData.phone) {
+      document.getElementById('userPhone').value = userData.phone;
+      document.getElementById('userJazzcash').value = userData.phone;
+    }
+  } else {
+    window.location.href = 'login.html';
+  }
+});
+
+window.calculatePKR = function() {
   const usdt = parseFloat(document.getElementById('usdtAmount').value) || 0;
   const rate = 278;
   const pkr = usdt * rate;
   document.getElementById('pkrReceive').textContent = 'Rs. ' + pkr.toLocaleString();
 }
 
-function copyText(text) {
+window.copyText = function(text) {
   navigator.clipboard.writeText(text);
   alert('✅ Address Copied:\n' + text);
 }
 
-function submitOrder() {
+window.submitOrder = async function() {
+  if (!currentUser) {
+    alert('❌ Pehle login karein');
+    window.location.href = 'login.html';
+    return;
+  }
+
   const name = document.getElementById('userName').value;
   const phone = document.getElementById('userPhone').value;
   const jazzcash = document.getElementById('userJazzcash').value;
@@ -179,22 +212,53 @@ function submitOrder() {
     return;
   }
 
-  let text = `🛒 *NEW SELL ORDER — USDT EXCHANGE PK*\n\n`;
-  text += `📦 *Type:* Sell USDT\n`;
-  text += `💎 *USDT Amount:* ${usdt} USDT\n`;
-  text += `💰 *PKR Amount:* ${pkr}\n`;
-  text += `📊 *Rate:* Rs. 278/USDT\n\n`;
-  text += `👤 *Name:* ${name}\n`;
-  text += `📱 *WhatsApp:* ${phone}\n`;
-  text += `💳 *JazzCash:* ${jazzcash}\n`;
-  text += `🔢 *TXID:* ${trxId}\n\n`;
-  text += `━━━━━━━━━━━━━━━\n`;
-  text += `✅ Please verify my USDT and send PKR.`;
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = '⏳ Submitting...';
+  btn.disabled = true;
 
-  window.open(`https://wa.me/923169113663?text=${encodeURIComponent(text)}`, '_blank');
+  const orderData = {
+    userId: currentUser.uid,
+    userEmail: currentUser.email,
+    type: 'Sell',
+    usdtAmount: parseFloat(usdt),
+    pkrAmount: parseFloat(pkr.replace(/[^0-9.]/g, '')),
+    rate: 278,
+    customerName: name,
+    customerPhone: phone,
+    jazzcash: jazzcash,
+    trxId: trxId,
+    paymentMethod: 'BEP20',
+    status: 'Pending',
+    date: new Date().toLocaleDateString('en-PK'),
+    createdAt: new Date().toISOString()
+  };
+
+  try {
+    await addDoc(collection(db, 'orders'), orderData);
+    alert('✅ Order submitted! Admin verify karega.');
+
+    let text = `🛒 *NEW SELL ORDER — USDT EXCHANGE PK*\n\n`;
+    text += `📦 *Type:* Sell USDT\n`;
+    text += `💎 *USDT Amount:* ${usdt} USDT\n`;
+    text += `💰 *PKR Amount:* ${pkr}\n`;
+    text += `📊 *Rate:* Rs. 278/USDT\n\n`;
+    text += `👤 *Name:* ${name}\n`;
+    text += `📱 *WhatsApp:* ${phone}\n`;
+    text += `💳 *JazzCash:* ${jazzcash}\n`;
+    text += `🔢 *TXID:* ${trxId}\n\n`;
+    text += `━━━━━━━━━━━━━━━\n`;
+    text += `✅ Please verify my USDT and send PKR.`;
+
+    window.open(`https://wa.me/923169113663?text=${encodeURIComponent(text)}`, '_blank');
+    
+    setTimeout(() => window.location.href = 'dashboard.html', 1500);
+  } catch (err) {
+    console.error(err);
+    alert('❌ Error: ' + err.message);
+    btn.textContent = '🚀 Submit Order on WhatsApp';
+    btn.disabled = false;
+  }
 }
-
-setTimeout(() => calculatePKR(), 500);
 </script>
 
 </body>
