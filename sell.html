@@ -95,7 +95,6 @@
         <h3 class="font-bold text-lg text-white">Send USDT</h3>
       </div>
 
-      <!-- SENDER METHOD BUTTONS -->
       <p class="text-sm font-bold text-white mb-3">Where do you want to send USDT from?</p>
       <div class="grid grid-cols-2 gap-3 mb-5">
         <button type="button" onclick="selectSenderMethod('binance')" id="btnBinanceSender" 
@@ -112,7 +111,6 @@
 
       <!-- BINANCE SENDER -->
       <div id="binanceSenderFields">
-        <!-- OUR DETAILS -->
         <div class="bg-gradient-to-br from-yellow-900/30 to-orange-900/30 border-2 border-yellow-500/40 rounded-2xl p-5 mb-5">
           <p class="text-xs text-yellow-300 font-bold uppercase mb-3">🟡 Send USDT to this Binance Account</p>
           
@@ -124,7 +122,7 @@
             </div>
           </div>
 
-          <div class="bg-black/50 rounded-xl p-3 mb-3">
+          <div class="bg-black/50 rounded-xl p-3">
             <p class="text-xs text-gray-400 mb-1">Our Binance Name:</p>
             <div class="flex items-center gap-2">
               <p class="text-sm font-mono text-white flex-1">HAZRAT__ANAS</p>
@@ -135,7 +133,6 @@
           <p class="text-xs text-yellow-300 mt-3">💡 Send USDT to this Binance UID using Binance Pay</p>
         </div>
 
-        <!-- SENDER DETAILS -->
         <p class="text-sm font-bold text-white mb-3">Your Binance Details:</p>
         <div class="space-y-4">
           <div>
@@ -151,7 +148,6 @@
 
       <!-- WALLET SENDER -->
       <div id="walletSenderFields" class="hidden">
-        <!-- OUR DETAILS -->
         <div class="bg-gradient-to-br from-yellow-900/30 to-orange-900/30 border-2 border-yellow-500/40 rounded-2xl p-5 mb-5">
           <p class="text-xs text-yellow-300 font-bold uppercase mb-3">💎 Send USDT to this BEP20 Address</p>
           
@@ -171,7 +167,6 @@
           </div>
         </div>
 
-        <!-- SENDER DETAILS -->
         <p class="text-sm font-bold text-white mb-3">Your Wallet Details:</p>
         <div class="space-y-4">
           <div>
@@ -198,7 +193,6 @@
         <div>
           <label class="block text-gray-300 text-sm mb-2 font-medium">💰 Amount You Sent (USDT) *</label>
           <input type="number" id="amountSentUsdt" placeholder="e.g., 50" step="0.01" class="input-dark w-full px-4 py-3 rounded-xl">
-          <p class="text-xs text-gray-500 mt-1">The exact USDT amount you transferred</p>
         </div>
 
         <div>
@@ -208,21 +202,54 @@
         </div>
 
         <div>
-          <label class="block text-gray-300 text-sm mb-2 font-medium">👤 Receiver Account Holder Name *</label>
-          <input type="text" id="receiverName" placeholder="e.g., Ali Ahmed" class="input-dark w-full px-4 py-3 rounded-xl">
-          <p class="text-xs text-gray-500 mt-1">The name on the JazzCash/Easypaisa account where you want PKR</p>
-        </div>
-
-        <div>
-          <label class="block text-gray-300 text-sm mb-2 font-medium">📱 Receiver JazzCash/Easypaisa Number *</label>
-          <input type="tel" id="receiverPhone" placeholder="03XX-XXXXXXX" class="input-dark w-full px-4 py-3 rounded-xl">
-          <p class="text-xs text-gray-500 mt-1">Where you want to receive PKR</p>
-        </div>
-
-        <div>
           <label class="block text-gray-300 text-sm mb-2 font-medium">📸 Transaction Screenshot *</label>
           <input type="file" id="screenshot" accept="image/*" class="input-dark w-full px-4 py-3 rounded-xl text-sm">
           <p class="text-xs text-gray-500 mt-1">Upload screenshot of USDT transfer (Max 2MB)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: PAYMENT METHOD -->
+    <div class="black-card rounded-3xl p-6 mb-6">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-8 h-8 orange-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">4</div>
+        <h3 class="font-bold text-lg text-white">Where to Receive PKR?</h3>
+      </div>
+
+      <p class="text-sm text-gray-300 mb-4">Select your payment method:</p>
+      
+      <div class="grid grid-cols-2 gap-3 mb-5">
+        <button type="button" onclick="selectPaymentMethod('Easypaisa')" id="btnEasypaisa" 
+                class="p-4 rounded-xl border-2 border-gray-700 hover:border-orange-500/50 transition text-center">
+          <div class="text-3xl mb-1">💚</div>
+          <p class="font-bold text-sm text-white">Easypaisa</p>
+        </button>
+        <button type="button" onclick="selectPaymentMethod('JazzCash')" id="btnJazzCash"
+                class="p-4 rounded-xl border-2 border-orange-500 bg-orange-500/20 transition text-center">
+          <div class="text-3xl mb-1">🔴</div>
+          <p class="font-bold text-sm text-white">JazzCash</p>
+        </button>
+        <button type="button" onclick="selectPaymentMethod('SadaPay')" id="btnSadaPay"
+                class="p-4 rounded-xl border-2 border-gray-700 hover:border-orange-500/50 transition text-center">
+          <div class="text-3xl mb-1">💜</div>
+          <p class="font-bold text-sm text-white">SadaPay</p>
+        </button>
+        <button type="button" onclick="selectPaymentMethod('NayaPay')" id="btnNayaPay"
+                class="p-4 rounded-xl border-2 border-gray-700 hover:border-orange-500/50 transition text-center">
+          <div class="text-3xl mb-1">🟢</div>
+          <p class="font-bold text-sm text-white">NayaPay</p>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-gray-300 text-sm mb-2 font-medium">👤 Receiver Account Holder Name *</label>
+          <input type="text" id="receiverName" placeholder="e.g., Ali Ahmed" class="input-dark w-full px-4 py-3 rounded-xl">
+        </div>
+
+        <div>
+          <label class="block text-gray-300 text-sm mb-2 font-medium">📱 Receiver Account Number *</label>
+          <input type="tel" id="receiverPhone" placeholder="03XX-XXXXXXX" class="input-dark w-full px-4 py-3 rounded-xl">
         </div>
       </div>
     </div>
@@ -256,6 +283,10 @@
       <div class="flex justify-between items-center mb-2">
         <span class="text-gray-400 text-sm">PKR Amount:</span>
         <span id="orderPkrDisplay" class="font-bold text-orange-400 text-sm">---</span>
+      </div>
+      <div class="flex justify-between items-center mb-2">
+        <span class="text-gray-400 text-sm">Payment Via:</span>
+        <span id="orderPaymentDisplay" class="font-bold text-white text-sm">---</span>
       </div>
       <div class="flex justify-between items-center">
         <span class="text-gray-400 text-sm">Status:</span>
@@ -304,6 +335,7 @@ let currentUser = null;
 let isSubmitting = false;
 let inputCurrency = 'USDT';
 let senderMethod = 'binance';
+let paymentMethod = 'JazzCash';
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -363,6 +395,19 @@ window.selectSenderMethod = function(method) {
     walletFields.classList.remove('hidden');
     binanceFields.classList.add('hidden');
   }
+}
+
+window.selectPaymentMethod = function(method) {
+  paymentMethod = method;
+  const methods = ['Easypaisa', 'JazzCash', 'SadaPay', 'NayaPay'];
+  methods.forEach(m => {
+    const btn = document.getElementById('btn' + m);
+    if (m === method) {
+      btn.className = 'p-4 rounded-xl border-2 border-orange-500 bg-orange-500/20 transition text-center';
+    } else {
+      btn.className = 'p-4 rounded-xl border-2 border-gray-700 hover:border-orange-500/50 transition text-center';
+    }
+  });
 }
 
 window.copyText = function(text) {
@@ -470,9 +515,8 @@ window.submitOrder = async function() {
       senderWalletName: senderWalletName,
       receiverName: receiverName,
       receiverPhone: receiverPhone,
-      jazzcash: receiverPhone,
+      paymentMethod: paymentMethod,
       trxId: trxId,
-      paymentMethod: 'BEP20',
       screenshot: screenshotBase64,
       status: 'Pending',
       date: new Date().toLocaleDateString('en-PK'),
@@ -485,6 +529,7 @@ window.submitOrder = async function() {
     document.getElementById('orderIdDisplay').textContent = shortOrderId;
     document.getElementById('orderUsdtDisplay').textContent = usdt.toFixed(2) + ' USDT';
     document.getElementById('orderPkrDisplay').textContent = 'Rs. ' + parseInt(pkr).toLocaleString();
+    document.getElementById('orderPaymentDisplay').textContent = paymentMethod;
     
     document.getElementById('successModal').classList.add('open');
     
@@ -505,6 +550,7 @@ window.submitOrder = async function() {
     inputCurrency = 'USDT';
     document.getElementById('currencyBtn').textContent = 'USDT ⇄';
     selectSenderMethod('binance');
+    selectPaymentMethod('JazzCash');
   } catch (err) {
     console.error(err);
     alert('❌ Error: ' + err.message);
