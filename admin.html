@@ -39,6 +39,7 @@
 </head>
 <body class="text-white">
 
+<!-- LOGIN SCREEN -->
 <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
   <div class="w-full max-w-md">
     <div class="text-center mb-8">
@@ -68,6 +69,7 @@
   </div>
 </div>
 
+<!-- ADMIN PANEL -->
 <div id="adminPanel" class="hidden">
   <header class="backdrop-blur-xl bg-black/80 shadow-lg sticky top-0 z-50 border-b border-gold-500/20">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -90,8 +92,9 @@
 
       <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
         <button onclick="showTab('all')" id="tabAll" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gold-500 text-black">📋 All</button>
+        <button onclick="showTab('buy')" id="tabBuy" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20">💰 Buy</button>
+        <button onclick="showTab('sell')" id="tabSell" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20">💵 Sell</button>
         <button onclick="showTab('pending')" id="tabPending" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20">⏳ Pending</button>
-        <button onclick="showTab('completed')" id="tabCompleted" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20">✅ Completed</button>
         <button onclick="showTab('stats')" id="tabStats" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20">📊 Stats</button>
       </div>
 
@@ -107,19 +110,19 @@
             <p class="text-2xl font-black gold-text" id="statTotal">0</p>
           </div>
           <div class="black-card rounded-2xl p-5">
-            <div class="text-2xl mb-2">✅</div>
-            <p class="text-gray-400 text-xs uppercase mb-1">Completed</p>
-            <p class="text-2xl font-black text-green-400" id="statCompleted">0</p>
+            <div class="text-2xl mb-2">💰</div>
+            <p class="text-gray-400 text-xs uppercase mb-1">Buy Orders</p>
+            <p class="text-2xl font-black text-green-400" id="statBuy">0</p>
+          </div>
+          <div class="black-card rounded-2xl p-5">
+            <div class="text-2xl mb-2">💵</div>
+            <p class="text-gray-400 text-xs uppercase mb-1">Sell Orders</p>
+            <p class="text-2xl font-black text-orange-400" id="statSell">0</p>
           </div>
           <div class="black-card rounded-2xl p-5">
             <div class="text-2xl mb-2">⏳</div>
             <p class="text-gray-400 text-xs uppercase mb-1">Pending</p>
             <p class="text-2xl font-black text-gold-400" id="statPending">0</p>
-          </div>
-          <div class="black-card rounded-2xl p-5">
-            <div class="text-2xl mb-2">❌</div>
-            <p class="text-gray-400 text-xs uppercase mb-1">Rejected</p>
-            <p class="text-2xl font-black text-red-400" id="statRejected">0</p>
           </div>
         </div>
       </div>
@@ -130,8 +133,8 @@
 
 <!-- IMAGE VIEWER MODAL -->
 <div id="imageModal" class="hidden fixed inset-0 z-[9999] bg-black/95 items-center justify-center p-4" onclick="closeImage()">
-  <div class="max-w-4xl max-h-screen w-full">
-    <button onclick="closeImage()" class="absolute top-4 right-4 w-10 h-10 bg-white/10 rounded-full text-white text-xl">✕</button>
+  <div class="max-w-4xl max-h-screen w-full relative">
+    <button onclick="closeImage()" class="absolute top-4 right-4 w-10 h-10 bg-white/10 rounded-full text-white text-xl z-10">✕</button>
     <img id="viewImage" src="" class="max-w-full max-h-[90vh] object-contain rounded-xl mx-auto">
   </div>
 </div>
@@ -168,7 +171,7 @@ onAuthStateChanged(auth, async (user) => {
     } else {
       await signOut(auth);
       const errEl = document.getElementById('adminError');
-      errEl.textContent = '❌ Aap admin nahi hain';
+      errEl.textContent = '❌ You are not an admin';
       errEl.classList.remove('hidden');
     }
   } else {
@@ -192,9 +195,9 @@ window.adminLogin = async function(e) {
     await signInWithEmailAndPassword(auth, email, pass);
   } catch (err) {
     let msg = '❌ ';
-    if (err.code === 'auth/user-not-found') msg += 'Yeh email registered nahi';
-    else if (err.code === 'auth/wrong-password') msg += 'Password ghalat hai';
-    else if (err.code === 'auth/invalid-credential') msg += 'Email ya password ghalat hai';
+    if (err.code === 'auth/user-not-found') msg += 'Email not registered';
+    else if (err.code === 'auth/wrong-password') msg += 'Wrong password';
+    else if (err.code === 'auth/invalid-credential') msg += 'Invalid email or password';
     else msg += err.message;
     
     errEl.textContent = msg;
@@ -238,7 +241,7 @@ window.loadOrders = async function() {
     renderOrders();
   } catch (err) {
     console.error(err);
-    container.innerHTML = '<p class="text-center text-red-400 py-8">Orders load nahi ho sake: ' + err.message + '</p>';
+    container.innerHTML = '<p class="text-center text-red-400 py-8">Failed to load orders: ' + err.message + '</p>';
   }
 }
 
@@ -247,19 +250,25 @@ function renderOrders() {
   let filtered = allOrders;
   
   if (currentFilter === 'pending') filtered = allOrders.filter(o => o.status === 'Pending');
-  else if (currentFilter === 'completed') filtered = allOrders.filter(o => o.status === 'Completed');
+  else if (currentFilter === 'buy') filtered = allOrders.filter(o => o.type === 'Buy');
+  else if (currentFilter === 'sell') filtered = allOrders.filter(o => o.type === 'Sell');
 
   if (filtered.length === 0) {
     container.innerHTML = `
       <div class="black-card rounded-2xl p-8 text-center">
         <div class="text-5xl mb-3">📭</div>
-        <p class="text-gray-400 text-sm">Koi order nahi mila</p>
+        <p class="text-gray-400 text-sm">No orders found</p>
       </div>
     `;
     return;
   }
 
   container.innerHTML = filtered.map(order => {
+    const isSell = order.type === 'Sell';
+    const typeColor = isSell ? 'text-orange-400' : 'text-green-400';
+    const typeEmoji = isSell ? '💵' : '💰';
+    const borderColor = isSell ? 'border-orange-500' : 'border-green-500';
+
     const screenshotHtml = order.screenshot 
       ? `<div class="mb-3">
            <p class="text-gray-500 text-xs mb-2">📸 Payment Screenshot:</p>
@@ -269,14 +278,73 @@ function renderOrders() {
            <p class="text-xs text-gold-400 mt-1 text-center">👆 Tap to view full size</p>
          </div>`
       : `<div class="mb-3 p-3 bg-yellow-900/20 border border-yellow-500/30 rounded-xl">
-           <p class="text-xs text-yellow-400">⚠️ Koi screenshot upload nahi hua</p>
+           <p class="text-xs text-yellow-400">⚠️ No screenshot uploaded</p>
          </div>`;
 
+    let detailFields = '';
+
+    if (!isSell) {
+      // BUY ORDER FIELDS
+      detailFields = `
+        <div>
+          <p class="text-gray-500">Sender Name</p>
+          <p class="text-white font-semibold">${order.senderName || 'N/A'}</p>
+        </div>
+        <div>
+          <p class="text-gray-500">Amount Sent (PKR)</p>
+          <p class="text-white font-semibold">Rs. ${order.amountSent || 'N/A'}</p>
+        </div>
+        <div class="col-span-2">
+          <p class="text-gray-500">Receive Method</p>
+          <p class="text-white font-semibold">${order.receiveMethod === 'binance' ? '🟡 Binance' : '💼 Wallet'}</p>
+        </div>
+        ${order.binanceUid ? `<div><p class="text-gray-500">Binance UID</p><p class="text-white font-semibold break-all text-xs">${order.binanceUid}</p></div>` : ''}
+        ${order.binanceName ? `<div><p class="text-gray-500">Binance Name</p><p class="text-white font-semibold">${order.binanceName}</p></div>` : ''}
+        ${order.walletAddress ? `<div class="col-span-2"><p class="text-gray-500">Wallet Address</p><p class="text-white font-semibold break-all text-xs">${order.walletAddress}</p></div>` : ''}
+      `;
+    } else {
+      // SELL ORDER FIELDS
+      detailFields = `
+        <div>
+          <p class="text-gray-500">Amount Sent (USDT)</p>
+          <p class="text-white font-semibold">${order.amountSentUsdt || 'N/A'} USDT</p>
+        </div>
+        <div>
+          <p class="text-gray-500">Payment Method</p>
+          <p class="text-white font-semibold">💳 ${order.paymentMethod || 'N/A'}</p>
+        </div>
+        <div class="col-span-2">
+          <p class="text-gray-500">Sender Method</p>
+          <p class="text-white font-semibold">${order.senderMethod === 'binance' ? '🟡 From Binance' : '💼 From Wallet'}</p>
+        </div>
+        ${order.senderBinanceUid ? `<div><p class="text-gray-500">Sender Binance UID</p><p class="text-white font-semibold break-all text-xs">${order.senderBinanceUid}</p></div>` : ''}
+        ${order.senderBinanceName ? `<div><p class="text-gray-500">Sender Binance Name</p><p class="text-white font-semibold">${order.senderBinanceName}</p></div>` : ''}
+        ${order.senderWalletAddress ? `<div class="col-span-2"><p class="text-gray-500">Sender Wallet Address</p><p class="text-white font-semibold break-all text-xs">${order.senderWalletAddress}</p></div>` : ''}
+        ${order.senderWalletName ? `<div class="col-span-2"><p class="text-gray-500">Sender Wallet Name</p><p class="text-white font-semibold">${order.senderWalletName}</p></div>` : ''}
+        <div>
+          <p class="text-gray-500">Receiver Name</p>
+          <p class="text-white font-semibold">${order.receiverName || 'N/A'}</p>
+        </div>
+        <div>
+          <p class="text-gray-500">Receiver Number</p>
+          <p class="text-white font-semibold">${order.receiverPhone || 'N/A'}</p>
+        </div>
+      `;
+    }
+
+    const primaryAmount = isSell 
+      ? `${order.usdtAmount || 0} USDT` 
+      : `Rs. ${order.pkrAmount || 0}`;
+    
+    const secondaryAmount = isSell 
+      ? `Rs. ${order.pkrAmount || 0}` 
+      : `${order.usdtAmount || 0} USDT`;
+
     return `
-    <div class="black-card rounded-2xl p-4 mb-3">
+    <div class="black-card rounded-2xl p-4 mb-3 border-l-4 ${borderColor}">
       <div class="flex justify-between items-start mb-3">
         <div>
-          <p class="font-bold text-white text-sm">${order.type || 'Buy'} USDT</p>
+          <p class="font-bold text-white text-sm">${typeEmoji} ${order.type || 'Buy'} USDT</p>
           <p class="text-gray-500 text-xs mt-1">#${order.id.substring(0,8).toUpperCase()}</p>
         </div>
         <span class="text-xs px-3 py-1 rounded-full font-semibold ${getStatusClass(order.status)}">${order.status || 'Pending'}</span>
@@ -284,24 +352,30 @@ function renderOrders() {
       
       <div class="grid grid-cols-2 gap-3 text-xs mb-3">
         <div>
-          <p class="text-gray-500">Amount</p>
-          <p class="text-white font-semibold">${order.type === 'Buy' ? 'Rs. ' + (order.pkrAmount || 0) : (order.usdtAmount || 0) + ' USDT'}</p>
+          <p class="text-gray-500">${isSell ? 'USDT Amount' : 'PKR Amount'}</p>
+          <p class="text-white font-semibold ${typeColor}">${primaryAmount}</p>
+        </div>
+        <div>
+          <p class="text-gray-500">${isSell ? 'PKR to Send' : 'USDT to Send'}</p>
+          <p class="text-white font-semibold">${secondaryAmount}</p>
         </div>
         <div>
           <p class="text-gray-500">Rate</p>
           <p class="text-white font-semibold">Rs. ${order.rate || 0}</p>
         </div>
         <div>
-          <p class="text-gray-500">Customer</p>
-          <p class="text-white font-semibold">${order.customerName || 'N/A'}</p>
+          <p class="text-gray-500">Date</p>
+          <p class="text-white font-semibold">${order.date || 'N/A'}</p>
         </div>
-        <div>
-          <p class="text-gray-500">Phone</p>
-          <p class="text-white font-semibold">${order.customerPhone || 'N/A'}</p>
+        ${detailFields}
+        <div class="col-span-2">
+          <p class="text-gray-500">Customer Email</p>
+          <p class="text-white font-semibold break-all text-xs">${order.userEmail || 'N/A'}</p>
         </div>
-        ${order.wallet ? `<div class="col-span-2"><p class="text-gray-500">Wallet</p><p class="text-white font-semibold break-all text-xs">${order.wallet}</p></div>` : ''}
-        ${order.jazzcash ? `<div class="col-span-2"><p class="text-gray-500">JazzCash</p><p class="text-white font-semibold">${order.jazzcash}</p></div>` : ''}
-        ${order.trxId ? `<div class="col-span-2"><p class="text-gray-500">TRX ID</p><p class="text-white font-semibold break-all text-xs">${order.trxId}</p></div>` : ''}
+        <div class="col-span-2">
+          <p class="text-gray-500">TRX ID</p>
+          <p class="text-white font-semibold break-all text-xs">${order.trxId || 'N/A'}</p>
+        </div>
       </div>
 
       ${screenshotHtml}
@@ -352,9 +426,9 @@ window.updateStatus = async function(orderId, newStatus) {
 
 function loadStats() {
   document.getElementById('statTotal').textContent = allOrders.length;
-  document.getElementById('statCompleted').textContent = allOrders.filter(o => o.status === 'Completed').length;
+  document.getElementById('statBuy').textContent = allOrders.filter(o => o.type === 'Buy').length;
+  document.getElementById('statSell').textContent = allOrders.filter(o => o.type === 'Sell').length;
   document.getElementById('statPending').textContent = allOrders.filter(o => o.status === 'Pending').length;
-  document.getElementById('statRejected').textContent = allOrders.filter(o => o.status === 'Rejected').length;
 }
 </script>
 
