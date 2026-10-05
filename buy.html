@@ -32,6 +32,9 @@
   .whatsapp-float { position: fixed; bottom: 24px; right: 24px; z-index: 999; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 10px 30px rgba(37,211,102,0.5); text-decoration: none; }
   .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(245,158,11,0.3); border-radius: 50%; border-top-color: #f59e0b; animation: spin 1s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
+  .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(8px); }
+  .modal.open { display: flex; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 </style>
 </head>
 <body class="text-white min-h-screen">
@@ -98,12 +101,15 @@
             <span class="text-sm text-gray-400">Account Number:</span>
             <div class="flex items-center gap-2">
               <span class="font-bold text-white text-lg">03187193663</span>
-              <button onclick="copyText('03187193663')" class="text-gold-400 hover:text-gold-300 text-sm">📋</button>
+              <button onclick="copyText('03187193663')" class="text-gold-400 hover:text-gold-300 text-sm bg-gold-500/20 px-2 py-1 rounded-lg">📋 Copy</button>
             </div>
           </div>
           <div class="flex justify-between items-center">
             <span class="text-sm text-gray-400">Account Name:</span>
-            <span class="font-bold text-white">HAZRAT ANAS</span>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-white">HAZRAT ANAS</span>
+              <button onclick="copyText('HAZRAT ANAS')" class="text-gold-400 hover:text-gold-300 text-sm bg-gold-500/20 px-2 py-1 rounded-lg">📋 Copy</button>
+            </div>
           </div>
           <div class="flex justify-between items-center">
             <span class="text-sm text-gray-400">Amount:</span>
@@ -143,19 +149,67 @@
     </div>
 
     <button onclick="submitOrder()" id="submitBtn" class="w-full gold-gradient text-black font-bold py-5 rounded-2xl text-lg shadow-xl hover:shadow-2xl transition">
-      🚀 Submit Order on WhatsApp
+      🚀 Submit Order
     </button>
 
-    <p class="text-center text-xs text-gray-500 mt-4">Order submit karne ke baad admin verify karega — usually 5-30 minutes</p>
+    <p class="text-center text-xs text-gray-500 mt-4">Order submit karne ke baad admin verify karega</p>
   </div>
 </main>
+
+<!-- SUCCESS MODAL -->
+<div id="successModal" class="modal">
+  <div class="bg-gradient-to-br from-gray-900 to-black rounded-3xl p-8 max-w-md w-full border-2 border-gold-500/40 shadow-2xl max-h-[90vh] overflow-y-auto">
+    <div class="text-center mb-6">
+      <div class="w-20 h-20 gold-gradient rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-lg gold-glow">✅</div>
+      <h3 class="text-2xl font-black text-white mb-2">Order Submitted!</h3>
+      <p class="text-gray-400 text-sm">Aapka order successfully submit ho gaya hai</p>
+    </div>
+
+    <div class="bg-gold-500/10 border-2 border-gold-500/30 rounded-2xl p-4 mb-5">
+      <div class="flex justify-between items-center mb-2">
+        <span class="text-gray-400 text-sm">Order ID:</span>
+        <span id="orderIdDisplay" class="font-bold text-gold-400 text-sm break-all">---</span>
+      </div>
+      <div class="flex justify-between items-center mb-2">
+        <span class="text-gray-400 text-sm">Amount:</span>
+        <span id="orderAmountDisplay" class="font-bold text-white text-sm">---</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-400 text-sm">Status:</span>
+        <span class="bg-gold-500/20 text-gold-400 px-3 py-1 rounded-full text-xs font-semibold">⏳ Pending</span>
+      </div>
+    </div>
+
+    <div class="bg-blue-900/20 border-2 border-blue-500/40 rounded-2xl p-4 mb-5">
+      <p class="text-blue-300 text-sm font-semibold mb-2">⏰ Important Information:</p>
+      <p class="text-gray-300 text-sm leading-relaxed mb-3">
+        Aapka order <strong class="text-white">minimum 30 minutes</strong> se <strong class="text-white">maximum 2 hours</strong> tak complete ho jayega.
+      </p>
+      <p class="text-gray-300 text-sm leading-relaxed">
+        Agar 2 ghante ke baad bhi order complete nahi hota, toh <strong class="text-white">WhatsApp</strong> par contact karein.
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-3">
+      <a href="https://wa.me/923169113663?text=Assalam%20o%20Alaikum%2C%20mera%20order%20ID%20hai%3A%20" 
+         target="_blank"
+         id="whatsappContactBtn"
+         class="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white text-center font-bold py-4 rounded-xl transition shadow-lg">
+        📲 Contact on WhatsApp
+      </a>
+      <button onclick="closeModal()" class="w-full bg-white/10 border-2 border-white/20 text-white font-bold py-4 rounded-xl hover:bg-white/20 transition">
+        Go to Dashboard →
+      </button>
+    </div>
+  </div>
+</div>
 
 <a href="https://wa.me/923169113663" class="whatsapp-float" target="_blank">💬</a>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAqnJ03WOnX4_hlo4MK2Wc4ZJv8dCgDFgE",
@@ -175,10 +229,6 @@ let currentUser = null;
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
-    const userDoc = await getDoc(doc(db, 'users', user.uid));
-    const userData = userDoc.data() || {};
-    if (userData.name) document.getElementById('userName').value = userData.name;
-    if (userData.phone) document.getElementById('userPhone').value = userData.phone;
   } else {
     window.location.href = 'login.html';
   }
@@ -204,16 +254,32 @@ window.submitOrder = async function() {
     return;
   }
 
-  const name = document.getElementById('userName').value;
-  const phone = document.getElementById('userPhone').value;
-  const wallet = document.getElementById('userWallet').value;
-  const trxId = document.getElementById('trxId').value;
+  const name = document.getElementById('userName').value.trim();
+  const phone = document.getElementById('userPhone').value.trim();
+  const wallet = document.getElementById('userWallet').value.trim();
+  const trxId = document.getElementById('trxId').value.trim();
   const pkr = document.getElementById('pkrAmount').value;
   const usdt = document.getElementById('usdtReceive').textContent;
 
   if (!name || !phone || !wallet || !trxId || !pkr) {
     alert('❌ Sab fields bhar dein!');
     return;
+  }
+
+  // Check pending orders (max 3)
+  try {
+    const pendingQuery = query(
+      collection(db, 'orders'),
+      where('userId', '==', currentUser.uid),
+      where('status', '==', 'Pending')
+    );
+    const pendingSnap = await getDocs(pendingQuery);
+    if (pendingSnap.size >= 3) {
+      alert('❌ Aapke paas 3 pending orders hain. Pehle unhe complete karwayein.');
+      return;
+    }
+  } catch (err) {
+    console.log('Pending check error:', err);
   }
 
   const btn = document.getElementById('submitBtn');
@@ -238,30 +304,35 @@ window.submitOrder = async function() {
   };
 
   try {
-    await addDoc(collection(db, 'orders'), orderData);
-    alert('✅ Order submitted! Admin verify karega.');
-
-    let text = `🛒 *NEW BUY ORDER — USDT EXCHANGE PK*\n\n`;
-    text += `📦 *Type:* Buy USDT\n`;
-    text += `💰 *PKR Amount:* Rs. ${pkr}\n`;
-    text += `💎 *USDT Amount:* ${usdt}\n`;
-    text += `📊 *Rate:* Rs. 290/USDT\n\n`;
-    text += `👤 *Name:* ${name}\n`;
-    text += `📱 *WhatsApp:* ${phone}\n`;
-    text += `💼 *Wallet:* ${wallet}\n`;
-    text += `🔢 *TRX ID:* ${trxId}\n\n`;
-    text += `━━━━━━━━━━━━━━━\n`;
-    text += `✅ Please verify my payment and send USDT.`;
-
-    window.open(`https://wa.me/923169113663?text=${encodeURIComponent(text)}`, '_blank');
+    const docRef = await addDoc(collection(db, 'orders'), orderData);
     
-    setTimeout(() => window.location.href = 'dashboard.html', 1500);
+    // Show success modal
+    document.getElementById('orderIdDisplay').textContent = docRef.id.substring(0, 10).toUpperCase();
+    document.getElementById('orderAmountDisplay').textContent = 'Rs. ' + parseInt(pkr).toLocaleString();
+    document.getElementById('whatsappContactBtn').href = `https://wa.me/923169113663?text=${encodeURIComponent('Assalam o Alaikum, mera order ID hai: ' + docRef.id.substring(0, 10).toUpperCase() + '. Kya mera order complete ho gaya hai?')}`;
+    document.getElementById('successModal').classList.add('open');
+    
+    btn.textContent = '🚀 Submit Order';
+    btn.disabled = false;
+    
+    // Reset form
+    document.getElementById('userName').value = '';
+    document.getElementById('userPhone').value = '';
+    document.getElementById('userWallet').value = '';
+    document.getElementById('trxId').value = '';
+    document.getElementById('pkrAmount').value = '';
+    calculateUSDT();
   } catch (err) {
     console.error(err);
     alert('❌ Error: ' + err.message);
-    btn.textContent = '🚀 Submit Order on WhatsApp';
+    btn.textContent = '🚀 Submit Order';
     btn.disabled = false;
   }
+}
+
+window.closeModal = function() {
+  document.getElementById('successModal').classList.remove('open');
+  window.location.href = 'dashboard.html';
 }
 </script>
 
