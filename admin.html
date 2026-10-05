@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — USDT Exchange PK</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0a">
+<title>Admin Panel — USDT Exchange PK</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -18,32 +19,38 @@
     }
   }
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  * { -webkit-tap-highlight-color: transparent; }
-  body { font-family: 'Inter', sans-serif; background: #0a0a0a; min-height: 100vh; }
+  * { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0a; min-height: 100vh; -webkit-user-select: none; user-select: none; }
+  input, textarea { -webkit-user-select: text; user-select: text; }
   h1,h2,h3,h4 { font-family: 'Poppins', sans-serif; }
   .gold-gradient { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #d97706 100%); }
   .gold-text { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .black-card { background: linear-gradient(135deg, #141414 0%, #1a1a1a 100%); border: 1px solid #2a2a2a; }
   .gold-glow { box-shadow: 0 0 30px rgba(245, 158, 11, 0.4); }
-  .input-dark { background: #0a0a0a; border: 2px solid #2a2a2a; color: white; }
-  .input-dark:focus { border-color: #f59e0b; outline: none; }
+  .input-dark { background: #0a0a0a; border: 2px solid #2a2a2a; color: white; font-size: 15px; outline: none; }
+  .input-dark:focus { border-color: #f59e0b; }
   .status-pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
   .status-completed { background: rgba(34, 197, 94, 0.15); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.4); }
   .status-rejected { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.4); }
   .status-processing { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.4); }
   .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(245,158,11,0.3); border-radius: 50%; border-top-color: #f59e0b; animation: spin 1s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
+  .modal-backdrop { background: rgba(0,0,0,0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .badge-count { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; font-size: 11px; font-weight: 700; }
 </style>
 </head>
 <body class="text-white">
 
+<!-- LOGIN SCREEN -->
 <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
   <div class="w-full max-w-md">
     <div class="text-center mb-8">
       <div class="w-16 h-16 gold-gradient rounded-2xl flex items-center justify-center text-black font-bold text-3xl shadow-lg gold-glow mx-auto">👑</div>
-      <h1 class="text-2xl font-black text-white mt-4">Admin Login</h1>
+      <h1 class="text-2xl font-bold text-white mt-4">Admin Login</h1>
       <p class="text-gray-400 text-sm mt-1">USDT Exchange PK</p>
     </div>
 
@@ -52,12 +59,12 @@
         <div>
           <label class="block text-gray-400 text-sm mb-2 font-medium">📧 Email</label>
           <input type="email" id="adminEmail" required placeholder="admin@usdtexchange.pk" 
-                 class="input-dark w-full px-5 py-4 rounded-xl text-base">
+                 class="input-dark w-full px-5 py-4 rounded-xl">
         </div>
         <div>
           <label class="block text-gray-400 text-sm mb-2 font-medium">🔒 Password</label>
           <input type="password" id="adminPass" required placeholder="Admin password" 
-                 class="input-dark w-full px-5 py-4 rounded-xl text-base">
+                 class="input-dark w-full px-5 py-4 rounded-xl">
         </div>
         <button type="submit" id="loginBtn" class="w-full gold-gradient text-black font-bold py-4 rounded-xl text-lg shadow-lg gold-glow">
           🚀 Login
@@ -68,81 +75,127 @@
   </div>
 </div>
 
+<!-- ADMIN PANEL -->
 <div id="adminPanel" class="hidden">
-  <header class="backdrop-blur-xl bg-black/80 shadow-lg sticky top-0 z-50 border-b border-gold-500/20">
-    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 gold-gradient rounded-xl flex items-center justify-center text-black font-bold text-lg">👑</div>
-        <div>
-          <h1 class="font-bold text-sm text-white leading-tight">Admin Panel</h1>
-          <p class="text-xs text-gold-400" id="adminEmailDisplay">Loading...</p>
+  <!-- HEADER -->
+  <header class="backdrop-blur-xl bg-black/90 shadow-lg sticky top-0 z-50 border-b border-gold-500/20">
+    <div class="container mx-auto px-4 py-3 max-w-4xl">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 gold-gradient rounded-xl flex items-center justify-center text-black font-bold text-lg">👑</div>
+          <div>
+            <h1 class="font-bold text-sm text-white leading-tight">Admin Panel</h1>
+            <p class="text-xs text-gold-400 truncate max-w-[180px]" id="adminEmailDisplay">Loading...</p>
+          </div>
         </div>
-      </div>
-      <div class="flex items-center gap-2">
-        <button onclick="loadAllData()" class="text-gold-400 hover:text-gold-300 text-sm font-medium bg-gold-500/10 px-4 py-2 rounded-lg border border-gold-500/30">🔄</button>
-        <button onclick="adminLogout()" class="text-gray-300 hover:text-red-400 text-sm font-medium bg-red-500/10 px-4 py-2 rounded-lg border border-red-500/30">Logout</button>
+        <div class="flex items-center gap-2">
+          <button onclick="loadAllData()" class="text-gold-400 hover:text-gold-300 text-sm font-medium bg-gold-500/10 px-3 py-2 rounded-lg border border-gold-500/30">🔄</button>
+          <button onclick="adminLogout()" class="text-red-400 hover:text-red-300 text-sm font-medium bg-red-500/10 px-3 py-2 rounded-lg border border-red-500/30">Logout</button>
+        </div>
       </div>
     </div>
   </header>
 
-  <main class="py-6 px-4 pb-24">
+  <main class="py-4 px-4 pb-24">
     <div class="container mx-auto max-w-4xl">
 
-      <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
-        <button onclick="showTab('all')" id="tabAll" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gold-500 text-black">📋 Orders</button>
-        <button onclick="showTab('users')" id="tabUsers" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20">👥 Users</button>
-        <button onclick="showTab('buy')" id="tabBuy" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20">💰 Buy</button>
-        <button onclick="showTab('sell')" id="tabSell" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20">💵 Sell</button>
-        <button onclick="showTab('stats')" id="tabStats" class="tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20">📊 Stats</button>
+      <!-- TAB BUTTONS -->
+      <div class="flex gap-2 mb-4 overflow-x-auto pb-1 no-scrollbar">
+        <button onclick="showTab('orders')" id="tabOrders" class="tab-btn whitespace-nowrap px-4 py-2.5 rounded-xl font-semibold bg-gold-500 text-black text-sm">
+          📋 Orders <span class="badge-count bg-black/20" id="badgeOrders">0</span>
+        </button>
+        <button onclick="showTab('users')" id="tabUsers" class="tab-btn whitespace-nowrap px-4 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20 text-sm">
+          👥 Users <span class="badge-count bg-black/30 text-gold-400" id="badgeUsers">0</span>
+        </button>
+        <button onclick="showTab('stats')" id="tabStats" class="tab-btn whitespace-nowrap px-4 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20 text-sm">
+          📊 Stats
+        </button>
       </div>
 
-      <div id="ordersContainer">
-        <div class="text-center py-8"><span class="loading"></span></div>
+      <!-- ORDERS TAB -->
+      <div id="ordersTab">
+        <!-- FILTERS -->
+        <div class="flex gap-2 mb-3 overflow-x-auto pb-1 no-scrollbar">
+          <button onclick="filterOrders('all', this)" class="filter-btn active whitespace-nowrap px-3 py-2 rounded-lg text-xs font-semibold bg-gold-500 text-black">
+            All <span class="ml-1 opacity-70" id="fAll">0</span>
+          </button>
+          <button onclick="filterOrders('Pending', this)" class="filter-btn whitespace-nowrap px-3 py-2 rounded-lg text-xs font-semibold bg-gray-900 text-gray-300 border border-gray-700">
+            ⏳ Pending <span class="ml-1 opacity-70" id="fPending">0</span>
+          </button>
+          <button onclick="filterOrders('Processing', this)" class="filter-btn whitespace-nowrap px-3 py-2 rounded-lg text-xs font-semibold bg-gray-900 text-gray-300 border border-gray-700">
+            🔄 Processing <span class="ml-1 opacity-70" id="fProcessing">0</span>
+          </button>
+          <button onclick="filterOrders('Completed', this)" class="filter-btn whitespace-nowrap px-3 py-2 rounded-lg text-xs font-semibold bg-gray-900 text-gray-300 border border-gray-700">
+            ✅ Completed <span class="ml-1 opacity-70" id="fCompleted">0</span>
+          </button>
+          <button onclick="filterOrders('Rejected', this)" class="filter-btn whitespace-nowrap px-3 py-2 rounded-lg text-xs font-semibold bg-gray-900 text-gray-300 border border-gray-700">
+            ❌ Rejected <span class="ml-1 opacity-70" id="fRejected">0</span>
+          </button>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="mb-4">
+          <input type="text" id="orderSearch" oninput="renderOrders()" placeholder="🔍 Search by name, phone, order ID, TRX..." 
+                 class="input-dark w-full px-4 py-3 rounded-xl text-sm">
+        </div>
+
+        <!-- ORDERS LIST -->
+        <div id="ordersContainer">
+          <div class="text-center py-8"><span class="loading"></span></div>
+        </div>
       </div>
 
-      <div id="usersContainer" class="hidden"></div>
+      <!-- USERS TAB -->
+      <div id="usersTab" class="hidden">
+        <div class="mb-4">
+          <input type="text" id="userSearch" oninput="renderUsers()" placeholder="🔍 Search users by name, email, phone..." 
+                 class="input-dark w-full px-4 py-3 rounded-xl text-sm">
+        </div>
+        <div id="usersContainer"></div>
+      </div>
 
-      <div id="statsContainer" class="hidden">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div class="black-card rounded-2xl p-5">
-            <div class="text-2xl mb-2">👥</div>
-            <p class="text-gray-400 text-xs uppercase mb-1">Total Users</p>
-            <p class="text-2xl font-black gold-text" id="statUsers">0</p>
+      <!-- STATS TAB -->
+      <div id="statsTab" class="hidden">
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div class="black-card rounded-2xl p-4">
+            <div class="text-2xl mb-1">👥</div>
+            <p class="text-gray-400 text-xs uppercase">Total Users</p>
+            <p class="text-2xl font-bold gold-text mt-1" id="statUsers">0</p>
           </div>
-          <div class="black-card rounded-2xl p-5">
-            <div class="text-2xl mb-2">📦</div>
-            <p class="text-gray-400 text-xs uppercase mb-1">Total Orders</p>
-            <p class="text-2xl font-black gold-text" id="statTotal">0</p>
+          <div class="black-card rounded-2xl p-4">
+            <div class="text-2xl mb-1">📦</div>
+            <p class="text-gray-400 text-xs uppercase">Total Orders</p>
+            <p class="text-2xl font-bold gold-text mt-1" id="statTotal">0</p>
           </div>
-          <div class="black-card rounded-2xl p-5">
-            <div class="text-2xl mb-2">💰</div>
-            <p class="text-gray-400 text-xs uppercase mb-1">Buy Orders</p>
-            <p class="text-2xl font-black text-green-400" id="statBuy">0</p>
+          <div class="black-card rounded-2xl p-4">
+            <div class="text-2xl mb-1">💰</div>
+            <p class="text-gray-400 text-xs uppercase">Buy Orders</p>
+            <p class="text-2xl font-bold text-green-400 mt-1" id="statBuy">0</p>
           </div>
-          <div class="black-card rounded-2xl p-5">
-            <div class="text-2xl mb-2">💵</div>
-            <p class="text-gray-400 text-xs uppercase mb-1">Sell Orders</p>
-            <p class="text-2xl font-black text-orange-400" id="statSell">0</p>
+          <div class="black-card rounded-2xl p-4">
+            <div class="text-2xl mb-1">💵</div>
+            <p class="text-gray-400 text-xs uppercase">Sell Orders</p>
+            <p class="text-2xl font-bold text-orange-400 mt-1" id="statSell">0</p>
           </div>
-          <div class="black-card rounded-2xl p-5">
-            <div class="text-2xl mb-2">⏳</div>
-            <p class="text-gray-400 text-xs uppercase mb-1">Pending</p>
-            <p class="text-2xl font-black text-gold-400" id="statPending">0</p>
+          <div class="black-card rounded-2xl p-4">
+            <div class="text-2xl mb-1">⏳</div>
+            <p class="text-gray-400 text-xs uppercase">Pending</p>
+            <p class="text-2xl font-bold text-gold-400 mt-1" id="statPending">0</p>
           </div>
-          <div class="black-card rounded-2xl p-5">
-            <div class="text-2xl mb-2">✅</div>
-            <p class="text-gray-400 text-xs uppercase mb-1">Completed</p>
-            <p class="text-2xl font-black text-green-400" id="statCompleted">0</p>
+          <div class="black-card rounded-2xl p-4">
+            <div class="text-2xl mb-1">✅</div>
+            <p class="text-gray-400 text-xs uppercase">Completed</p>
+            <p class="text-2xl font-bold text-green-400 mt-1" id="statCompleted">0</p>
           </div>
-          <div class="black-card rounded-2xl p-5">
-            <div class="text-2xl mb-2">❌</div>
-            <p class="text-gray-400 text-xs uppercase mb-1">Rejected</p>
-            <p class="text-2xl font-black text-red-400" id="statRejected">0</p>
+          <div class="black-card rounded-2xl p-4">
+            <div class="text-2xl mb-1">❌</div>
+            <p class="text-gray-400 text-xs uppercase">Rejected</p>
+            <p class="text-2xl font-bold text-red-400 mt-1" id="statRejected">0</p>
           </div>
-          <div class="black-card rounded-2xl p-5">
-            <div class="text-2xl mb-2">💎</div>
-            <p class="text-gray-400 text-xs uppercase mb-1">Total USDT</p>
-            <p class="text-2xl font-black text-gold-400" id="statUsdt">0</p>
+          <div class="black-card rounded-2xl p-4">
+            <div class="text-2xl mb-1">💎</div>
+            <p class="text-gray-400 text-xs uppercase">Total USDT</p>
+            <p class="text-2xl font-bold text-gold-400 mt-1" id="statUsdt">0</p>
           </div>
         </div>
       </div>
@@ -151,17 +204,29 @@
   </main>
 </div>
 
-<div id="imageModal" class="hidden fixed inset-0 z-[9999] bg-black/95 items-center justify-center p-4" onclick="closeImage()">
+<!-- IMAGE VIEWER -->
+<div id="imageModal" class="hidden fixed inset-0 z-[9999] modal-backdrop items-center justify-center p-4" onclick="closeImage()">
   <div class="max-w-4xl max-h-screen w-full relative">
     <button onclick="closeImage()" class="absolute top-4 right-4 w-10 h-10 bg-white/10 rounded-full text-white text-xl z-10">✕</button>
     <img id="viewImage" src="" class="max-w-full max-h-[90vh] object-contain rounded-xl mx-auto">
   </div>
 </div>
 
+<!-- USER DETAIL MODAL -->
+<div id="userModal" class="hidden fixed inset-0 z-[9999] modal-backdrop items-center justify-center p-4">
+  <div class="black-card rounded-2xl p-6 max-w-md w-full border-2 border-gold-500/40 max-h-[90vh] overflow-y-auto">
+    <div class="flex justify-between items-center mb-5">
+      <h3 class="text-lg font-bold text-white">User Details</h3>
+      <button onclick="closeUserModal()" class="text-gray-400 text-2xl">✕</button>
+    </div>
+    <div id="userModalContent"></div>
+  </div>
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, getDocs, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAqnJ03WOnX4_hlo4MK2Wc4ZJv8dCgDFgE",
@@ -178,8 +243,9 @@ const db = getFirestore(app);
 
 let allOrders = [];
 let allUsers = [];
-let currentFilter = 'all';
+let currentStatusFilter = 'all';
 
+// AUTH
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     const adminDoc = await getDoc(doc(db, 'admins', user.uid));
@@ -191,7 +257,7 @@ onAuthStateChanged(auth, async (user) => {
     } else {
       await signOut(auth);
       const errEl = document.getElementById('adminError');
-      errEl.textContent = '❌ You are not an admin';
+      errEl.textContent = '❌ You are not authorized as admin';
       errEl.classList.remove('hidden');
     }
   } else {
@@ -219,7 +285,6 @@ window.adminLogin = async function(e) {
     else if (err.code === 'auth/wrong-password') msg += 'Wrong password';
     else if (err.code === 'auth/invalid-credential') msg += 'Invalid email or password';
     else msg += err.message;
-    
     errEl.textContent = msg;
     errEl.classList.remove('hidden');
     btn.textContent = '🚀 Login';
@@ -233,38 +298,28 @@ window.adminLogout = async function() {
 }
 
 window.loadAllData = async function() {
-  await loadOrders();
-  await loadUsers();
+  await Promise.all([loadOrders(), loadUsers()]);
+  updateBadges();
 }
 
+// TABS
 window.showTab = function(tab) {
   document.querySelectorAll('.tab-btn').forEach(b => {
-    b.className = 'tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20';
+    b.className = b.className.replace('bg-gold-500 text-black', 'bg-gray-900 text-gray-300 border border-gold-500/20');
   });
-  event.target.className = 'tab-btn whitespace-nowrap px-5 py-2.5 rounded-xl font-semibold bg-gold-500 text-black';
+  event.target.className = event.target.className.replace('bg-gray-900 text-gray-300 border border-gold-500/20', 'bg-gold-500 text-black');
 
-  document.getElementById('ordersContainer').classList.add('hidden');
-  document.getElementById('usersContainer').classList.add('hidden');
-  document.getElementById('statsContainer').classList.add('hidden');
+  document.getElementById('ordersTab').classList.add('hidden');
+  document.getElementById('usersTab').classList.add('hidden');
+  document.getElementById('statsTab').classList.add('hidden');
 
-  if (tab === 'stats') {
-    document.getElementById('statsContainer').classList.remove('hidden');
-    loadStats();
-  } else if (tab === 'users') {
-    document.getElementById('usersContainer').classList.remove('hidden');
-    renderUsers();
-  } else {
-    document.getElementById('ordersContainer').classList.remove('hidden');
-    currentFilter = tab;
-    renderOrders();
-  }
+  if (tab === 'orders') document.getElementById('ordersTab').classList.remove('hidden');
+  else if (tab === 'users') document.getElementById('usersTab').classList.remove('hidden');
+  else if (tab === 'stats') { document.getElementById('statsTab').classList.remove('hidden'); loadStats(); }
 }
 
+// LOAD ORDERS
 window.loadOrders = async function() {
-  const container = document.getElementById('ordersContainer');
-  if (!container) return;
-  container.innerHTML = '<div class="text-center py-8"><span class="loading"></span></div>';
-
   try {
     const snap = await getDocs(collection(db, 'orders'));
     allOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -272,215 +327,103 @@ window.loadOrders = async function() {
     renderOrders();
   } catch (err) {
     console.error(err);
-    container.innerHTML = '<p class="text-center text-red-400 py-8">Failed to load orders: ' + err.message + '</p>';
+    document.getElementById('ordersContainer').innerHTML = '<p class="text-center text-red-400 py-8 text-sm">Failed to load orders</p>';
   }
 }
 
-window.loadUsers = async function() {
-  try {
-    const snap = await getDocs(collection(db, 'users'));
-    allUsers = snap.docs.map(d => ({ uid: d.id, ...d.data() }));
-    allUsers.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-function renderUsers() {
-  const container = document.getElementById('usersContainer');
-  
-  if (allUsers.length === 0) {
-    container.innerHTML = `
-      <div class="black-card rounded-2xl p-8 text-center">
-        <div class="text-5xl mb-3">👥</div>
-        <p class="text-gray-400 text-sm">No users registered yet</p>
-      </div>
-    `;
-    return;
-  }
-
-  container.innerHTML = `
-    <div class="mb-4 p-4 bg-gold-500/10 border border-gold-500/30 rounded-xl">
-      <p class="text-gold-400 text-sm font-semibold">👥 Total Users: <span class="text-2xl font-black">${allUsers.length}</span></p>
-    </div>
-  ` + allUsers.map((user, index) => `
-    <div class="black-card rounded-2xl p-4 mb-3">
-      <div class="flex justify-between items-start mb-3">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-lg">
-            ${(user.name || 'U').charAt(0).toUpperCase()}
-          </div>
-          <div>
-            <p class="font-bold text-white text-sm">${user.name || 'Unknown User'}</p>
-            <p class="text-gray-500 text-xs mt-0.5">#${index + 1}</p>
-          </div>
-        </div>
-        <span class="text-xs px-3 py-1 rounded-full font-semibold bg-green-500/20 text-green-400 border border-green-500/40">
-          Active
-        </span>
-      </div>
-      
-      <div class="grid grid-cols-2 gap-3 text-xs mb-2">
-        <div class="col-span-2">
-          <p class="text-gray-500">📧 Email</p>
-          <p class="text-white font-semibold break-all">${user.email || 'N/A'}</p>
-        </div>
-        <div>
-          <p class="text-gray-500">📱 Phone</p>
-          <p class="text-white font-semibold">${user.phone || 'N/A'}</p>
-        </div>
-        <div>
-          <p class="text-gray-500">💰 Balance</p>
-          <p class="text-white font-semibold">Rs. ${user.balance || 0}</p>
-        </div>
-        <div class="col-span-2">
-          <p class="text-gray-500">📅 Joined</p>
-          <p class="text-white font-semibold">${user.createdAt ? new Date(user.createdAt).toLocaleString('en-PK') : 'N/A'}</p>
-        </div>
-        <div class="col-span-2">
-          <p class="text-gray-500">🆔 User UID</p>
-          <p class="text-white font-semibold break-all text-xs font-mono">${user.uid}</p>
-        </div>
-      </div>
-    </div>
-  `).join('');
+window.filterOrders = function(status, btn) {
+  currentStatusFilter = status;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.className = b.className.replace('bg-gold-500 text-black', 'bg-gray-900 text-gray-300 border border-gray-700');
+  });
+  btn.className = btn.className.replace('bg-gray-900 text-gray-300 border border-gray-700', 'bg-gold-500 text-black');
+  renderOrders();
 }
 
 function renderOrders() {
   const container = document.getElementById('ordersContainer');
+  const search = (document.getElementById('orderSearch')?.value || '').toLowerCase();
+
   let filtered = allOrders;
+  if (currentStatusFilter !== 'all') filtered = filtered.filter(o => o.status === currentStatusFilter);
   
-  if (currentFilter === 'pending') filtered = allOrders.filter(o => o.status === 'Pending');
-  else if (currentFilter === 'buy') filtered = allOrders.filter(o => o.type === 'Buy');
-  else if (currentFilter === 'sell') filtered = allOrders.filter(o => o.type === 'Sell');
+  if (search) {
+    filtered = filtered.filter(o => 
+      (o.customerName || o.senderName || o.receiverName || '').toLowerCase().includes(search) ||
+      (o.customerPhone || o.receiverPhone || '').includes(search) ||
+      (o.id || '').toLowerCase().includes(search) ||
+      (o.trxId || '').toLowerCase().includes(search)
+    );
+  }
 
   if (filtered.length === 0) {
     container.innerHTML = `
       <div class="black-card rounded-2xl p-8 text-center">
         <div class="text-5xl mb-3">📭</div>
         <p class="text-gray-400 text-sm">No orders found</p>
-      </div>
-    `;
+      </div>`;
     return;
   }
 
   container.innerHTML = filtered.map(order => {
     const isSell = order.type === 'Sell';
-    const typeColor = isSell ? 'text-orange-400' : 'text-green-400';
-    const typeEmoji = isSell ? '💵' : '💰';
     const borderColor = isSell ? 'border-orange-500' : 'border-green-500';
+    const typeEmoji = isSell ? '💵' : '💰';
+    const typeColor = isSell ? 'text-orange-400' : 'text-green-400';
 
     const screenshotHtml = order.screenshot 
-      ? `<div class="mb-3">
-           <p class="text-gray-500 text-xs mb-2">📸 Payment Screenshot:</p>
-           <img src="${order.screenshot}" 
-                onclick="viewImage('${order.id}')" 
-                class="w-full max-h-48 object-contain rounded-xl border-2 border-gold-500/30 cursor-pointer hover:border-gold-500 transition">
-           <p class="text-xs text-gold-400 mt-1 text-center">👆 Tap to view full size</p>
-         </div>`
-      : `<div class="mb-3 p-3 bg-yellow-900/20 border border-yellow-500/30 rounded-xl">
-           <p class="text-xs text-yellow-400">⚠️ No screenshot uploaded</p>
-         </div>`;
+      ? `<img src="${order.screenshot}" onclick="viewImage('${order.id}')" 
+              class="w-full max-h-48 object-contain rounded-lg border border-gold-500/30 cursor-pointer mb-2">`
+      : `<div class="mb-2 p-2 bg-yellow-900/20 border border-yellow-500/30 rounded-lg text-xs text-yellow-400">⚠️ No screenshot</div>`;
 
-    let detailFields = '';
-
+    let details = '';
     if (!isSell) {
-      detailFields = `
-        <div>
-          <p class="text-gray-500">Sender Name</p>
-          <p class="text-white font-semibold">${order.senderName || 'N/A'}</p>
-        </div>
-        <div>
-          <p class="text-gray-500">Amount Sent (PKR)</p>
-          <p class="text-white font-semibold">Rs. ${order.amountSent || 'N/A'}</p>
-        </div>
-        <div class="col-span-2">
-          <p class="text-gray-500">Receive Method</p>
-          <p class="text-white font-semibold">${order.receiveMethod === 'binance' ? '🟡 Binance' : '💼 Wallet'}</p>
-        </div>
-        ${order.binanceUid ? `<div><p class="text-gray-500">Binance UID</p><p class="text-white font-semibold break-all text-xs">${order.binanceUid}</p></div>` : ''}
-        ${order.binanceName ? `<div><p class="text-gray-500">Binance Name</p><p class="text-white font-semibold">${order.binanceName}</p></div>` : ''}
-        ${order.walletAddress ? `<div class="col-span-2"><p class="text-gray-500">Wallet Address</p><p class="text-white font-semibold break-all text-xs">${order.walletAddress}</p></div>` : ''}
+      details = `
+        <div><span class="text-gray-500">Sender:</span> <span class="text-white">${order.senderName || 'N/A'}</span></div>
+        <div><span class="text-gray-500">Amount Sent:</span> <span class="text-white">Rs. ${order.amountSent || 0}</span></div>
+        <div class="col-span-2"><span class="text-gray-500">Receive:</span> <span class="text-white">${order.receiveMethod === 'binance' ? '🟡 Binance' : '💼 Wallet'}</span></div>
+        ${order.binanceUid ? `<div class="col-span-2"><span class="text-gray-500">Binance UID:</span> <span class="text-white break-all">${order.binanceUid}</span></div>` : ''}
+        ${order.binanceName ? `<div class="col-span-2"><span class="text-gray-500">Binance Name:</span> <span class="text-white">${order.binanceName}</span></div>` : ''}
+        ${order.walletAddress ? `<div class="col-span-2"><span class="text-gray-500">Wallet:</span> <span class="text-white break-all">${order.walletAddress}</span></div>` : ''}
       `;
     } else {
-      detailFields = `
-        <div>
-          <p class="text-gray-500">Amount Sent (USDT)</p>
-          <p class="text-white font-semibold">${order.amountSentUsdt || 'N/A'} USDT</p>
-        </div>
-        <div>
-          <p class="text-gray-500">Payment Method</p>
-          <p class="text-white font-semibold">💳 ${order.paymentMethod || 'N/A'}</p>
-        </div>
-        <div class="col-span-2">
-          <p class="text-gray-500">Sender Method</p>
-          <p class="text-white font-semibold">${order.senderMethod === 'binance' ? '🟡 From Binance' : '💼 From Wallet'}</p>
-        </div>
-        ${order.senderBinanceUid ? `<div><p class="text-gray-500">Sender Binance UID</p><p class="text-white font-semibold break-all text-xs">${order.senderBinanceUid}</p></div>` : ''}
-        ${order.senderBinanceName ? `<div><p class="text-gray-500">Sender Binance Name</p><p class="text-white font-semibold">${order.senderBinanceName}</p></div>` : ''}
-        ${order.senderWalletAddress ? `<div class="col-span-2"><p class="text-gray-500">Sender Wallet Address</p><p class="text-white font-semibold break-all text-xs">${order.senderWalletAddress}</p></div>` : ''}
-        ${order.senderWalletName ? `<div class="col-span-2"><p class="text-gray-500">Sender Wallet Name</p><p class="text-white font-semibold">${order.senderWalletName}</p></div>` : ''}
-        <div>
-          <p class="text-gray-500">Receiver Name</p>
-          <p class="text-white font-semibold">${order.receiverName || 'N/A'}</p>
-        </div>
-        <div>
-          <p class="text-gray-500">Receiver Number</p>
-          <p class="text-white font-semibold">${order.receiverPhone || 'N/A'}</p>
-        </div>
+      details = `
+        <div><span class="text-gray-500">Amount Sent:</span> <span class="text-white">${order.amountSentUsdt || 0} USDT</span></div>
+        <div><span class="text-gray-500">Payment:</span> <span class="text-white">${order.paymentMethod || 'N/A'}</span></div>
+        <div class="col-span-2"><span class="text-gray-500">Sender Method:</span> <span class="text-white">${order.senderMethod === 'binance' ? '🟡 Binance' : '💼 Wallet'}</span></div>
+        ${order.senderBinanceUid ? `<div class="col-span-2"><span class="text-gray-500">Sender UID:</span> <span class="text-white break-all">${order.senderBinanceUid}</span></div>` : ''}
+        ${order.senderWalletAddress ? `<div class="col-span-2"><span class="text-gray-500">Sender Wallet:</span> <span class="text-white break-all">${order.senderWalletAddress}</span></div>` : ''}
+        <div><span class="text-gray-500">Receiver:</span> <span class="text-white">${order.receiverName || 'N/A'}</span></div>
+        <div><span class="text-gray-500">Receiver No:</span> <span class="text-white">${order.receiverPhone || 'N/A'}</span></div>
       `;
     }
 
-    const primaryAmount = isSell 
-      ? `${order.usdtAmount || 0} USDT` 
-      : `Rs. ${order.pkrAmount || 0}`;
-    
-    const secondaryAmount = isSell 
-      ? `Rs. ${order.pkrAmount || 0}` 
-      : `${order.usdtAmount || 0} USDT`;
+    const primary = isSell ? `${order.usdtAmount || 0} USDT` : `Rs. ${order.pkrAmount || 0}`;
+    const secondary = isSell ? `Rs. ${order.pkrAmount || 0}` : `${order.usdtAmount || 0} USDT`;
 
     return `
     <div class="black-card rounded-2xl p-4 mb-3 border-l-4 ${borderColor}">
       <div class="flex justify-between items-start mb-3">
         <div>
           <p class="font-bold text-white text-sm">${typeEmoji} ${order.type || 'Buy'} USDT</p>
-          <p class="text-gray-500 text-xs mt-1">#${order.id.substring(0,8).toUpperCase()}</p>
+          <p class="text-gray-500 text-xs mt-0.5">#${order.id.substring(0,10).toUpperCase()}</p>
         </div>
         <span class="text-xs px-3 py-1 rounded-full font-semibold ${getStatusClass(order.status)}">${order.status || 'Pending'}</span>
       </div>
       
-      <div class="grid grid-cols-2 gap-3 text-xs mb-3">
-        <div>
-          <p class="text-gray-500">${isSell ? 'USDT Amount' : 'PKR Amount'}</p>
-          <p class="text-white font-semibold ${typeColor}">${primaryAmount}</p>
-        </div>
-        <div>
-          <p class="text-gray-500">${isSell ? 'PKR to Send' : 'USDT to Send'}</p>
-          <p class="text-white font-semibold">${secondaryAmount}</p>
-        </div>
-        <div>
-          <p class="text-gray-500">Rate</p>
-          <p class="text-white font-semibold">Rs. ${order.rate || 0}</p>
-        </div>
-        <div>
-          <p class="text-gray-500">Date</p>
-          <p class="text-white font-semibold">${order.date || 'N/A'}</p>
-        </div>
-        ${detailFields}
-        <div class="col-span-2">
-          <p class="text-gray-500">Customer Email</p>
-          <p class="text-white font-semibold break-all text-xs">${order.userEmail || 'N/A'}</p>
-        </div>
-        <div class="col-span-2">
-          <p class="text-gray-500">TRX ID</p>
-          <p class="text-white font-semibold break-all text-xs">${order.trxId || 'N/A'}</p>
-        </div>
+      <div class="grid grid-cols-2 gap-2 text-xs mb-3">
+        <div><span class="text-gray-500">${isSell ? 'USDT' : 'PKR'}:</span> <span class="${typeColor} font-bold">${primary}</span></div>
+        <div><span class="text-gray-500">${isSell ? 'PKR' : 'USDT'}:</span> <span class="text-white font-bold">${secondary}</span></div>
+        ${details}
+        <div class="col-span-2"><span class="text-gray-500">Email:</span> <span class="text-white break-all">${order.userEmail || 'N/A'}</span></div>
+        <div class="col-span-2"><span class="text-gray-500">TRX:</span> <span class="text-white break-all">${order.trxId || 'N/A'}</span></div>
+        <div class="col-span-2"><span class="text-gray-500">Date:</span> <span class="text-white">${order.date || 'N/A'}</span></div>
       </div>
 
       ${screenshotHtml}
 
-      <div class="flex gap-2">
-        <button onclick="updateStatus('${order.id}', 'Processing')" class="flex-1 bg-blue-500/20 border border-blue-500/40 text-blue-400 py-2 rounded-lg text-xs font-semibold">Processing</button>
+      <div class="flex gap-2 mt-2">
+        <button onclick="updateStatus('${order.id}', 'Processing')" class="flex-1 bg-blue-500/20 border border-blue-500/40 text-blue-400 py-2 rounded-lg text-xs font-semibold">🔄 Processing</button>
         <button onclick="updateStatus('${order.id}', 'Completed')" class="flex-1 bg-green-500/20 border border-green-500/40 text-green-400 py-2 rounded-lg text-xs font-semibold">✓ Complete</button>
         <button onclick="updateStatus('${order.id}', 'Rejected')" class="flex-1 bg-red-500/20 border border-red-500/40 text-red-400 py-2 rounded-lg text-xs font-semibold">✕ Reject</button>
       </div>
@@ -489,6 +432,167 @@ function renderOrders() {
   }).join('');
 }
 
+// LOAD USERS
+window.loadUsers = async function() {
+  try {
+    const snap = await getDocs(collection(db, 'users'));
+    allUsers = snap.docs.map(d => ({ uid: d.id, ...d.data() }));
+    allUsers.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+    renderUsers();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function renderUsers() {
+  const container = document.getElementById('usersContainer');
+  const search = (document.getElementById('userSearch')?.value || '').toLowerCase();
+
+  let filtered = allUsers;
+  if (search) {
+    filtered = filtered.filter(u => 
+      (u.name || '').toLowerCase().includes(search) ||
+      (u.email || '').toLowerCase().includes(search) ||
+      (u.phone || '').includes(search)
+    );
+  }
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="black-card rounded-2xl p-8 text-center">
+        <div class="text-5xl mb-3">👥</div>
+        <p class="text-gray-400 text-sm">No users found</p>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="mb-3 p-3 bg-gold-500/10 border border-gold-500/30 rounded-xl">
+      <p class="text-gold-400 text-xs font-semibold">Total: <span class="text-lg font-bold">${filtered.length}</span> users</p>
+    </div>
+  ` + filtered.map(user => `
+    <div class="black-card rounded-2xl p-4 mb-3">
+      <div class="flex justify-between items-start mb-3">
+        <div class="flex items-center gap-3 flex-1 min-w-0">
+          <div class="w-10 h-10 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-base flex-shrink-0">
+            ${(user.name || user.email || 'U').charAt(0).toUpperCase()}
+          </div>
+          <div class="min-w-0">
+            <p class="font-bold text-white text-sm truncate">${user.name || 'Unknown'}</p>
+            <p class="text-gray-500 text-xs truncate">${user.email || 'N/A'}</p>
+          </div>
+        </div>
+        <button onclick="openUserModal('${user.uid}')" class="text-gold-400 text-xs bg-gold-500/10 px-3 py-1.5 rounded-lg border border-gold-500/30 flex-shrink-0">View</button>
+      </div>
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <div><span class="text-gray-500">📱 Phone:</span> <span class="text-white">${user.phone || 'N/A'}</span></div>
+        <div><span class="text-gray-500">💰 Balance:</span> <span class="text-gold-400 font-bold">Rs. ${user.balance || 0}</span></div>
+        <div class="col-span-2"><span class="text-gray-500">📅 Joined:</span> <span class="text-white">${user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-PK') : 'N/A'}</span></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// USER MODAL
+window.openUserModal = function(uid) {
+  const user = allUsers.find(u => u.uid === uid);
+  if (!user) return;
+
+  const orders = allOrders.filter(o => o.userId === uid);
+  const completedOrders = orders.filter(o => o.status === 'Completed').length;
+
+  document.getElementById('userModalContent').innerHTML = `
+    <div class="text-center mb-5">
+      <div class="w-16 h-16 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-2xl mx-auto mb-3">
+        ${(user.name || user.email || 'U').charAt(0).toUpperCase()}
+      </div>
+      <p class="font-bold text-white text-base">${user.name || 'Unknown'}</p>
+      <p class="text-gray-400 text-xs">${user.email || 'N/A'}</p>
+    </div>
+
+    <div class="bg-gold-500/10 border border-gold-500/30 rounded-xl p-4 mb-4 space-y-2 text-sm">
+      <div class="flex justify-between"><span class="text-gray-400">Balance:</span><span class="text-gold-400 font-bold">Rs. ${user.balance || 0}</span></div>
+      <div class="flex justify-between"><span class="text-gray-400">Phone:</span><span class="text-white">${user.phone || 'N/A'}</span></div>
+      <div class="flex justify-between"><span class="text-gray-400">Total Orders:</span><span class="text-white">${orders.length}</span></div>
+      <div class="flex justify-between"><span class="text-gray-400">Completed:</span><span class="text-green-400">${completedOrders}</span></div>
+      <div class="flex justify-between"><span class="text-gray-400">Provider:</span><span class="text-white">${user.authProvider || 'email'}</span></div>
+      <div class="flex justify-between"><span class="text-gray-400">UID:</span><span class="text-white text-xs break-all">${user.uid}</span></div>
+    </div>
+
+    <div class="space-y-2">
+      <button onclick="resetUserPassword('${user.email}')" class="w-full bg-yellow-500/20 border border-yellow-500/40 text-yellow-400 py-3 rounded-xl text-sm font-semibold">
+        🔑 Send Password Reset Email
+      </button>
+      <button onclick="updateUserBalance('${user.uid}', ${user.balance || 0})" class="w-full bg-blue-500/20 border border-blue-500/40 text-blue-400 py-3 rounded-xl text-sm font-semibold">
+        💰 Update Balance
+      </button>
+      <button onclick="deleteUser('${user.uid}', '${user.email}')" class="w-full bg-red-500/20 border border-red-500/40 text-red-400 py-3 rounded-xl text-sm font-semibold">
+        🗑️ Delete User
+      </button>
+    </div>
+  `;
+
+  document.getElementById('userModal').classList.remove('hidden');
+  document.getElementById('userModal').classList.add('flex');
+}
+
+window.closeUserModal = function() {
+  document.getElementById('userModal').classList.add('hidden');
+  document.getElementById('userModal').classList.remove('flex');
+}
+
+window.resetUserPassword = async function(email) {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert('✅ Password reset email sent to: ' + email);
+  } catch (err) {
+    alert('❌ Error: ' + err.message);
+  }
+}
+
+window.updateUserBalance = async function(uid, currentBalance) {
+  const newBalance = prompt('Enter new balance (PKR):', currentBalance);
+  if (newBalance === null) return;
+  const parsed = parseFloat(newBalance);
+  if (isNaN(parsed) || parsed < 0) {
+    alert('❌ Invalid balance');
+    return;
+  }
+  try {
+    await updateDoc(doc(db, 'users', uid), { balance: parsed });
+    alert('✅ Balance updated to Rs. ' + parsed);
+    await loadUsers();
+    closeUserModal();
+  } catch (err) {
+    alert('❌ Error: ' + err.message);
+  }
+}
+
+window.deleteUser = async function(uid, email) {
+  if (!confirm(`Delete user ${email}? This cannot be undone.`)) return;
+  try {
+    await deleteDoc(doc(db, 'users', uid));
+    alert('✅ User deleted from Firestore. (Auth account needs manual deletion from Firebase Console)');
+    await loadUsers();
+    closeUserModal();
+  } catch (err) {
+    alert('❌ Error: ' + err.message);
+  }
+}
+
+// UPDATE STATUS
+window.updateStatus = async function(orderId, newStatus) {
+  if (!confirm(`Change status to "${newStatus}"?`)) return;
+  try {
+    await updateDoc(doc(db, 'orders', orderId), { status: newStatus });
+    await loadOrders();
+    updateBadges();
+  } catch (err) {
+    alert('❌ Error: ' + err.message);
+  }
+}
+
+// IMAGE VIEWER
 window.viewImage = function(orderId) {
   const order = allOrders.find(o => o.id === orderId);
   if (order && order.screenshot) {
@@ -505,6 +609,7 @@ window.closeImage = function() {
   document.body.style.overflow = '';
 }
 
+// HELPERS
 function getStatusClass(status) {
   if (status === 'Completed') return 'status-completed';
   if (status === 'Rejected') return 'status-rejected';
@@ -512,15 +617,14 @@ function getStatusClass(status) {
   return 'status-pending';
 }
 
-window.updateStatus = async function(orderId, newStatus) {
-  try {
-    await updateDoc(doc(db, 'orders', orderId), { status: newStatus });
-    alert('✅ Status updated: ' + newStatus);
-    loadOrders();
-  } catch (err) {
-    console.error(err);
-    alert('❌ Error: ' + err.message);
-  }
+function updateBadges() {
+  document.getElementById('badgeOrders').textContent = allOrders.length;
+  document.getElementById('badgeUsers').textContent = allUsers.length;
+  document.getElementById('fAll').textContent = allOrders.length;
+  document.getElementById('fPending').textContent = allOrders.filter(o => o.status === 'Pending').length;
+  document.getElementById('fProcessing').textContent = allOrders.filter(o => o.status === 'Processing').length;
+  document.getElementById('fCompleted').textContent = allOrders.filter(o => o.status === 'Completed').length;
+  document.getElementById('fRejected').textContent = allOrders.filter(o => o.status === 'Rejected').length;
 }
 
 function loadStats() {
@@ -531,10 +635,7 @@ function loadStats() {
   document.getElementById('statPending').textContent = allOrders.filter(o => o.status === 'Pending').length;
   document.getElementById('statCompleted').textContent = allOrders.filter(o => o.status === 'Completed').length;
   document.getElementById('statRejected').textContent = allOrders.filter(o => o.status === 'Rejected').length;
-  
-  const totalUsdt = allOrders
-    .filter(o => o.status === 'Completed')
-    .reduce((sum, o) => sum + (parseFloat(o.usdtAmount) || 0), 0);
+  const totalUsdt = allOrders.filter(o => o.status === 'Completed').reduce((s, o) => s + (parseFloat(o.usdtAmount) || 0), 0);
   document.getElementById('statUsdt').textContent = totalUsdt.toFixed(2);
 }
 </script>
