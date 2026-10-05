@@ -172,7 +172,6 @@
           <div>
             <label class="block text-gray-400 text-sm mb-2">Your Wallet Address (BEP20) *</label>
             <input type="text" id="senderWalletAddress" placeholder="0x..." class="input-dark w-full px-4 py-3 rounded-xl">
-            <p class="text-xs text-gray-500 mt-1">The wallet address you sent USDT from</p>
           </div>
           <div>
             <label class="block text-gray-400 text-sm mb-2">Your Wallet Account Name *</label>
@@ -204,12 +203,12 @@
         <div>
           <label class="block text-gray-300 text-sm mb-2 font-medium">📸 Transaction Screenshot *</label>
           <input type="file" id="screenshot" accept="image/*" class="input-dark w-full px-4 py-3 rounded-xl text-sm">
-          <p class="text-xs text-gray-500 mt-1">Upload screenshot of USDT transfer (Max 2MB)</p>
+          <p class="text-xs text-gray-500 mt-1">Max 1MB — compress your screenshot</p>
         </div>
       </div>
     </div>
 
-    <!-- STEP 4: PAYMENT METHOD -->
+    <!-- STEP 4 -->
     <div class="black-card rounded-3xl p-6 mb-6">
       <div class="flex items-center gap-2 mb-4">
         <div class="w-8 h-8 orange-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">4</div>
@@ -470,8 +469,8 @@ window.submitOrder = async function() {
     return;
   }
 
-  if (screenshotFile.size > 2 * 1024 * 1024) {
-    alert('❌ Screenshot must be less than 2MB!');
+  if (screenshotFile.size > 1 * 1024 * 1024) {
+    alert('❌ Screenshot must be less than 1MB! Please compress your screenshot.');
     return;
   }
 
