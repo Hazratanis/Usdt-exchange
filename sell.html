@@ -90,32 +90,13 @@
 
     <!-- STEP 2 -->
     <div class="black-card rounded-3xl p-6 mb-6">
-      <div class="flex items-center gap-2 mb-4">
+      <div class="flex items-center gap-2 mb-5">
         <div class="w-8 h-8 orange-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">2</div>
         <h3 class="font-bold text-lg text-white">Send USDT</h3>
       </div>
-      
-      <div class="bg-gradient-to-br from-yellow-900/30 to-orange-900/30 border-2 border-yellow-500/40 rounded-2xl p-5 mb-5">
-        <p class="text-xs text-yellow-300 font-bold uppercase mb-3">💎 Send USDT to this Address</p>
-        
-        <div class="bg-black/50 rounded-xl p-3 mb-3 break-all">
-          <p class="text-xs text-gray-400 mb-1">Our BEP20 (BSC) Address:</p>
-          <p class="text-xs font-mono text-white">0x6e1510c624536e7a283c26f1f1fb303488244b95</p>
-        </div>
-        
-        <button onclick="copyText('0x6e1510c624536e7a283c26f1f1fb303488244b95')" class="w-full bg-yellow-500/20 border border-yellow-500/50 text-yellow-300 font-bold py-3 rounded-xl hover:bg-yellow-500/30 transition">
-          📋 Copy Address
-        </button>
 
-        <div class="mt-4 space-y-2 text-xs text-yellow-300">
-          <p>⚠️ <strong>Only BEP20 network</strong> use karein</p>
-          <p>⚠️ Wrong network will result in loss of funds</p>
-          <p>⚠️ Minimum: 1 USDT</p>
-        </div>
-      </div>
-
-      <!-- SENDER OPTIONS -->
-      <p class="text-sm font-bold text-white mb-3">Where did you send USDT from?</p>
+      <!-- SENDER METHOD BUTTONS -->
+      <p class="text-sm font-bold text-white mb-3">Where do you want to send USDT from?</p>
       <div class="grid grid-cols-2 gap-3 mb-5">
         <button type="button" onclick="selectSenderMethod('binance')" id="btnBinanceSender" 
                 class="p-4 rounded-xl border-2 border-orange-500 bg-orange-500/20 transition text-center">
@@ -129,29 +110,79 @@
         </button>
       </div>
 
-      <!-- BINANCE SENDER FIELDS -->
-      <div id="binanceSenderFields" class="space-y-4">
-        <div>
-          <label class="block text-gray-400 text-sm mb-2">Your Binance UID *</label>
-          <input type="text" id="binanceUid" placeholder="e.g., 499961684" class="input-dark w-full px-4 py-3 rounded-xl">
+      <!-- BINANCE SENDER -->
+      <div id="binanceSenderFields">
+        <!-- OUR DETAILS -->
+        <div class="bg-gradient-to-br from-yellow-900/30 to-orange-900/30 border-2 border-yellow-500/40 rounded-2xl p-5 mb-5">
+          <p class="text-xs text-yellow-300 font-bold uppercase mb-3">🟡 Send USDT to this Binance Account</p>
+          
+          <div class="bg-black/50 rounded-xl p-3 mb-3">
+            <p class="text-xs text-gray-400 mb-1">Our Binance UID:</p>
+            <div class="flex items-center gap-2">
+              <p class="text-sm font-mono text-white flex-1">499961684</p>
+              <button onclick="copyText('499961684')" class="text-yellow-300 hover:text-yellow-200 text-sm bg-yellow-500/20 px-3 py-1 rounded-lg font-semibold">📋 Copy</button>
+            </div>
+          </div>
+
+          <div class="bg-black/50 rounded-xl p-3 mb-3">
+            <p class="text-xs text-gray-400 mb-1">Our Binance Name:</p>
+            <div class="flex items-center gap-2">
+              <p class="text-sm font-mono text-white flex-1">HAZRAT__ANAS</p>
+              <button onclick="copyText('HAZRAT__ANAS')" class="text-yellow-300 hover:text-yellow-200 text-sm bg-yellow-500/20 px-3 py-1 rounded-lg font-semibold">📋 Copy</button>
+            </div>
+          </div>
+
+          <p class="text-xs text-yellow-300 mt-3">💡 Send USDT to this Binance UID using Binance Pay</p>
         </div>
-        <div>
-          <label class="block text-gray-400 text-sm mb-2">Your Binance Account Name *</label>
-          <input type="text" id="binanceName" placeholder="e.g., Muhammad Ali" class="input-dark w-full px-4 py-3 rounded-xl">
+
+        <!-- SENDER DETAILS -->
+        <p class="text-sm font-bold text-white mb-3">Your Binance Details:</p>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-gray-400 text-sm mb-2">Your Binance UID *</label>
+            <input type="text" id="binanceUid" placeholder="e.g., 123456789" class="input-dark w-full px-4 py-3 rounded-xl">
+          </div>
+          <div>
+            <label class="block text-gray-400 text-sm mb-2">Your Binance Account Name *</label>
+            <input type="text" id="binanceName" placeholder="e.g., Muhammad Ali" class="input-dark w-full px-4 py-3 rounded-xl">
+          </div>
         </div>
       </div>
 
-      <!-- WALLET SENDER FIELDS -->
-      <div id="walletSenderFields" class="space-y-4 hidden">
-        <div>
-          <label class="block text-gray-400 text-sm mb-2">Your Wallet Address (BEP20) *</label>
-          <input type="text" id="senderWalletAddress" placeholder="0x..." class="input-dark w-full px-4 py-3 rounded-xl">
-          <p class="text-xs text-gray-500 mt-1">The wallet address you sent USDT from</p>
+      <!-- WALLET SENDER -->
+      <div id="walletSenderFields" class="hidden">
+        <!-- OUR DETAILS -->
+        <div class="bg-gradient-to-br from-yellow-900/30 to-orange-900/30 border-2 border-yellow-500/40 rounded-2xl p-5 mb-5">
+          <p class="text-xs text-yellow-300 font-bold uppercase mb-3">💎 Send USDT to this BEP20 Address</p>
+          
+          <div class="bg-black/50 rounded-xl p-3 mb-3 break-all">
+            <p class="text-xs text-gray-400 mb-1">Our BEP20 (BSC) Address:</p>
+            <p class="text-xs font-mono text-white">0x6e1510c624536e7a283c26f1f1fb303488244b95</p>
+          </div>
+          
+          <button onclick="copyText('0x6e1510c624536e7a283c26f1f1fb303488244b95')" class="w-full bg-yellow-500/20 border border-yellow-500/50 text-yellow-300 font-bold py-3 rounded-xl hover:bg-yellow-500/30 transition">
+            📋 Copy Address
+          </button>
+
+          <div class="mt-4 space-y-2 text-xs text-yellow-300">
+            <p>⚠️ <strong>Only BEP20 network</strong> use karein</p>
+            <p>⚠️ Wrong network will result in loss of funds</p>
+            <p>⚠️ Minimum: 1 USDT</p>
+          </div>
         </div>
-        <div>
-          <label class="block text-gray-400 text-sm mb-2">Your Wallet Account Name *</label>
-          <input type="text" id="senderWalletName" placeholder="e.g., Muhammad Ali" class="input-dark w-full px-4 py-3 rounded-xl">
-          <p class="text-xs text-gray-500 mt-1">The name on your wallet</p>
+
+        <!-- SENDER DETAILS -->
+        <p class="text-sm font-bold text-white mb-3">Your Wallet Details:</p>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-gray-400 text-sm mb-2">Your Wallet Address (BEP20) *</label>
+            <input type="text" id="senderWalletAddress" placeholder="0x..." class="input-dark w-full px-4 py-3 rounded-xl">
+            <p class="text-xs text-gray-500 mt-1">The wallet address you sent USDT from</p>
+          </div>
+          <div>
+            <label class="block text-gray-400 text-sm mb-2">Your Wallet Account Name *</label>
+            <input type="text" id="senderWalletName" placeholder="e.g., Muhammad Ali" class="input-dark w-full px-4 py-3 rounded-xl">
+          </div>
         </div>
       </div>
     </div>
@@ -160,7 +191,7 @@
     <div class="black-card rounded-3xl p-6 mb-6">
       <div class="flex items-center gap-2 mb-4">
         <div class="w-8 h-8 orange-gradient rounded-full flex items-center justify-center text-black font-bold text-sm">3</div>
-        <h3 class="font-bold text-lg text-white">Enter Your Details</h3>
+        <h3 class="font-bold text-lg text-white">Transaction Details</h3>
       </div>
 
       <div class="space-y-5">
@@ -369,14 +400,14 @@ window.submitOrder = async function() {
     binanceUid = document.getElementById('binanceUid').value.trim();
     binanceName = document.getElementById('binanceName').value.trim();
     if (!binanceUid || !binanceName) {
-      alert('❌ Please fill in Binance UID and Name!');
+      alert('❌ Please fill in your Binance UID and Name!');
       return;
     }
   } else {
     senderWalletAddress = document.getElementById('senderWalletAddress').value.trim();
     senderWalletName = document.getElementById('senderWalletName').value.trim();
     if (!senderWalletAddress || !senderWalletName) {
-      alert('❌ Please fill in Wallet Address and Name!');
+      alert('❌ Please fill in your Wallet Address and Name!');
       return;
     }
   }
