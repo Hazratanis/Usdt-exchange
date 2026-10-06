@@ -75,6 +75,16 @@
   .mobile-menu.open { max-height: 500px; }
   .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
   .faq-answer.open { max-height: 500px; }
+  
+  /* Live Notification */
+  #liveNotification {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  #liveNotification.hide {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  
   @media screen and (max-width: 768px) { input, select, textarea { font-size: 16px !important; } }
 </style>
 </head>
@@ -94,6 +104,7 @@
     <nav class="hidden md:flex gap-6 text-gray-300 text-sm font-medium">
       <a href="#services" class="hover:text-gold-400 transition">Services</a>
       <a href="#how" class="hover:text-gold-400 transition">How It Works</a>
+      <a href="#reviews" class="hover:text-gold-400 transition">Reviews</a>
       <a href="#faq" class="hover:text-gold-400 transition">FAQ</a>
       <a href="#contact" class="hover:text-gold-400 transition">Contact</a>
     </nav>
@@ -108,6 +119,7 @@
   <div id="mobileMenu" class="mobile-menu md:hidden bg-black border-t border-gold-500/20 px-4">
     <a href="#services" onclick="toggleMenu()" class="block py-3 text-gray-300 border-b border-gold-500/10">Services</a>
     <a href="#how" onclick="toggleMenu()" class="block py-3 text-gray-300 border-b border-gold-500/10">How It Works</a>
+    <a href="#reviews" onclick="toggleMenu()" class="block py-3 text-gray-300 border-b border-gold-500/10">Reviews</a>
     <a href="#faq" onclick="toggleMenu()" class="block py-3 text-gray-300 border-b border-gold-500/10">FAQ</a>
     <a href="#contact" onclick="toggleMenu()" class="block py-3 text-gray-300">Contact</a>
     <div class="flex gap-2 my-3">
@@ -248,8 +260,94 @@
   </div>
 </section>
 
+<!-- REVIEWS -->
+<section id="reviews" class="py-16 px-4 bg-gray-950">
+  <div class="container mx-auto max-w-6xl">
+    <div class="text-center mb-12">
+      <h3 class="text-3xl md:text-5xl font-bold text-white mb-3">
+        Customer <span class="gold-text">Reviews</span>
+      </h3>
+      <p class="text-gray-400 text-base">Trusted by 1000+ customers across Pakistan</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div class="black-card rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-lg">A</div>
+          <div>
+            <p class="font-bold text-white text-sm">Ahmed Khan</p>
+            <p class="text-gray-500 text-xs">Karachi</p>
+          </div>
+        </div>
+        <div class="text-yellow-400 mb-3">⭐⭐⭐⭐⭐</div>
+        <p class="text-gray-300 text-sm leading-relaxed">"Easypaisa account 10 minute mein unblock ho gaya. Bohot fast service hai!"</p>
+      </div>
+
+      <div class="black-card rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-lg">F</div>
+          <div>
+            <p class="font-bold text-white text-sm">Fatima Ali</p>
+            <p class="text-gray-500 text-xs">Lahore</p>
+          </div>
+        </div>
+        <div class="text-yellow-400 mb-3">⭐⭐⭐⭐⭐</div>
+        <p class="text-gray-300 text-sm leading-relaxed">"CapCut Pro mila best rate mein. Payment ke baad instant delivery!"</p>
+      </div>
+
+      <div class="black-card rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-lg">H</div>
+          <div>
+            <p class="font-bold text-white text-sm">Hassan Raza</p>
+            <p class="text-gray-500 text-xs">Islamabad</p>
+          </div>
+        </div>
+        <div class="text-yellow-400 mb-3">⭐⭐⭐⭐⭐</div>
+        <p class="text-gray-300 text-sm leading-relaxed">"TikTok promotion se views 10x barh gaye. Recommended!"</p>
+      </div>
+
+      <div class="black-card rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-lg">S</div>
+          <div>
+            <p class="font-bold text-white text-sm">Sara Ahmed</p>
+            <p class="text-gray-500 text-xs">Faisalabad</p>
+          </div>
+        </div>
+        <div class="text-yellow-400 mb-3">⭐⭐⭐⭐⭐</div>
+        <p class="text-gray-300 text-sm leading-relaxed">"USDT sell kiya, 20 minute mein PKR mil gaya. Trusted seller!"</p>
+      </div>
+
+      <div class="black-card rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-lg">M</div>
+          <div>
+            <p class="font-bold text-white text-sm">Muhammad Usman</p>
+            <p class="text-gray-500 text-xs">Rawalpindi</p>
+          </div>
+        </div>
+        <div class="text-yellow-400 mb-3">⭐⭐⭐⭐⭐</div>
+        <p class="text-gray-300 text-sm leading-relaxed">"Bohot professional service. Har order time pe complete hota hai."</p>
+      </div>
+
+      <div class="black-card rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-lg">Z</div>
+          <div>
+            <p class="font-bold text-white text-sm">Zainab Bibi</p>
+            <p class="text-gray-500 text-xs">Multan</p>
+          </div>
+        </div>
+        <div class="text-yellow-400 mb-3">⭐⭐⭐⭐⭐</div>
+        <p class="text-gray-300 text-sm leading-relaxed">"Canva Pro subscription mila instantly. Best rates!"</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- WHY CHOOSE US -->
-<section class="py-16 px-4 bg-gray-950">
+<section class="py-16 px-4 bg-black">
   <div class="container mx-auto max-w-6xl">
     <div class="text-center mb-12">
       <h3 class="text-3xl md:text-5xl font-bold text-white mb-3">Why <span class="gold-text">Choose Us</span></h3>
@@ -282,7 +380,7 @@
 </section>
 
 <!-- FAQ -->
-<section id="faq" class="py-16 px-4 bg-black">
+<section id="faq" class="py-16 px-4 bg-gray-950">
   <div class="container mx-auto max-w-2xl">
     <div class="text-center mb-12">
       <h3 class="text-3xl md:text-5xl font-bold text-white mb-3"><span class="gold-text">FAQ</span></h3>
@@ -324,7 +422,7 @@
 </section>
 
 <!-- CONTACT -->
-<section id="contact" class="py-16 px-4 bg-gray-950">
+<section id="contact" class="py-16 px-4 bg-black">
   <div class="container mx-auto max-w-2xl text-center">
     <h3 class="text-3xl md:text-5xl font-bold text-white mb-4">Ready to <span class="gold-text">Exchange?</span></h3>
     <p class="text-gray-400 text-base mb-8">Contact us for any questions — we reply fast</p>
@@ -341,7 +439,7 @@
 </section>
 
 <!-- FOOTER -->
-<footer class="bg-black text-gray-400 py-10 px-4 border-t border-gold-500/20">
+<footer class="bg-gray-950 text-gray-400 py-10 px-4 border-t border-gold-500/20">
   <div class="container mx-auto max-w-6xl">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
       <div>
@@ -378,8 +476,23 @@
   </div>
 </footer>
 
+<!-- FLOATING WHATSAPP BUTTON -->
 <a href="https://wa.me/923169113663?text=Hello%20USDT%20Exchange%20PK%2C%20I%20need%20assistance.%20Please%20help." 
    class="whatsapp-float" target="_blank" aria-label="WhatsApp">💬</a>
+
+<!-- LIVE NOTIFICATION POPUP -->
+<div id="liveNotification" class="fixed bottom-24 left-4 z-[9998] hide">
+  <div class="bg-gray-900 border-2 border-gold-500/40 rounded-xl p-3 shadow-2xl flex items-center gap-3 max-w-xs">
+    <div id="notifIcon" class="w-10 h-10 gold-gradient rounded-full flex items-center justify-center text-black font-bold flex-shrink-0">A</div>
+    <div class="min-w-0">
+      <p id="notifName" class="font-bold text-white text-xs truncate">Ahmed Khan</p>
+      <p id="notifAction" class="text-gray-400 text-xs">ne USDT kharida</p>
+      <p class="text-gold-400 text-xs font-semibold mt-0.5">
+        <span id="notifTime">2 minutes</span> pehle
+      </p>
+    </div>
+  </div>
+</div>
 
 <script>
   function toggleMenu() {
@@ -400,6 +513,47 @@
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
+
+  // Live notification system
+  const notifications = [
+    { name: 'Ahmed Khan', action: 'ne USDT kharida', city: 'Karachi', time: '2 minutes' },
+    { name: 'Fatima Ali', action: 'ne USDT becha', city: 'Lahore', time: '5 minutes' },
+    { name: 'Hassan Raza', action: 'ne order complete kiya', city: 'Islamabad', time: '8 minutes' },
+    { name: 'Sara Ahmed', action: 'ne PKR receive kiya', city: 'Faisalabad', time: '12 minutes' },
+    { name: 'Muhammad Usman', action: 'ne USDT kharida', city: 'Rawalpindi', time: '15 minutes' },
+    { name: 'Zainab Bibi', action: 'ne order place kiya', city: 'Multan', time: '20 minutes' },
+    { name: 'Ali Raza', action: 'ne USDT becha', city: 'Peshawar', time: '25 minutes' },
+    { name: 'Ayesha Khan', action: 'ne USDT kharida', city: 'Quetta', time: '30 minutes' }
+  ];
+
+  let notifIndex = 0;
+
+  function showNotification() {
+    const notif = notifications[notifIndex];
+    const notifEl = document.getElementById('liveNotification');
+
+    document.getElementById('notifIcon').textContent = notif.name.charAt(0);
+    document.getElementById('notifName').textContent = notif.name + ' (' + notif.city + ')';
+    document.getElementById('notifAction').textContent = notif.action;
+    document.getElementById('notifTime').textContent = notif.time;
+
+    notifEl.classList.remove('hide');
+
+    // Hide after 5 seconds
+    setTimeout(() => {
+      notifEl.classList.add('hide');
+    }, 5000);
+
+    notifIndex = (notifIndex + 1) % notifications.length;
+  }
+
+  // Show first notification after 10 seconds
+  setTimeout(showNotification, 10000);
+
+  // Then every 45 seconds
+  setInterval(() => {
+    showNotification();
+  }, 45000);
 </script>
 
 </body>
