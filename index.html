@@ -78,11 +78,7 @@
   
   /* Live Notification */
   #liveNotification {
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  #liveNotification.hide {
-    transform: translateY(20px);
-    opacity: 0;
+    transition: all 0.5s ease;
   }
   
   @media screen and (max-width: 768px) { input, select, textarea { font-size: 16px !important; } }
@@ -481,24 +477,71 @@
    class="whatsapp-float" target="_blank" aria-label="WhatsApp">💬</a>
 
 <!-- LIVE NOTIFICATION POPUP -->
-<div id="liveNotification" class="fixed bottom-24 left-4 z-[9998] hide">
-  <div class="bg-gray-900 border-2 border-gold-500/40 rounded-xl p-3 shadow-2xl flex items-center gap-3 max-w-xs">
-    <div id="notifIcon" class="w-10 h-10 gold-gradient rounded-full flex items-center justify-center text-black font-bold flex-shrink-0">A</div>
-    <div class="min-w-0">
-      <p id="notifName" class="font-bold text-white text-xs truncate">Ahmed Khan</p>
-      <p id="notifAction" class="text-gray-400 text-xs">ne USDT kharida</p>
-      <p class="text-gold-400 text-xs font-semibold mt-0.5">
-        <span id="notifTime">2 minutes</span> pehle
-      </p>
+<div id="liveNotification" style="
+  position: fixed;
+  bottom: 90px;
+  left: 16px;
+  z-index: 9998;
+  transform: translateY(100px);
+  opacity: 0;
+  pointer-events: none;
+">
+  <div style="
+    background: #141414;
+    border: 2px solid rgba(245, 158, 11, 0.4);
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 280px;
+  ">
+    <div id="notifIcon" style="
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: black;
+      font-weight: bold;
+      font-size: 18px;
+      flex-shrink: 0;
+    ">A</div>
+    <div style="min-width: 0;">
+      <p id="notifName" style="
+        font-weight: bold;
+        color: white;
+        font-size: 12px;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      ">Ali</p>
+      <p id="notifAction" style="
+        color: #9ca3af;
+        font-size: 11px;
+        margin: 2px 0 0 0;
+      ">bought 10 USDT</p>
+      <p style="
+        color: #fbbf24;
+        font-size: 11px;
+        font-weight: 600;
+        margin: 2px 0 0 0;
+      "><span id="notifTime">2 min ago</span></p>
     </div>
   </div>
 </div>
 
 <script>
+  // ===== MENU =====
   function toggleMenu() {
     document.getElementById('mobileMenu').classList.toggle('open');
   }
 
+  // ===== FAQ =====
   function toggleFaq(btn) {
     const answer = btn.nextElementSibling;
     const icon = btn.querySelector('span:last-child');
@@ -506,6 +549,7 @@
     icon.textContent = answer.classList.contains('open') ? '−' : '+';
   }
 
+  // ===== SMOOTH SCROLL =====
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
       e.preventDefault();
@@ -514,46 +558,49 @@
     });
   });
 
-  // Live notification system
-  const notifications = [
-    { name: 'Ahmed Khan', action: 'ne USDT kharida', city: 'Karachi', time: '2 minutes' },
-    { name: 'Fatima Ali', action: 'ne USDT becha', city: 'Lahore', time: '5 minutes' },
-    { name: 'Hassan Raza', action: 'ne order complete kiya', city: 'Islamabad', time: '8 minutes' },
-    { name: 'Sara Ahmed', action: 'ne PKR receive kiya', city: 'Faisalabad', time: '12 minutes' },
-    { name: 'Muhammad Usman', action: 'ne USDT kharida', city: 'Rawalpindi', time: '15 minutes' },
-    { name: 'Zainab Bibi', action: 'ne order place kiya', city: 'Multan', time: '20 minutes' },
-    { name: 'Ali Raza', action: 'ne USDT becha', city: 'Peshawar', time: '25 minutes' },
-    { name: 'Ayesha Khan', action: 'ne USDT kharida', city: 'Quetta', time: '30 minutes' }
+  // ===== LIVE NOTIFICATIONS (English) =====
+  var notifications = [
+    { name: 'Ali', action: 'bought 10 USDT', time: '2 min ago' },
+    { name: 'Anis', action: 'sold 20 USDT', time: '3 min ago' },
+    { name: 'Ahmed', action: 'bought 50 USDT', time: '5 min ago' },
+    { name: 'Fatima', action: 'sold 15 USDT', time: '7 min ago' },
+    { name: 'Hassan', action: 'bought 30 USDT', time: '9 min ago' },
+    { name: 'Sara', action: 'sold 25 USDT', time: '11 min ago' },
+    { name: 'Usman', action: 'bought 100 USDT', time: '13 min ago' },
+    { name: 'Zainab', action: 'sold 40 USDT', time: '15 min ago' },
+    { name: 'Bilal', action: 'bought 75 USDT', time: '18 min ago' },
+    { name: 'Ayesha', action: 'sold 60 USDT', time: '20 min ago' }
   ];
 
-  let notifIndex = 0;
+  var notifIndex = 0;
+  var notifEl = document.getElementById('liveNotification');
 
   function showNotification() {
-    const notif = notifications[notifIndex];
-    const notifEl = document.getElementById('liveNotification');
+    var notif = notifications[notifIndex];
 
-    document.getElementById('notifIcon').textContent = notif.name.charAt(0);
-    document.getElementById('notifName').textContent = notif.name + ' (' + notif.city + ')';
+    document.getElementById('notifIcon').textContent = notif.name.charAt(0).toUpperCase();
+    document.getElementById('notifName').textContent = notif.name;
     document.getElementById('notifAction').textContent = notif.action;
     document.getElementById('notifTime').textContent = notif.time;
 
-    notifEl.classList.remove('hide');
+    // Show
+    notifEl.style.transform = 'translateY(0)';
+    notifEl.style.opacity = '1';
 
     // Hide after 5 seconds
-    setTimeout(() => {
-      notifEl.classList.add('hide');
+    setTimeout(function() {
+      notifEl.style.transform = 'translateY(100px)';
+      notifEl.style.opacity = '0';
     }, 5000);
 
     notifIndex = (notifIndex + 1) % notifications.length;
   }
 
-  // Show first notification after 10 seconds
-  setTimeout(showNotification, 10000);
+  // First notification after 4 seconds
+  setTimeout(showNotification, 4000);
 
-  // Then every 45 seconds
-  setInterval(() => {
-    showNotification();
-  }, 45000);
+  // Then every 15 seconds
+  setInterval(showNotification, 15000);
 </script>
 
 </body>
