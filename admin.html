@@ -4,198 +4,223 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0a0a0a">
-<title>Admin — USDT Exchange PK</title>
+<title>Admin Panel — USDT Exchange PK</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = { 
+    theme: {
+      extend: {
+        colors: {
+          'gold': { 50:'#fffbeb',100:'#fef3c7',200:'#fde68a',300:'#fcd34d',400:'#fbbf24',500:'#f59e0b',600:'#d97706',700:'#b45309',800:'#92400e',900:'#78350f' }
+        },
+        fontFamily: { 'display': ['Poppins','sans-serif'], 'body': ['Inter','sans-serif'] }
+      }
+    }
+  }
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-  body { font-family: 'Inter', sans-serif; background: #0a0a0a; min-height: 100vh; -webkit-user-select: none; user-select: none; }
-  input { -webkit-user-select: text; user-select: text; }
-  h1,h2,h3 { font-family: 'Poppins', sans-serif; }
-  .gold-gradient { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
-  .gold-text { background: linear-gradient(135deg, #fbbf24, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .card { background: #141414; border: 1px solid #262626; }
-  .input-dark { background: #0a0a0a; border: 2px solid #262626; color: white; outline: none; transition: border-color 0.2s; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0a; min-height: 100vh; }
+  h1,h2,h3,h4 { font-family: 'Poppins', sans-serif; }
+  .gold-gradient { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #d97706 100%); }
+  .gold-text { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .black-card { background: linear-gradient(135deg, #141414 0%, #1a1a1a 100%); border: 1px solid #2a2a2a; }
+  .gold-glow { box-shadow: 0 0 30px rgba(245, 158, 11, 0.4); }
+  .input-dark { background: #0a0a0a; border: 2px solid #2a2a2a; color: white; font-size: 15px; outline: none; }
   .input-dark:focus { border-color: #f59e0b; }
-  .btn-gold { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: black; font-weight: 700; }
-  .btn-gold:active { opacity: 0.85; }
-  .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(245,158,11,0.3); border-radius: 50%; border-top-color: #f59e0b; animation: spin 0.8s linear infinite; }
+  .status-pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+  .status-completed { background: rgba(34, 197, 94, 0.15); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.4); }
+  .status-rejected { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.4); }
+  .status-processing { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.4); }
+  .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(245,158,11,0.3); border-radius: 50%; border-top-color: #f59e0b; animation: spin 1s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .modal-bg { background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-  .no-sb::-webkit-scrollbar { display: none; }
-  .no-sb { -ms-overflow-style: none; scrollbar-width: none; }
-  .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); padding: 12px 20px; border-radius: 12px; font-weight: 600; font-size: 14px; z-index: 99999; transition: transform 0.3s; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-  .toast-ok { background: #16a34a; color: white; }
-  .toast-err { background: #dc2626; color: white; }
-  .s-pending { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.4); }
-  .s-completed { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.4); }
-  .s-rejected { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.4); }
-  .s-processing { background: rgba(59,130,246,0.15); color: #3b82f6; border: 1px solid rgba(59,130,246,0.4); }
+  .modal-backdrop { background: rgba(0,0,0,0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .badge-count { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; font-size: 11px; font-weight: 700; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
 </head>
 <body class="text-white">
 
-<div id="toast" class="toast"></div>
-
-<!-- LOGIN -->
+<!-- ============ LOGIN SCREEN ============ -->
 <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
-  <div class="w-full max-w-sm">
-    <div class="text-center mb-6">
-      <div class="w-16 h-16 gold-gradient rounded-2xl flex items-center justify-center text-black font-bold text-3xl mx-auto mb-3">👑</div>
-      <h1 class="text-2xl font-bold">Admin Login</h1>
-      <p class="text-gray-500 text-xs mt-1">USDT Exchange PK</p>
+  <div class="w-full max-w-md">
+    <div class="text-center mb-8">
+      <div class="w-16 h-16 gold-gradient rounded-2xl flex items-center justify-center text-black font-bold text-3xl shadow-lg gold-glow mx-auto">👑</div>
+      <h1 class="text-2xl font-bold text-white mt-4">Admin Login</h1>
+      <p class="text-gray-400 text-sm mt-1">USDT Exchange PK</p>
     </div>
-    <div class="card rounded-2xl p-6">
-      <form onsubmit="adminLogin(event)" class="space-y-4">
+
+    <div class="black-card rounded-3xl p-8">
+      <form onsubmit="adminLogin(event)" class="space-y-5">
         <div>
-          <label class="block text-gray-400 text-xs mb-1.5 font-semibold">Email</label>
-          <input type="email" id="adminEmail" required placeholder="admin@example.com" autocomplete="email"
-                 class="input-dark w-full px-4 py-3 rounded-xl">
+          <label class="block text-gray-400 text-sm mb-2 font-medium">📧 Email</label>
+          <input type="email" id="adminEmail" required placeholder="admin@usdtexchange.pk" class="input-dark w-full px-5 py-4 rounded-xl">
         </div>
         <div>
-          <label class="block text-gray-400 text-xs mb-1.5 font-semibold">Password</label>
-          <input type="password" id="adminPass" required placeholder="••••••••" autocomplete="current-password"
-                 class="input-dark w-full px-4 py-3 rounded-xl">
+          <label class="block text-gray-400 text-sm mb-2 font-medium">🔒 Password</label>
+          <input type="password" id="adminPass" required placeholder="Admin password" class="input-dark w-full px-5 py-4 rounded-xl">
         </div>
-        <button type="submit" id="loginBtn" class="btn-gold w-full py-3.5 rounded-xl text-base">
-          Login
+        <button type="submit" id="loginBtn" class="w-full gold-gradient text-black font-bold py-4 rounded-xl text-lg shadow-lg gold-glow">
+          🚀 Login
         </button>
-        <p id="adminError" class="text-red-400 text-xs text-center hidden bg-red-500/10 border border-red-500/30 rounded-lg py-2 px-3"></p>
+        <p id="adminError" class="text-red-400 text-sm text-center hidden"></p>
       </form>
-      <p class="text-center text-gray-600 text-[11px] mt-4">🔒 Login saved — logout tak dobara nahi poochega</p>
     </div>
   </div>
 </div>
 
-<!-- PANEL -->
+<!-- ============ ADMIN PANEL ============ -->
 <div id="adminPanel" class="hidden">
-  <header class="bg-black/95 backdrop-blur-xl border-b border-gold-500/20 sticky top-0 z-50">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-      <div class="flex items-center gap-2.5 min-w-0">
-        <div class="w-10 h-10 gold-gradient rounded-xl flex items-center justify-center text-black text-lg font-bold flex-shrink-0">👑</div>
-        <div class="min-w-0">
-          <h1 class="font-bold text-sm leading-tight">Admin Panel</h1>
-          <p class="text-[11px] text-gold-400 truncate" id="adminEmailDisplay">...</p>
+  <!-- HEADER -->
+  <header class="backdrop-blur-xl bg-black/90 shadow-lg sticky top-0 z-50 border-b border-gold-500/20">
+    <div class="container mx-auto px-4 py-3 max-w-4xl">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 gold-gradient rounded-xl flex items-center justify-center text-black font-bold text-lg">👑</div>
+          <div>
+            <h1 class="font-bold text-sm text-white leading-tight">Admin Panel</h1>
+            <p class="text-xs text-gold-400 truncate max-w-[180px]" id="adminEmailDisplay">Loading...</p>
+          </div>
         </div>
-      </div>
-      <div class="flex items-center gap-2 flex-shrink-0">
-        <button onclick="loadAllData()" id="refreshBtn" class="text-gold-400 bg-gold-500/10 w-9 h-9 rounded-lg border border-gold-500/30 text-sm">🔄</button>
-        <button onclick="adminLogout()" class="text-red-400 bg-red-500/10 px-3 h-9 rounded-lg border border-red-500/30 text-xs font-semibold">Logout</button>
+        <div class="flex items-center gap-2">
+          <button onclick="enableNotifications()" id="notifBtn" class="text-gold-400 hover:text-gold-300 text-sm font-medium bg-gold-500/10 px-3 py-2 rounded-lg border border-gold-500/30" title="Enable Notifications">🔔</button>
+          <button onclick="loadAllData()" class="text-gold-400 hover:text-gold-300 text-sm font-medium bg-gold-500/10 px-3 py-2 rounded-lg border border-gold-500/30">🔄</button>
+          <button onclick="adminLogout()" class="text-red-400 hover:text-red-300 text-sm font-medium bg-red-500/10 px-3 py-2 rounded-lg border border-red-500/30">Logout</button>
+        </div>
       </div>
     </div>
   </header>
 
-  <main class="max-w-4xl mx-auto p-4 pb-24">
-    <!-- TABS -->
-    <div class="flex gap-2 mb-4 overflow-x-auto no-sb pb-1">
-      <button onclick="showTab('orders', this)" id="tabOrders" class="whitespace-nowrap px-4 py-2.5 rounded-xl text-sm font-semibold bg-gold-500 text-black">
-        📋 Orders <span id="badgeOrders" class="text-xs opacity-80">(0)</span>
-      </button>
-      <button onclick="showTab('users', this)" id="tabUsers" class="whitespace-nowrap px-4 py-2.5 rounded-xl text-sm font-semibold bg-gray-900 text-gray-300 border border-gold-500/20">
-        👥 Users <span id="badgeUsers" class="text-xs opacity-80">(0)</span>
-      </button>
-      <button onclick="showTab('stats', this)" id="tabStats" class="whitespace-nowrap px-4 py-2.5 rounded-xl text-sm font-semibold bg-gray-900 text-gray-300 border border-gold-500/20">
-        📊 Stats
-      </button>
-    </div>
+  <main class="py-4 px-4 pb-24">
+    <div class="container mx-auto max-w-4xl">
 
-    <!-- ORDERS TAB -->
-    <div id="ordersTab">
-      <div class="flex gap-2 mb-3 overflow-x-auto no-sb pb-1">
-        <button onclick="filterOrders('all', this)" class="f-btn whitespace-nowrap px-3 py-2 rounded-lg text-xs font-semibold bg-gold-500 text-black">
-          All <span id="fAll">0</span>
+      <!-- TAB BUTTONS -->
+      <div class="flex gap-2 mb-4 overflow-x-auto pb-1 no-scrollbar">
+        <button onclick="showTab('orders')" id="tabOrders" class="tab-btn whitespace-nowrap px-4 py-2.5 rounded-xl font-semibold bg-gold-500 text-black text-sm">
+          📋 Orders <span class="badge-count bg-black/20" id="badgeOrders">0</span>
         </button>
-        <button onclick="filterOrders('Pending', this)" class="f-btn whitespace-nowrap px-3 py-2 rounded-lg text-xs font-semibold bg-gray-900 text-gray-300 border border-gray-700">
-          ⏳ <span id="fPending">0</span>
+        <button onclick="showTab('users')" id="tabUsers" class="tab-btn whitespace-nowrap px-4 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20 text-sm">
+          👥 Users <span class="badge-count bg-black/30 text-gold-400" id="badgeUsers">0</span>
         </button>
-        <button onclick="filterOrders('Processing', this)" class="f-btn whitespace-nowrap px-3 py-2 rounded-lg text-xs font-semibold bg-gray-900 text-gray-300 border border-gray-700">
-          🔄 <span id="fProcessing">0</span>
-        </button>
-        <button onclick="filterOrders('Completed', this)" class="f-btn whitespace-nowrap px-3 py-2 rounded-lg text-xs font-semibold bg-gray-900 text-gray-300 border border-gray-700">
-          ✅ <span id="fCompleted">0</span>
-        </button>
-        <button onclick="filterOrders('Rejected', this)" class="f-btn whitespace-nowrap px-3 py-2 rounded-lg text-xs font-semibold bg-gray-900 text-gray-300 border border-gray-700">
-          ❌ <span id="fRejected">0</span>
+        <button onclick="showTab('stats')" id="tabStats" class="tab-btn whitespace-nowrap px-4 py-2.5 rounded-xl font-semibold bg-gray-900 text-gray-300 border border-gold-500/20 text-sm">
+          📊 Stats
         </button>
       </div>
 
-      <input type="text" id="orderSearch" oninput="renderOrders()" placeholder="🔍 Name, phone, TRX, order ID..."
-             class="input-dark w-full px-4 py-3 rounded-xl text-sm mb-4">
+      <!-- ORDERS TAB -->
+      <div id="ordersTab">
+        <div class="flex gap-2 mb-3 overflow-x-auto pb-1 no-scrollbar">
+          <button onclick="filterOrders('all', this)" class="filter-btn active whitespace-nowrap px-3 py-2 rounded-lg text-xs font-semibold bg-gold-500 text-black">
+            All <span class="ml-1 opacity-70" id="fAll">0</span>
+          </button>
+          <button onclick="filterOrders('Pending', this)" class="filter-btn whitespace-nowrap px-3 py-2 rounded-lg text-xs font-semibold bg-gray-900 text-gray-300 border border-gray-700">
+            ⏳ Pending <span class="ml-1 opacity-70" id="fPending">0</span>
+          </button>
+          <button onclick="filterOrders('Processing', this)" class="filter-btn whitespace-nowrap px-3 py-2 rounded-lg text-xs font-semibold bg-gray-900 text-gray-300 border border-gray-700">
+            🔄 Processing <span class="ml-1 opacity-70" id="fProcessing">0</span>
+          </button>
+          <button onclick="filterOrders('Completed', this)" class="filter-btn whitespace-nowrap px-3 py-2 rounded-lg text-xs font-semibold bg-gray-900 text-gray-300 border border-gray-700">
+            ✅ Completed <span class="ml-1 opacity-70" id="fCompleted">0</span>
+          </button>
+          <button onclick="filterOrders('Rejected', this)" class="filter-btn whitespace-nowrap px-3 py-2 rounded-lg text-xs font-semibold bg-gray-900 text-gray-300 border border-gray-700">
+            ❌ Rejected <span class="ml-1 opacity-70" id="fRejected">0</span>
+          </button>
+        </div>
 
-      <div id="ordersContainer">
-        <div class="text-center py-12"><span class="spinner"></span></div>
-      </div>
-    </div>
+        <div class="mb-4">
+          <input type="text" id="orderSearch" oninput="renderOrders()" placeholder="🔍 Search by name, phone, order ID, TRX..." class="input-dark w-full px-4 py-3 rounded-xl text-sm">
+        </div>
 
-    <!-- USERS TAB -->
-    <div id="usersTab" class="hidden">
-      <input type="text" id="userSearch" oninput="renderUsers()" placeholder="🔍 Name, email, phone..."
-             class="input-dark w-full px-4 py-3 rounded-xl text-sm mb-4">
-      <div id="usersContainer"></div>
-    </div>
-
-    <!-- STATS TAB -->
-    <div id="statsTab" class="hidden">
-      <div class="grid grid-cols-2 gap-3">
-        <div class="card rounded-2xl p-4">
-          <p class="text-gray-500 text-xs">👥 Users</p>
-          <p class="text-2xl font-bold gold-text mt-1" id="statUsers">0</p>
-        </div>
-        <div class="card rounded-2xl p-4">
-          <p class="text-gray-500 text-xs">📦 Orders</p>
-          <p class="text-2xl font-bold gold-text mt-1" id="statTotal">0</p>
-        </div>
-        <div class="card rounded-2xl p-4">
-          <p class="text-gray-500 text-xs">💰 Buy</p>
-          <p class="text-2xl font-bold text-green-400 mt-1" id="statBuy">0</p>
-        </div>
-        <div class="card rounded-2xl p-4">
-          <p class="text-gray-500 text-xs">💵 Sell</p>
-          <p class="text-2xl font-bold text-orange-400 mt-1" id="statSell">0</p>
-        </div>
-        <div class="card rounded-2xl p-4">
-          <p class="text-gray-500 text-xs">⏳ Pending</p>
-          <p class="text-2xl font-bold text-gold-400 mt-1" id="statPending">0</p>
-        </div>
-        <div class="card rounded-2xl p-4">
-          <p class="text-gray-500 text-xs">✅ Done</p>
-          <p class="text-2xl font-bold text-green-400 mt-1" id="statCompleted">0</p>
-        </div>
-        <div class="card rounded-2xl p-4">
-          <p class="text-gray-500 text-xs">❌ Rejected</p>
-          <p class="text-2xl font-bold text-red-400 mt-1" id="statRejected">0</p>
-        </div>
-        <div class="card rounded-2xl p-4">
-          <p class="text-gray-500 text-xs">💎 USDT</p>
-          <p class="text-xl font-bold gold-text mt-1" id="statUsdt">0</p>
+        <div id="ordersContainer">
+          <div class="text-center py-8"><span class="loading"></span></div>
         </div>
       </div>
+
+      <!-- USERS TAB -->
+      <div id="usersTab" class="hidden">
+        <div class="mb-4">
+          <input type="text" id="userSearch" oninput="renderUsers()" placeholder="🔍 Search users by name, email, phone..." class="input-dark w-full px-4 py-3 rounded-xl text-sm">
+        </div>
+        <div id="usersContainer"></div>
+      </div>
+
+      <!-- STATS TAB -->
+      <div id="statsTab" class="hidden">
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div class="black-card rounded-2xl p-4">
+            <div class="text-2xl mb-1">👥</div>
+            <p class="text-gray-400 text-xs uppercase">Total Users</p>
+            <p class="text-2xl font-bold gold-text mt-1" id="statUsers">0</p>
+          </div>
+          <div class="black-card rounded-2xl p-4">
+            <div class="text-2xl mb-1">📦</div>
+            <p class="text-gray-400 text-xs uppercase">Total Orders</p>
+            <p class="text-2xl font-bold gold-text mt-1" id="statTotal">0</p>
+          </div>
+          <div class="black-card rounded-2xl p-4">
+            <div class="text-2xl mb-1">💰</div>
+            <p class="text-gray-400 text-xs uppercase">Buy Orders</p>
+            <p class="text-2xl font-bold text-green-400 mt-1" id="statBuy">0</p>
+          </div>
+          <div class="black-card rounded-2xl p-4">
+            <div class="text-2xl mb-1">💵</div>
+            <p class="text-gray-400 text-xs uppercase">Sell Orders</p>
+            <p class="text-2xl font-bold text-orange-400 mt-1" id="statSell">0</p>
+          </div>
+          <div class="black-card rounded-2xl p-4">
+            <div class="text-2xl mb-1">⏳</div>
+            <p class="text-gray-400 text-xs uppercase">Pending</p>
+            <p class="text-2xl font-bold text-gold-400 mt-1" id="statPending">0</p>
+          </div>
+          <div class="black-card rounded-2xl p-4">
+            <div class="text-2xl mb-1">✅</div>
+            <p class="text-gray-400 text-xs uppercase">Completed</p>
+            <p class="text-2xl font-bold text-green-400 mt-1" id="statCompleted">0</p>
+          </div>
+          <div class="black-card rounded-2xl p-4">
+            <div class="text-2xl mb-1">❌</div>
+            <p class="text-gray-400 text-xs uppercase">Rejected</p>
+            <p class="text-2xl font-bold text-red-400 mt-1" id="statRejected">0</p>
+          </div>
+          <div class="black-card rounded-2xl p-4">
+            <div class="text-2xl mb-1">💎</div>
+            <p class="text-gray-400 text-xs uppercase">Total USDT</p>
+            <p class="text-2xl font-bold text-gold-400 mt-1" id="statUsdt">0</p>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 </div>
 
-<!-- IMAGE -->
-<div id="imageModal" class="hidden fixed inset-0 z-[9999] modal-bg items-center justify-center p-4" onclick="closeImage()">
-  <img id="viewImage" src="" class="max-w-full max-h-[90vh] object-contain rounded-xl">
+<!-- IMAGE VIEWER -->
+<div id="imageModal" class="hidden fixed inset-0 z-[9999] modal-backdrop items-center justify-center p-4" onclick="closeImage()">
+  <div class="max-w-4xl max-h-screen w-full relative">
+    <button onclick="closeImage()" class="absolute top-4 right-4 w-10 h-10 bg-white/10 rounded-full text-white text-xl z-10">✕</button>
+    <img id="viewImage" src="" class="max-w-full max-h-[90vh] object-contain rounded-xl mx-auto">
+  </div>
 </div>
 
-<!-- USER MODAL -->
-<div id="userModal" class="hidden fixed inset-0 z-[9999] modal-bg items-center justify-center p-4">
-  <div class="card rounded-2xl p-6 max-w-sm w-full border-2 border-gold-500/40 max-h-[90vh] overflow-y-auto">
-    <div class="flex justify-between items-center mb-4">
-      <h3 class="font-bold">User Details</h3>
-      <button onclick="closeUserModal()" class="text-gray-400 text-2xl w-8 h-8 flex items-center justify-center">✕</button>
+<!-- USER DETAIL MODAL -->
+<div id="userModal" class="hidden fixed inset-0 z-[9999] modal-backdrop items-center justify-center p-4">
+  <div class="black-card rounded-2xl p-6 max-w-md w-full border-2 border-gold-500/40 max-h-[90vh] overflow-y-auto">
+    <div class="flex justify-between items-center mb-5">
+      <h3 class="text-lg font-bold text-white">User Details</h3>
+      <button onclick="closeUserModal()" class="text-gray-400 text-2xl">✕</button>
     </div>
     <div id="userModalContent"></div>
   </div>
 </div>
 
+<!-- ============ FIREBASE + APP LOGIC ============ -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, getDocs, doc, updateDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, getDoc, deleteDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAqnJ03WOnX4_hlo4MK2Wc4ZJv8dCgDFgE",
@@ -210,95 +235,307 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// 🔑 SESSION PERSIST — Browser band karke dobara kholne pe bhi logged in rahega
-setPersistence(auth, browserLocalPersistence).catch(err => console.error('Persistence:', err));
-
 let allOrders = [];
 let allUsers = [];
-let currentFilter = 'all';
+let currentStatusFilter = 'all';
+let ordersUnsubscribe = null;
+let lastOrderCount = 0;
+let isFirstLoad = true;
+let notificationsEnabled = false;
 
-// TOAST
-function toast(msg, type = 'ok') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast toast-' + type + ' show';
-  setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-// AUTH STATE — session check karta hai
+// ============ AUTH ============
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    try {
-      const adminDoc = await getDoc(doc(db, 'admins', user.uid));
-      if (adminDoc.exists()) {
-        document.getElementById('loginScreen').classList.add('hidden');
-        document.getElementById('adminPanel').classList.remove('hidden');
-        document.getElementById('adminEmailDisplay').textContent = user.email;
-        loadAllData();
-      } else {
-        await signOut(auth);
-        const e = document.getElementById('adminError');
-        e.textContent = '❌ Not authorized as admin';
-        e.classList.remove('hidden');
-      }
-    } catch (err) { console.error(err); }
+    const adminDoc = await getDoc(doc(db, 'admins', user.uid));
+    if (adminDoc.exists()) {
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('adminPanel').classList.remove('hidden');
+      document.getElementById('adminEmailDisplay').textContent = user.email;
+      loadAllData();
+      startOrderListener();
+    } else {
+      await signOut(auth);
+      const errEl = document.getElementById('adminError');
+      errEl.textContent = '❌ You are not authorized as admin';
+      errEl.classList.remove('hidden');
+    }
   } else {
     document.getElementById('loginScreen').classList.remove('hidden');
     document.getElementById('adminPanel').classList.add('hidden');
+    if (ordersUnsubscribe) ordersUnsubscribe();
   }
 });
 
-window.adminLogin = async (e) => {
+window.adminLogin = async function(e) {
   e.preventDefault();
-  const email = document.getElementById('adminEmail').value.trim();
+  const email = document.getElementById('adminEmail').value;
   const pass = document.getElementById('adminPass').value;
   const errEl = document.getElementById('adminError');
   const btn = document.getElementById('loginBtn');
 
   errEl.classList.add('hidden');
-  btn.textContent = 'Logging in...';
+  btn.textContent = '⏳ Logging in...';
   btn.disabled = true;
 
   try {
-    await setPersistence(auth, browserLocalPersistence);
     await signInWithEmailAndPassword(auth, email, pass);
-    toast('✅ Login successful!');
   } catch (err) {
     let msg = '❌ ';
     if (err.code === 'auth/user-not-found') msg += 'Email not registered';
-    else if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') msg += 'Invalid email or password';
-    else if (err.code === 'auth/too-many-requests') msg += 'Too many attempts, try later';
+    else if (err.code === 'auth/wrong-password') msg += 'Wrong password';
+    else if (err.code === 'auth/invalid-credential') msg += 'Invalid email or password';
     else msg += err.message;
     errEl.textContent = msg;
     errEl.classList.remove('hidden');
-    btn.textContent = 'Login';
+    btn.textContent = '🚀 Login';
     btn.disabled = false;
   }
 }
 
-window.adminLogout = async () => {
-  if (!confirm('Logout? Aapko dobara login karna hoga.')) return;
+window.adminLogout = async function() {
+  if (ordersUnsubscribe) ordersUnsubscribe();
   await signOut(auth);
-  toast('👋 Logged out');
-  setTimeout(() => location.reload(), 400);
+  window.location.reload();
 }
 
-window.loadAllData = async () => {
-  const btn = document.getElementById('refreshBtn');
-  btn.classList.add('animate-spin');
+// ============ NOTIFICATIONS ============
+window.enableNotifications = async function() {
+  if (!('Notification' in window)) {
+    alert('❌ This browser does not support notifications');
+    return;
+  }
+
+  if (Notification.permission === 'granted') {
+    notificationsEnabled = true;
+    document.getElementById('notifBtn').textContent = '🔔';
+    document.getElementById('notifBtn').style.background = 'rgba(34, 197, 94, 0.2)';
+    document.getElementById('notifBtn').style.borderColor = 'rgba(34, 197, 94, 0.4)';
+    alert('✅ Notifications already enabled');
+    return;
+  }
+
+  const permission = await Notification.requestPermission();
+  if (permission === 'granted') {
+    notificationsEnabled = true;
+    document.getElementById('notifBtn').textContent = '🔔';
+    document.getElementById('notifBtn').style.background = 'rgba(34, 197, 94, 0.2)';
+    document.getElementById('notifBtn').style.borderColor = 'rgba(34, 197, 94, 0.4)';
+    alert('✅ Notifications enabled! You will be notified of new orders.');
+    
+    // Test notification
+    new Notification('🔔 Test Notification', {
+      body: 'Notifications are working! You will now receive alerts for new orders.',
+      icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">💎</text></svg>'
+    });
+  } else {
+    alert('❌ Notification permission denied. Please enable from browser settings.');
+  }
+}
+
+// Check permission on load
+if ('Notification' in window && Notification.permission === 'granted') {
+  notificationsEnabled = true;
+  setTimeout(() => {
+    const btn = document.getElementById('notifBtn');
+    if (btn) {
+      btn.style.background = 'rgba(34, 197, 94, 0.2)';
+      btn.style.borderColor = 'rgba(34, 197, 94, 0.4)';
+    }
+  }, 500);
+}
+
+// ============ REAL-TIME ORDER LISTENER ============
+function startOrderListener() {
+  const ordersQuery = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
+  
+  ordersUnsubscribe = onSnapshot(ordersQuery, (snapshot) => {
+    const currentCount = snapshot.size;
+    
+    // Skip first load
+    if (isFirstLoad) {
+      lastOrderCount = currentCount;
+      isFirstLoad = false;
+      return;
+    }
+    
+    // Check for new order
+    if (currentCount > lastOrderCount) {
+      const newOrdersCount = currentCount - lastOrderCount;
+      
+      // Get the newest orders
+      const newOrders = snapshot.docs.slice(0, newOrdersCount);
+      
+      newOrders.forEach(docSnap => {
+        const order = docSnap.data();
+        showNewOrderAlert(order);
+      });
+      
+      // Refresh orders list
+      loadOrders();
+    }
+    
+    lastOrderCount = currentCount;
+  }, (error) => {
+    console.error('Order listener error:', error);
+  });
+}
+
+// ============ NEW ORDER ALERT ============
+function showNewOrderAlert(order) {
+  const orderType = order.type === 'Sell' ? 'SELL' : 'BUY';
+  const amount = order.type === 'Sell' 
+    ? `${order.usdtAmount || 0} USDT` 
+    : `Rs. ${order.pkrAmount || 0}`;
+  
+  const customerName = order.customerName || order.senderName || order.receiverName || 'Customer';
+  const phone = order.customerPhone || order.receiverPhone || 'N/A';
+  
+  const title = `🔔 New ${orderType} Order!`;
+  const body = `👤 ${customerName}\n💰 ${amount}\n📱 ${phone}`;
+  
+  // 1. Play sound
+  playNotificationSound();
+  
+  // 2. Browser notification
+  if (notificationsEnabled && 'Notification' in window && Notification.permission === 'granted') {
+    const notification = new Notification(title, {
+      body: body,
+      icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">💎</text></svg>',
+      tag: 'new-order-' + Date.now(),
+      requireInteraction: true
+    });
+    
+    setTimeout(() => notification.close(), 15000);
+    
+    notification.onclick = function() {
+      window.focus();
+      notification.close();
+    };
+  }
+  
+  // 3. In-app toast
+  showInAppToast(title, body);
+}
+
+// ============ SOUND ============
+function playNotificationSound() {
+  try {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // First beep
+    const osc1 = audioContext.createOscillator();
+    const gain1 = audioContext.createGain();
+    osc1.connect(gain1);
+    gain1.connect(audioContext.destination);
+    osc1.frequency.value = 800;
+    osc1.type = 'sine';
+    gain1.gain.setValueAtTime(0.3, audioContext.currentTime);
+    gain1.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+    osc1.start(audioContext.currentTime);
+    osc1.stop(audioContext.currentTime + 0.3);
+    
+    // Second beep
+    setTimeout(() => {
+      const osc2 = audioContext.createOscillator();
+      const gain2 = audioContext.createGain();
+      osc2.connect(gain2);
+      gain2.connect(audioContext.destination);
+      osc2.frequency.value = 1000;
+      osc2.type = 'sine';
+      gain2.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+      osc2.start(audioContext.currentTime);
+      osc2.stop(audioContext.currentTime + 0.3);
+    }, 250);
+    
+    // Third beep
+    setTimeout(() => {
+      const osc3 = audioContext.createOscillator();
+      const gain3 = audioContext.createGain();
+      osc3.connect(gain3);
+      gain3.connect(audioContext.destination);
+      osc3.frequency.value = 1200;
+      osc3.type = 'sine';
+      gain3.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gain3.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+      osc3.start(audioContext.currentTime);
+      osc3.stop(audioContext.currentTime + 0.3);
+    }, 500);
+  } catch (err) {
+    console.log('Sound error:', err);
+  }
+}
+
+// ============ IN-APP TOAST ============
+function showInAppToast(title, body) {
+  const existingToast = document.getElementById('orderToast');
+  if (existingToast) existingToast.remove();
+  
+  const toast = document.createElement('div');
+  toast.id = 'orderToast';
+  toast.style.cssText = `
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: black;
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(245, 158, 11, 0.5);
+    z-index: 99999;
+    max-width: 90%;
+    width: 340px;
+    opacity: 0;
+    transition: all 0.4s ease;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+  `;
+  
+  toast.innerHTML = `
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="font-size: 32px;">🔔</div>
+      <div style="flex: 1;">
+        <div style="font-weight: bold; font-size: 14px; margin-bottom: 4px;">${title}</div>
+        <div style="font-size: 12px; white-space: pre-line; line-height: 1.4;">${body}</div>
+      </div>
+      <button onclick="event.stopPropagation(); this.parentElement.parentElement.remove()" style="background: rgba(0,0,0,0.2); border: none; color: black; width: 24px; height: 24px; border-radius: 50%; font-size: 16px; cursor: pointer;">✕</button>
+    </div>
+  `;
+  
+  toast.onclick = function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    toast.remove();
+  };
+  
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+    toast.style.opacity = '1';
+  }, 100);
+  
+  setTimeout(() => {
+    if (toast.parentElement) {
+      toast.style.transform = 'translateX(-50%) translateY(-100px)';
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 400);
+    }
+  }, 15000);
+}
+
+// ============ LOAD DATA ============
+window.loadAllData = async function() {
   await Promise.all([loadOrders(), loadUsers()]);
   updateBadges();
-  btn.classList.remove('animate-spin');
 }
 
-// ===== TABS =====
-window.showTab = (tab, el) => {
-  document.querySelectorAll('#tabOrders, #tabUsers, #tabStats').forEach(b => {
-    b.classList.remove('bg-gold-500', 'text-black');
-    b.classList.add('bg-gray-900', 'text-gray-300', 'border', 'border-gold-500/20');
+// ============ TABS ============
+window.showTab = function(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.className = b.className.replace('bg-gold-500 text-black', 'bg-gray-900 text-gray-300 border border-gold-500/20');
   });
-  el.classList.remove('bg-gray-900', 'text-gray-300', 'border', 'border-gold-500/20');
-  el.classList.add('bg-gold-500', 'text-black');
+  event.target.className = event.target.className.replace('bg-gray-900 text-gray-300 border border-gold-500/20', 'bg-gold-500 text-black');
 
   document.getElementById('ordersTab').classList.add('hidden');
   document.getElementById('usersTab').classList.add('hidden');
@@ -309,282 +546,308 @@ window.showTab = (tab, el) => {
   else if (tab === 'stats') { document.getElementById('statsTab').classList.remove('hidden'); loadStats(); }
 }
 
-// ===== ORDERS =====
-window.loadOrders = async () => {
+// ============ LOAD ORDERS ============
+window.loadOrders = async function() {
   try {
     const snap = await getDocs(collection(db, 'orders'));
     allOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    allOrders.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+    allOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     renderOrders();
+    updateBadges();
   } catch (err) {
-    document.getElementById('ordersContainer').innerHTML = '<p class="text-center text-red-400 py-8 text-sm">Failed to load</p>';
+    console.error(err);
+    document.getElementById('ordersContainer').innerHTML = '<p class="text-center text-red-400 py-8 text-sm">Failed to load orders</p>';
   }
 }
 
-window.filterOrders = (status, el) => {
-  currentFilter = status;
-  document.querySelectorAll('.f-btn').forEach(b => {
-    b.classList.remove('bg-gold-500', 'text-black');
-    b.classList.add('bg-gray-900', 'text-gray-300', 'border', 'border-gray-700');
+window.filterOrders = function(status, btn) {
+  currentStatusFilter = status;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.className = b.className.replace('bg-gold-500 text-black', 'bg-gray-900 text-gray-300 border border-gray-700');
   });
-  el.classList.remove('bg-gray-900', 'text-gray-300', 'border', 'border-gray-700');
-  el.classList.add('bg-gold-500', 'text-black');
+  btn.className = btn.className.replace('bg-gray-900 text-gray-300 border border-gray-700', 'bg-gold-500 text-black');
   renderOrders();
 }
 
 function renderOrders() {
-  const c = document.getElementById('ordersContainer');
-  const s = (document.getElementById('orderSearch')?.value || '').toLowerCase().trim();
+  const container = document.getElementById('ordersContainer');
+  const search = (document.getElementById('orderSearch')?.value || '').toLowerCase();
 
-  let list = allOrders;
-  if (currentFilter !== 'all') list = list.filter(o => o.status === currentFilter);
-  if (s) {
-    list = list.filter(o =>
-      (o.customerName || o.senderName || o.receiverName || '').toLowerCase().includes(s) ||
-      (o.customerPhone || o.receiverPhone || '').includes(s) ||
-      (o.id || '').toLowerCase().includes(s) ||
-      (o.trxId || '').toLowerCase().includes(s) ||
-      (o.userEmail || '').toLowerCase().includes(s)
+  let filtered = allOrders;
+  if (currentStatusFilter !== 'all') filtered = filtered.filter(o => o.status === currentStatusFilter);
+  
+  if (search) {
+    filtered = filtered.filter(o => 
+      (o.customerName || o.senderName || o.receiverName || '').toLowerCase().includes(search) ||
+      (o.customerPhone || o.receiverPhone || '').includes(search) ||
+      (o.id || '').toLowerCase().includes(search) ||
+      (o.trxId || '').toLowerCase().includes(search)
     );
   }
 
-  if (!list.length) {
-    c.innerHTML = '<div class="card rounded-2xl p-10 text-center"><div class="text-4xl mb-2 opacity-50">📭</div><p class="text-gray-400 text-sm">No orders</p></div>';
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="black-card rounded-2xl p-8 text-center">
+        <div class="text-5xl mb-3">📭</div>
+        <p class="text-gray-400 text-sm">No orders found</p>
+      </div>`;
     return;
   }
 
-  c.innerHTML = list.map(o => {
-    const isSell = o.type === 'Sell';
-    const bColor = isSell ? 'border-l-orange-500' : 'border-l-green-500';
-    const emoji = isSell ? '💵' : '💰';
-    const col = isSell ? 'text-orange-400' : 'text-green-400';
+  container.innerHTML = filtered.map(order => {
+    const isSell = order.type === 'Sell';
+    const borderColor = isSell ? 'border-orange-500' : 'border-green-500';
+    const typeEmoji = isSell ? '💵' : '💰';
+    const typeColor = isSell ? 'text-orange-400' : 'text-green-400';
 
-    const shot = o.screenshot
-      ? `<img src="${o.screenshot}" onclick="viewImage('${o.id}')" class="w-full max-h-40 object-contain rounded-lg border border-gold-500/30 cursor-pointer mb-2">`
-      : `<div class="mb-2 p-2 bg-yellow-900/20 border border-yellow-500/30 rounded-lg text-[11px] text-yellow-400">⚠️ No screenshot</div>`;
+    const screenshotHtml = order.screenshot 
+      ? `<img src="${order.screenshot}" onclick="viewImage('${order.id}')" 
+              class="w-full max-h-48 object-contain rounded-lg border border-gold-500/30 cursor-pointer mb-2">`
+      : `<div class="mb-2 p-2 bg-yellow-900/20 border border-yellow-500/30 rounded-lg text-xs text-yellow-400">⚠️ No screenshot</div>`;
 
-    let det = '';
+    let details = '';
     if (!isSell) {
-      det = `
-        <div><span class="text-gray-500">Sender:</span> <span class="text-white">${o.senderName || '-'}</span></div>
-        <div><span class="text-gray-500">Sent:</span> <span class="text-white">Rs. ${o.amountSent || 0}</span></div>
-        <div class="col-span-2"><span class="text-gray-500">Receive:</span> <span class="text-white">${o.receiveMethod === 'binance' ? '🟡 Binance' : '💼 Wallet'}</span></div>
-        ${o.binanceUid ? `<div class="col-span-2"><span class="text-gray-500">Binance UID:</span> <span class="text-white break-all">${o.binanceUid}</span></div>` : ''}
-        ${o.walletAddress ? `<div class="col-span-2"><span class="text-gray-500">Wallet:</span> <span class="text-white break-all">${o.walletAddress}</span></div>` : ''}
+      details = `
+        <div><span class="text-gray-500">Sender:</span> <span class="text-white">${order.senderName || 'N/A'}</span></div>
+        <div><span class="text-gray-500">Amount Sent:</span> <span class="text-white">Rs. ${order.amountSent || 0}</span></div>
+        <div class="col-span-2"><span class="text-gray-500">Receive:</span> <span class="text-white">${order.receiveMethod === 'binance' ? '🟡 Binance' : '💼 Wallet'}</span></div>
+        ${order.binanceUid ? `<div class="col-span-2"><span class="text-gray-500">Binance UID:</span> <span class="text-white break-all">${order.binanceUid}</span></div>` : ''}
+        ${order.binanceName ? `<div class="col-span-2"><span class="text-gray-500">Binance Name:</span> <span class="text-white">${order.binanceName}</span></div>` : ''}
+        ${order.walletAddress ? `<div class="col-span-2"><span class="text-gray-500">Wallet:</span> <span class="text-white break-all">${order.walletAddress}</span></div>` : ''}
       `;
     } else {
-      det = `
-        <div><span class="text-gray-500">Sent:</span> <span class="text-white">${o.amountSentUsdt || 0} USDT</span></div>
-        <div><span class="text-gray-500">Pay:</span> <span class="text-white">${o.paymentMethod || '-'}</span></div>
-        <div class="col-span-2"><span class="text-gray-500">Sender:</span> <span class="text-white">${o.senderMethod === 'binance' ? '🟡 Binance' : '💼 Wallet'}</span></div>
-        ${o.senderBinanceUid ? `<div class="col-span-2"><span class="text-gray-500">Binance UID:</span> <span class="text-white break-all">${o.senderBinanceUid}</span></div>` : ''}
-        ${o.senderWalletAddress ? `<div class="col-span-2"><span class="text-gray-500">Wallet:</span> <span class="text-white break-all">${o.senderWalletAddress}</span></div>` : ''}
-        <div><span class="text-gray-500">Recv:</span> <span class="text-white">${o.receiverName || '-'}</span></div>
-        <div><span class="text-gray-500">No:</span> <span class="text-white">${o.receiverPhone || '-'}</span></div>
+      details = `
+        <div><span class="text-gray-500">Amount Sent:</span> <span class="text-white">${order.amountSentUsdt || 0} USDT</span></div>
+        <div><span class="text-gray-500">Payment:</span> <span class="text-white">${order.paymentMethod || 'N/A'}</span></div>
+        <div class="col-span-2"><span class="text-gray-500">Sender Method:</span> <span class="text-white">${order.senderMethod === 'binance' ? '🟡 Binance' : '💼 Wallet'}</span></div>
+        ${order.senderBinanceUid ? `<div class="col-span-2"><span class="text-gray-500">Sender UID:</span> <span class="text-white break-all">${order.senderBinanceUid}</span></div>` : ''}
+        ${order.senderWalletAddress ? `<div class="col-span-2"><span class="text-gray-500">Sender Wallet:</span> <span class="text-white break-all">${order.senderWalletAddress}</span></div>` : ''}
+        <div><span class="text-gray-500">Receiver:</span> <span class="text-white">${order.receiverName || 'N/A'}</span></div>
+        <div><span class="text-gray-500">Receiver No:</span> <span class="text-white">${order.receiverPhone || 'N/A'}</span></div>
       `;
     }
 
-    const p = isSell ? `${o.usdtAmount || 0} USDT` : `Rs. ${o.pkrAmount || 0}`;
-    const sec = isSell ? `Rs. ${o.pkrAmount || 0}` : `${o.usdtAmount || 0} USDT`;
+    const primary = isSell ? `${order.usdtAmount || 0} USDT` : `Rs. ${order.pkrAmount || 0}`;
+    const secondary = isSell ? `Rs. ${order.pkrAmount || 0}` : `${order.usdtAmount || 0} USDT`;
 
     return `
-    <div class="card rounded-2xl p-4 mb-3 border-l-4 ${bColor}">
+    <div class="black-card rounded-2xl p-4 mb-3 border-l-4 ${borderColor}">
       <div class="flex justify-between items-start mb-3">
         <div>
-          <p class="font-bold text-sm">${emoji} ${o.type || 'Buy'} USDT</p>
-          <p class="text-gray-500 text-[11px] font-mono mt-0.5">#${o.id.substring(0,10).toUpperCase()}</p>
+          <p class="font-bold text-white text-sm">${typeEmoji} ${order.type || 'Buy'} USDT</p>
+          <p class="text-gray-500 text-xs mt-0.5">#${order.id.substring(0,10).toUpperCase()}</p>
         </div>
-        <span class="text-[11px] px-2.5 py-1 rounded-full font-semibold ${stCls(o.status)}">${o.status || 'Pending'}</span>
+        <span class="text-xs px-3 py-1 rounded-full font-semibold ${getStatusClass(order.status)}">${order.status || 'Pending'}</span>
       </div>
-
+      
       <div class="grid grid-cols-2 gap-2 text-xs mb-3">
-        <div><span class="text-gray-500">${isSell ? 'USDT' : 'PKR'}:</span> <span class="${col} font-bold">${p}</span></div>
-        <div><span class="text-gray-500">${isSell ? 'PKR' : 'USDT'}:</span> <span class="text-white font-bold">${sec}</span></div>
-        ${det}
-        <div class="col-span-2"><span class="text-gray-500">Email:</span> <span class="text-white break-all">${o.userEmail || '-'}</span></div>
-        <div class="col-span-2"><span class="text-gray-500">TRX:</span> <span class="text-white break-all font-mono">${o.trxId || '-'}</span></div>
-        <div class="col-span-2"><span class="text-gray-500">Date:</span> <span class="text-white">${o.date || '-'}</span></div>
+        <div><span class="text-gray-500">${isSell ? 'USDT' : 'PKR'}:</span> <span class="${typeColor} font-bold">${primary}</span></div>
+        <div><span class="text-gray-500">${isSell ? 'PKR' : 'USDT'}:</span> <span class="text-white font-bold">${secondary}</span></div>
+        ${details}
+        <div class="col-span-2"><span class="text-gray-500">Email:</span> <span class="text-white break-all">${order.userEmail || 'N/A'}</span></div>
+        <div class="col-span-2"><span class="text-gray-500">TRX:</span> <span class="text-white break-all">${order.trxId || 'N/A'}</span></div>
+        <div class="col-span-2"><span class="text-gray-500">Date:</span> <span class="text-white">${order.date || 'N/A'}</span></div>
       </div>
 
-      ${shot}
+      ${screenshotHtml}
 
       <div class="flex gap-2 mt-2">
-        <button onclick="updateStatus('${o.id}', 'Processing')" class="flex-1 bg-blue-500/20 border border-blue-500/40 text-blue-400 py-2 rounded-lg text-xs font-semibold">🔄</button>
-        <button onclick="updateStatus('${o.id}', 'Completed')" class="flex-1 bg-green-500/20 border border-green-500/40 text-green-400 py-2 rounded-lg text-xs font-semibold">✓ Done</button>
-        <button onclick="updateStatus('${o.id}', 'Rejected')" class="flex-1 bg-red-500/20 border border-red-500/40 text-red-400 py-2 rounded-lg text-xs font-semibold">✕</button>
+        <button onclick="updateStatus('${order.id}', 'Processing')" class="flex-1 bg-blue-500/20 border border-blue-500/40 text-blue-400 py-2 rounded-lg text-xs font-semibold">🔄 Processing</button>
+        <button onclick="updateStatus('${order.id}', 'Completed')" class="flex-1 bg-green-500/20 border border-green-500/40 text-green-400 py-2 rounded-lg text-xs font-semibold">✓ Complete</button>
+        <button onclick="updateStatus('${order.id}', 'Rejected')" class="flex-1 bg-red-500/20 border border-red-500/40 text-red-400 py-2 rounded-lg text-xs font-semibold">✕ Reject</button>
       </div>
-    </div>`;
+    </div>
+    `;
   }).join('');
 }
 
-// ===== USERS =====
-window.loadUsers = async () => {
+// ============ LOAD USERS ============
+window.loadUsers = async function() {
   try {
     const snap = await getDocs(collection(db, 'users'));
     allUsers = snap.docs.map(d => ({ uid: d.id, ...d.data() }));
     allUsers.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
     renderUsers();
-  } catch (err) { console.error(err); }
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 function renderUsers() {
-  const c = document.getElementById('usersContainer');
-  const s = (document.getElementById('userSearch')?.value || '').toLowerCase().trim();
+  const container = document.getElementById('usersContainer');
+  const search = (document.getElementById('userSearch')?.value || '').toLowerCase();
 
-  let list = allUsers;
-  if (s) {
-    list = list.filter(u =>
-      (u.name || '').toLowerCase().includes(s) ||
-      (u.email || '').toLowerCase().includes(s) ||
-      (u.phone || '').includes(s)
+  let filtered = allUsers;
+  if (search) {
+    filtered = filtered.filter(u => 
+      (u.name || '').toLowerCase().includes(search) ||
+      (u.email || '').toLowerCase().includes(search) ||
+      (u.phone || '').includes(search)
     );
   }
 
-  if (!list.length) {
-    c.innerHTML = '<div class="card rounded-2xl p-10 text-center"><div class="text-4xl mb-2 opacity-50">👥</div><p class="text-gray-400 text-sm">No users</p></div>';
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="black-card rounded-2xl p-8 text-center">
+        <div class="text-5xl mb-3">👥</div>
+        <p class="text-gray-400 text-sm">No users found</p>
+      </div>`;
     return;
   }
 
-  c.innerHTML = `
-    <div class="mb-3 p-3 bg-gold-500/10 border border-gold-500/30 rounded-xl text-xs text-gold-400 font-semibold">
-      Showing ${list.length} of ${allUsers.length} users
+  container.innerHTML = `
+    <div class="mb-3 p-3 bg-gold-500/10 border border-gold-500/30 rounded-xl">
+      <p class="text-gold-400 text-xs font-semibold">Total: <span class="text-lg font-bold">${filtered.length}</span> users</p>
     </div>
-  ` + list.map(u => `
-    <div class="card rounded-2xl p-4 mb-3">
-      <div class="flex justify-between items-center mb-3">
-        <div class="flex items-center gap-3 min-w-0 flex-1">
-          <div class="w-10 h-10 gold-gradient rounded-full flex items-center justify-center text-black font-bold flex-shrink-0">
-            ${(u.name || u.email || 'U').charAt(0).toUpperCase()}
+  ` + filtered.map(user => `
+    <div class="black-card rounded-2xl p-4 mb-3">
+      <div class="flex justify-between items-start mb-3">
+        <div class="flex items-center gap-3 flex-1 min-w-0">
+          <div class="w-10 h-10 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-base flex-shrink-0">
+            ${(user.name || user.email || 'U').charAt(0).toUpperCase()}
           </div>
           <div class="min-w-0">
-            <p class="font-bold text-sm truncate">${u.name || 'Unknown'}</p>
-            <p class="text-gray-500 text-[11px] truncate">${u.email || '-'}</p>
+            <p class="font-bold text-white text-sm truncate">${user.name || 'Unknown'}</p>
+            <p class="text-gray-500 text-xs truncate">${user.email || 'N/A'}</p>
           </div>
         </div>
-        <button onclick="openUserModal('${u.uid}')" class="text-gold-400 text-xs bg-gold-500/10 px-3 py-1.5 rounded-lg border border-gold-500/30 flex-shrink-0">View</button>
+        <button onclick="openUserModal('${user.uid}')" class="text-gold-400 text-xs bg-gold-500/10 px-3 py-1.5 rounded-lg border border-gold-500/30 flex-shrink-0">View</button>
       </div>
       <div class="grid grid-cols-2 gap-2 text-xs">
-        <div><span class="text-gray-500">📱</span> <span class="text-white">${u.phone || '-'}</span></div>
-        <div><span class="text-gray-500">💰</span> <span class="text-gold-400 font-bold">Rs. ${u.balance || 0}</span></div>
-        <div class="col-span-2"><span class="text-gray-500">📅</span> <span class="text-white">${u.createdAt ? new Date(u.createdAt).toLocaleDateString('en-PK') : '-'}</span></div>
+        <div><span class="text-gray-500">📱 Phone:</span> <span class="text-white">${user.phone || 'N/A'}</span></div>
+        <div><span class="text-gray-500">💰 Balance:</span> <span class="text-gold-400 font-bold">Rs. ${user.balance || 0}</span></div>
+        <div class="col-span-2"><span class="text-gray-500">📅 Joined:</span> <span class="text-white">${user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-PK') : 'N/A'}</span></div>
       </div>
     </div>
   `).join('');
 }
 
-// ===== USER MODAL =====
-window.openUserModal = (uid) => {
-  const u = allUsers.find(x => x.uid === uid);
-  if (!u) return;
+// ============ USER MODAL ============
+window.openUserModal = function(uid) {
+  const user = allUsers.find(u => u.uid === uid);
+  if (!user) return;
+
   const orders = allOrders.filter(o => o.userId === uid);
-  const done = orders.filter(o => o.status === 'Completed').length;
+  const completedOrders = orders.filter(o => o.status === 'Completed').length;
 
   document.getElementById('userModalContent').innerHTML = `
-    <div class="text-center mb-4">
-      <div class="w-16 h-16 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-2xl mx-auto mb-2">
-        ${(u.name || u.email || 'U').charAt(0).toUpperCase()}
+    <div class="text-center mb-5">
+      <div class="w-16 h-16 gold-gradient rounded-full flex items-center justify-center text-black font-bold text-2xl mx-auto mb-3">
+        ${(user.name || user.email || 'U').charAt(0).toUpperCase()}
       </div>
-      <p class="font-bold">${u.name || 'Unknown'}</p>
-      <p class="text-gray-400 text-xs">${u.email || '-'}</p>
+      <p class="font-bold text-white text-base">${user.name || 'Unknown'}</p>
+      <p class="text-gray-400 text-xs">${user.email || 'N/A'}</p>
     </div>
 
-    <div class="bg-gold-500/10 border border-gold-500/30 rounded-xl p-4 mb-4 space-y-2 text-xs">
-      <div class="flex justify-between"><span class="text-gray-400">Balance:</span><span class="text-gold-400 font-bold">Rs. ${u.balance || 0}</span></div>
-      <div class="flex justify-between"><span class="text-gray-400">Phone:</span><span class="text-white">${u.phone || '-'}</span></div>
-      <div class="flex justify-between"><span class="text-gray-400">Orders:</span><span class="text-white">${orders.length}</span></div>
-      <div class="flex justify-between"><span class="text-gray-400">Completed:</span><span class="text-green-400">${done}</span></div>
-      <div class="flex justify-between"><span class="text-gray-400">UID:</span><span class="text-white text-[10px] break-all font-mono">${u.uid}</span></div>
+    <div class="bg-gold-500/10 border border-gold-500/30 rounded-xl p-4 mb-4 space-y-2 text-sm">
+      <div class="flex justify-between"><span class="text-gray-400">Balance:</span><span class="text-gold-400 font-bold">Rs. ${user.balance || 0}</span></div>
+      <div class="flex justify-between"><span class="text-gray-400">Phone:</span><span class="text-white">${user.phone || 'N/A'}</span></div>
+      <div class="flex justify-between"><span class="text-gray-400">Total Orders:</span><span class="text-white">${orders.length}</span></div>
+      <div class="flex justify-between"><span class="text-gray-400">Completed:</span><span class="text-green-400">${completedOrders}</span></div>
+      <div class="flex justify-between"><span class="text-gray-400">Provider:</span><span class="text-white">${user.authProvider || 'email'}</span></div>
+      <div class="flex justify-between"><span class="text-gray-400">UID:</span><span class="text-white text-xs break-all">${user.uid}</span></div>
     </div>
 
     <div class="space-y-2">
-      <button onclick="resetPass('${u.email}')" class="w-full bg-yellow-500/20 border border-yellow-500/40 text-yellow-400 py-2.5 rounded-xl text-xs font-semibold">🔑 Reset Password Email</button>
-      <button onclick="updateBal('${u.uid}', ${u.balance || 0})" class="w-full bg-blue-500/20 border border-blue-500/40 text-blue-400 py-2.5 rounded-xl text-xs font-semibold">💰 Update Balance</button>
-      <button onclick="delUser('${u.uid}', '${u.email}')" class="w-full bg-red-500/20 border border-red-500/40 text-red-400 py-2.5 rounded-xl text-xs font-semibold">🗑️ Delete User</button>
+      <button onclick="resetUserPassword('${user.email}')" class="w-full bg-yellow-500/20 border border-yellow-500/40 text-yellow-400 py-3 rounded-xl text-sm font-semibold">
+        🔑 Send Password Reset Email
+      </button>
+      <button onclick="updateUserBalance('${user.uid}', ${user.balance || 0})" class="w-full bg-blue-500/20 border border-blue-500/40 text-blue-400 py-3 rounded-xl text-sm font-semibold">
+        💰 Update Balance
+      </button>
+      <button onclick="deleteUser('${user.uid}', '${user.email}')" class="w-full bg-red-500/20 border border-red-500/40 text-red-400 py-3 rounded-xl text-sm font-semibold">
+        🗑️ Delete User
+      </button>
     </div>
   `;
-  const m = document.getElementById('userModal');
-  m.classList.remove('hidden');
-  m.classList.add('flex');
+
+  document.getElementById('userModal').classList.remove('hidden');
+  document.getElementById('userModal').classList.add('flex');
 }
 
-window.closeUserModal = () => {
-  const m = document.getElementById('userModal');
-  m.classList.add('hidden');
-  m.classList.remove('flex');
+window.closeUserModal = function() {
+  document.getElementById('userModal').classList.add('hidden');
+  document.getElementById('userModal').classList.remove('flex');
 }
 
-window.resetPass = async (email) => {
-  if (!confirm('Send reset email to ' + email + '?')) return;
+window.resetUserPassword = async function(email) {
   try {
     await sendPasswordResetEmail(auth, email);
-    toast('✅ Reset email sent');
-  } catch (err) { toast('❌ ' + err.message, 'err'); }
+    alert('✅ Password reset email sent to: ' + email);
+  } catch (err) {
+    alert('❌ Error: ' + err.message);
+  }
 }
 
-window.updateBal = async (uid, curr) => {
-  const nb = prompt('New balance (PKR):', curr);
-  if (nb === null) return;
-  const p = parseFloat(nb);
-  if (isNaN(p) || p < 0) return toast('❌ Invalid balance', 'err');
+window.updateUserBalance = async function(uid, currentBalance) {
+  const newBalance = prompt('Enter new balance (PKR):', currentBalance);
+  if (newBalance === null) return;
+  const parsed = parseFloat(newBalance);
+  if (isNaN(parsed) || parsed < 0) {
+    alert('❌ Invalid balance');
+    return;
+  }
   try {
-    await updateDoc(doc(db, 'users', uid), { balance: p });
-    toast('✅ Balance updated');
+    await updateDoc(doc(db, 'users', uid), { balance: parsed });
+    alert('✅ Balance updated to Rs. ' + parsed);
     await loadUsers();
     closeUserModal();
-  } catch (err) { toast('❌ ' + err.message, 'err'); }
+  } catch (err) {
+    alert('❌ Error: ' + err.message);
+  }
 }
 
-window.delUser = async (uid, email) => {
-  if (!confirm('Delete user ' + email + '? Cannot be undone.')) return;
+window.deleteUser = async function(uid, email) {
+  if (!confirm(`Delete user ${email}? This cannot be undone.`)) return;
   try {
     await deleteDoc(doc(db, 'users', uid));
-    toast('✅ User deleted');
+    alert('✅ User deleted from Firestore.');
     await loadUsers();
     closeUserModal();
-  } catch (err) { toast('❌ ' + err.message, 'err'); }
+  } catch (err) {
+    alert('❌ Error: ' + err.message);
+  }
 }
 
-// ===== STATUS =====
-window.updateStatus = async (id, status) => {
-  if (!confirm(`Change to ${status}?`)) return;
+// ============ UPDATE STATUS ============
+window.updateStatus = async function(orderId, newStatus) {
+  if (!confirm(`Change status to "${newStatus}"?`)) return;
   try {
-    await updateDoc(doc(db, 'orders', id), { status, updatedAt: new Date().toISOString() });
-    toast(`✅ ${status}`);
+    await updateDoc(doc(db, 'orders', orderId), { status: newStatus });
     await loadOrders();
-    updateBadges();
-  } catch (err) { toast('❌ ' + err.message, 'err'); }
+  } catch (err) {
+    alert('❌ Error: ' + err.message);
+  }
 }
 
-// ===== IMAGE =====
-window.viewImage = (id) => {
-  const o = allOrders.find(x => x.id === id);
-  if (o?.screenshot) {
-    document.getElementById('viewImage').src = o.screenshot;
-    const m = document.getElementById('imageModal');
-    m.classList.remove('hidden');
-    m.classList.add('flex');
+// ============ IMAGE VIEWER ============
+window.viewImage = function(orderId) {
+  const order = allOrders.find(o => o.id === orderId);
+  if (order && order.screenshot) {
+    document.getElementById('viewImage').src = order.screenshot;
+    document.getElementById('imageModal').classList.remove('hidden');
+    document.getElementById('imageModal').classList.add('flex');
     document.body.style.overflow = 'hidden';
   }
 }
 
-window.closeImage = () => {
-  const m = document.getElementById('imageModal');
-  m.classList.add('hidden');
-  m.classList.remove('flex');
+window.closeImage = function() {
+  document.getElementById('imageModal').classList.add('hidden');
+  document.getElementById('imageModal').classList.remove('flex');
   document.body.style.overflow = '';
 }
 
-// ===== HELPERS =====
-function stCls(s) {
-  if (s === 'Completed') return 's-completed';
-  if (s === 'Rejected') return 's-rejected';
-  if (s === 'Processing') return 's-processing';
-  return 's-pending';
+// ============ HELPERS ============
+function getStatusClass(status) {
+  if (status === 'Completed') return 'status-completed';
+  if (status === 'Rejected') return 'status-rejected';
+  if (status === 'Processing') return 'status-processing';
+  return 'status-pending';
 }
 
 function updateBadges() {
-  document.getElementById('badgeOrders').textContent = `(${allOrders.length})`;
-  document.getElementById('badgeUsers').textContent = `(${allUsers.length})`;
+  document.getElementById('badgeOrders').textContent = allOrders.length;
+  document.getElementById('badgeUsers').textContent = allUsers.length;
   document.getElementById('fAll').textContent = allOrders.length;
   document.getElementById('fPending').textContent = allOrders.filter(o => o.status === 'Pending').length;
   document.getElementById('fProcessing').textContent = allOrders.filter(o => o.status === 'Processing').length;
@@ -600,11 +863,9 @@ function loadStats() {
   document.getElementById('statPending').textContent = allOrders.filter(o => o.status === 'Pending').length;
   document.getElementById('statCompleted').textContent = allOrders.filter(o => o.status === 'Completed').length;
   document.getElementById('statRejected').textContent = allOrders.filter(o => o.status === 'Rejected').length;
-  const total = allOrders.filter(o => o.status === 'Completed').reduce((s, o) => s + (parseFloat(o.usdtAmount) || 0), 0);
-  document.getElementById('statUsdt').textContent = total.toFixed(2);
+  const totalUsdt = allOrders.filter(o => o.status === 'Completed').reduce((s, o) => s + (parseFloat(o.usdtAmount) || 0), 0);
+  document.getElementById('statUsdt').textContent = totalUsdt.toFixed(2);
 }
-
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeImage(); closeUserModal(); } });
 </script>
 
 </body>
