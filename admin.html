@@ -44,7 +44,7 @@
 </head>
 <body class="text-white">
 
-<!-- ============ LOGIN SCREEN ============ -->
+<!-- LOGIN SCREEN -->
 <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
   <div class="w-full max-w-md">
     <div class="text-center mb-8">
@@ -72,9 +72,8 @@
   </div>
 </div>
 
-<!-- ============ ADMIN PANEL ============ -->
+<!-- ADMIN PANEL -->
 <div id="adminPanel" class="hidden">
-  <!-- HEADER -->
   <header class="backdrop-blur-xl bg-black/90 shadow-lg sticky top-0 z-50 border-b border-gold-500/20">
     <div class="container mx-auto px-4 py-3 max-w-4xl">
       <div class="flex justify-between items-center">
@@ -97,7 +96,6 @@
   <main class="py-4 px-4 pb-24">
     <div class="container mx-auto max-w-4xl">
 
-      <!-- TAB BUTTONS -->
       <div class="flex gap-2 mb-4 overflow-x-auto pb-1 no-scrollbar">
         <button onclick="showTab('orders')" id="tabOrders" class="tab-btn whitespace-nowrap px-4 py-2.5 rounded-xl font-semibold bg-gold-500 text-black text-sm">
           📋 Orders <span class="badge-count bg-black/20" id="badgeOrders">0</span>
@@ -110,7 +108,6 @@
         </button>
       </div>
 
-      <!-- ORDERS TAB -->
       <div id="ordersTab">
         <div class="flex gap-2 mb-3 overflow-x-auto pb-1 no-scrollbar">
           <button onclick="filterOrders('all', this)" class="filter-btn active whitespace-nowrap px-3 py-2 rounded-lg text-xs font-semibold bg-gold-500 text-black">
@@ -139,7 +136,6 @@
         </div>
       </div>
 
-      <!-- USERS TAB -->
       <div id="usersTab" class="hidden">
         <div class="mb-4">
           <input type="text" id="userSearch" oninput="renderUsers()" placeholder="🔍 Search users by name, email, phone..." class="input-dark w-full px-4 py-3 rounded-xl text-sm">
@@ -147,49 +143,16 @@
         <div id="usersContainer"></div>
       </div>
 
-      <!-- STATS TAB -->
       <div id="statsTab" class="hidden">
         <div class="grid grid-cols-2 gap-3 mb-4">
-          <div class="black-card rounded-2xl p-4">
-            <div class="text-2xl mb-1">👥</div>
-            <p class="text-gray-400 text-xs uppercase">Total Users</p>
-            <p class="text-2xl font-bold gold-text mt-1" id="statUsers">0</p>
-          </div>
-          <div class="black-card rounded-2xl p-4">
-            <div class="text-2xl mb-1">📦</div>
-            <p class="text-gray-400 text-xs uppercase">Total Orders</p>
-            <p class="text-2xl font-bold gold-text mt-1" id="statTotal">0</p>
-          </div>
-          <div class="black-card rounded-2xl p-4">
-            <div class="text-2xl mb-1">💰</div>
-            <p class="text-gray-400 text-xs uppercase">Buy Orders</p>
-            <p class="text-2xl font-bold text-green-400 mt-1" id="statBuy">0</p>
-          </div>
-          <div class="black-card rounded-2xl p-4">
-            <div class="text-2xl mb-1">💵</div>
-            <p class="text-gray-400 text-xs uppercase">Sell Orders</p>
-            <p class="text-2xl font-bold text-orange-400 mt-1" id="statSell">0</p>
-          </div>
-          <div class="black-card rounded-2xl p-4">
-            <div class="text-2xl mb-1">⏳</div>
-            <p class="text-gray-400 text-xs uppercase">Pending</p>
-            <p class="text-2xl font-bold text-gold-400 mt-1" id="statPending">0</p>
-          </div>
-          <div class="black-card rounded-2xl p-4">
-            <div class="text-2xl mb-1">✅</div>
-            <p class="text-gray-400 text-xs uppercase">Completed</p>
-            <p class="text-2xl font-bold text-green-400 mt-1" id="statCompleted">0</p>
-          </div>
-          <div class="black-card rounded-2xl p-4">
-            <div class="text-2xl mb-1">❌</div>
-            <p class="text-gray-400 text-xs uppercase">Rejected</p>
-            <p class="text-2xl font-bold text-red-400 mt-1" id="statRejected">0</p>
-          </div>
-          <div class="black-card rounded-2xl p-4">
-            <div class="text-2xl mb-1">💎</div>
-            <p class="text-gray-400 text-xs uppercase">Total USDT</p>
-            <p class="text-2xl font-bold text-gold-400 mt-1" id="statUsdt">0</p>
-          </div>
+          <div class="black-card rounded-2xl p-4"><div class="text-2xl mb-1">👥</div><p class="text-gray-400 text-xs uppercase">Total Users</p><p class="text-2xl font-bold gold-text mt-1" id="statUsers">0</p></div>
+          <div class="black-card rounded-2xl p-4"><div class="text-2xl mb-1">📦</div><p class="text-gray-400 text-xs uppercase">Total Orders</p><p class="text-2xl font-bold gold-text mt-1" id="statTotal">0</p></div>
+          <div class="black-card rounded-2xl p-4"><div class="text-2xl mb-1">💰</div><p class="text-gray-400 text-xs uppercase">Buy Orders</p><p class="text-2xl font-bold text-green-400 mt-1" id="statBuy">0</p></div>
+          <div class="black-card rounded-2xl p-4"><div class="text-2xl mb-1">💵</div><p class="text-gray-400 text-xs uppercase">Sell Orders</p><p class="text-2xl font-bold text-orange-400 mt-1" id="statSell">0</p></div>
+          <div class="black-card rounded-2xl p-4"><div class="text-2xl mb-1">⏳</div><p class="text-gray-400 text-xs uppercase">Pending</p><p class="text-2xl font-bold text-gold-400 mt-1" id="statPending">0</p></div>
+          <div class="black-card rounded-2xl p-4"><div class="text-2xl mb-1">✅</div><p class="text-gray-400 text-xs uppercase">Completed</p><p class="text-2xl font-bold text-green-400 mt-1" id="statCompleted">0</p></div>
+          <div class="black-card rounded-2xl p-4"><div class="text-2xl mb-1">❌</div><p class="text-gray-400 text-xs uppercase">Rejected</p><p class="text-2xl font-bold text-red-400 mt-1" id="statRejected">0</p></div>
+          <div class="black-card rounded-2xl p-4"><div class="text-2xl mb-1">💎</div><p class="text-gray-400 text-xs uppercase">Total USDT</p><p class="text-2xl font-bold text-gold-400 mt-1" id="statUsdt">0</p></div>
         </div>
       </div>
 
@@ -216,7 +179,6 @@
   </div>
 </div>
 
-<!-- ============ FIREBASE + APP LOGIC ============ -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -242,6 +204,13 @@ let ordersUnsubscribe = null;
 let lastOrderCount = 0;
 let isFirstLoad = true;
 let notificationsEnabled = false;
+
+// ============ SERVICE WORKER REGISTER ============
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js')
+    .then((reg) => console.log('✅ SW registered:', reg.scope))
+    .catch((err) => console.error('❌ SW failed:', err));
+}
 
 // ============ AUTH ============
 onAuthStateChanged(auth, async (user) => {
@@ -298,7 +267,7 @@ window.adminLogout = async function() {
   window.location.reload();
 }
 
-// ============ NOTIFICATIONS ============
+// ============ NOTIFICATION PERMISSION ============
 window.enableNotifications = async function() {
   if (!('Notification' in window)) {
     alert('❌ This browser does not support notifications');
@@ -307,26 +276,37 @@ window.enableNotifications = async function() {
 
   if (Notification.permission === 'granted') {
     notificationsEnabled = true;
-    document.getElementById('notifBtn').textContent = '🔔';
     document.getElementById('notifBtn').style.background = 'rgba(34, 197, 94, 0.2)';
     document.getElementById('notifBtn').style.borderColor = 'rgba(34, 197, 94, 0.4)';
-    alert('✅ Notifications already enabled');
+    
+    // Test notification via Service Worker
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      await reg.showNotification('✅ Notifications Active', {
+        body: 'You will receive alerts for new orders.',
+        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">💎</text></svg>'
+      });
+    } catch (e) {
+      alert('✅ Notifications already enabled');
+    }
     return;
   }
 
   const permission = await Notification.requestPermission();
   if (permission === 'granted') {
     notificationsEnabled = true;
-    document.getElementById('notifBtn').textContent = '🔔';
     document.getElementById('notifBtn').style.background = 'rgba(34, 197, 94, 0.2)';
     document.getElementById('notifBtn').style.borderColor = 'rgba(34, 197, 94, 0.4)';
-    alert('✅ Notifications enabled! You will be notified of new orders.');
     
-    // Test notification
-    new Notification('🔔 Test Notification', {
-      body: 'Notifications are working! You will now receive alerts for new orders.',
-      icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">💎</text></svg>'
-    });
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      await reg.showNotification('✅ Notifications Enabled', {
+        body: 'You will now receive alerts for new orders.',
+        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">💎</text></svg>'
+      });
+    } catch (e) {
+      alert('✅ Notifications enabled!');
+    }
   } else {
     alert('❌ Notification permission denied. Please enable from browser settings.');
   }
@@ -351,18 +331,14 @@ function startOrderListener() {
   ordersUnsubscribe = onSnapshot(ordersQuery, (snapshot) => {
     const currentCount = snapshot.size;
     
-    // Skip first load
     if (isFirstLoad) {
       lastOrderCount = currentCount;
       isFirstLoad = false;
       return;
     }
     
-    // Check for new order
     if (currentCount > lastOrderCount) {
       const newOrdersCount = currentCount - lastOrderCount;
-      
-      // Get the newest orders
       const newOrders = snapshot.docs.slice(0, newOrdersCount);
       
       newOrders.forEach(docSnap => {
@@ -370,7 +346,6 @@ function startOrderListener() {
         showNewOrderAlert(order);
       });
       
-      // Refresh orders list
       loadOrders();
     }
     
@@ -381,7 +356,7 @@ function startOrderListener() {
 }
 
 // ============ NEW ORDER ALERT ============
-function showNewOrderAlert(order) {
+async function showNewOrderAlert(order) {
   const orderType = order.type === 'Sell' ? 'SELL' : 'BUY';
   const amount = order.type === 'Sell' 
     ? `${order.usdtAmount || 0} USDT` 
@@ -396,21 +371,31 @@ function showNewOrderAlert(order) {
   // 1. Play sound
   playNotificationSound();
   
-  // 2. Browser notification
+  // 2. Service Worker Notification (reliable on Android)
   if (notificationsEnabled && 'Notification' in window && Notification.permission === 'granted') {
-    const notification = new Notification(title, {
-      body: body,
-      icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">💎</text></svg>',
-      tag: 'new-order-' + Date.now(),
-      requireInteraction: true
-    });
-    
-    setTimeout(() => notification.close(), 15000);
-    
-    notification.onclick = function() {
-      window.focus();
-      notification.close();
-    };
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      await reg.showNotification(title, {
+        body: body,
+        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">💎</text></svg>',
+        badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🔔</text></svg>',
+        vibrate: [200, 100, 200],
+        tag: 'new-order-' + Date.now(),
+        requireInteraction: true,
+        renotify: true,
+        silent: false
+      });
+    } catch (err) {
+      console.error('SW notification error:', err);
+      try {
+        new Notification(title, {
+          body: body,
+          icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">💎</text></svg>'
+        });
+      } catch (e) {
+        console.error('Fallback notification error:', e);
+      }
+    }
   }
   
   // 3. In-app toast
@@ -422,45 +407,24 @@ function playNotificationSound() {
   try {
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     
-    // First beep
-    const osc1 = audioContext.createOscillator();
-    const gain1 = audioContext.createGain();
-    osc1.connect(gain1);
-    gain1.connect(audioContext.destination);
-    osc1.frequency.value = 800;
-    osc1.type = 'sine';
-    gain1.gain.setValueAtTime(0.3, audioContext.currentTime);
-    gain1.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-    osc1.start(audioContext.currentTime);
-    osc1.stop(audioContext.currentTime + 0.3);
+    const beep = (freq, delay) => {
+      setTimeout(() => {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+        osc.frequency.value = freq;
+        osc.type = 'sine';
+        gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+        osc.start(audioContext.currentTime);
+        osc.stop(audioContext.currentTime + 0.3);
+      }, delay);
+    };
     
-    // Second beep
-    setTimeout(() => {
-      const osc2 = audioContext.createOscillator();
-      const gain2 = audioContext.createGain();
-      osc2.connect(gain2);
-      gain2.connect(audioContext.destination);
-      osc2.frequency.value = 1000;
-      osc2.type = 'sine';
-      gain2.gain.setValueAtTime(0.3, audioContext.currentTime);
-      gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-      osc2.start(audioContext.currentTime);
-      osc2.stop(audioContext.currentTime + 0.3);
-    }, 250);
-    
-    // Third beep
-    setTimeout(() => {
-      const osc3 = audioContext.createOscillator();
-      const gain3 = audioContext.createGain();
-      osc3.connect(gain3);
-      gain3.connect(audioContext.destination);
-      osc3.frequency.value = 1200;
-      osc3.type = 'sine';
-      gain3.gain.setValueAtTime(0.3, audioContext.currentTime);
-      gain3.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-      osc3.start(audioContext.currentTime);
-      osc3.stop(audioContext.currentTime + 0.3);
-    }, 500);
+    beep(800, 0);
+    beep(1000, 250);
+    beep(1200, 500);
   } catch (err) {
     console.log('Sound error:', err);
   }
@@ -530,7 +494,6 @@ window.loadAllData = async function() {
   updateBadges();
 }
 
-// ============ TABS ============
 window.showTab = function(tab) {
   document.querySelectorAll('.tab-btn').forEach(b => {
     b.className = b.className.replace('bg-gold-500 text-black', 'bg-gray-900 text-gray-300 border border-gold-500/20');
@@ -546,7 +509,6 @@ window.showTab = function(tab) {
   else if (tab === 'stats') { document.getElementById('statsTab').classList.remove('hidden'); loadStats(); }
 }
 
-// ============ LOAD ORDERS ============
 window.loadOrders = async function() {
   try {
     const snap = await getDocs(collection(db, 'orders'));
@@ -601,8 +563,7 @@ function renderOrders() {
     const typeColor = isSell ? 'text-orange-400' : 'text-green-400';
 
     const screenshotHtml = order.screenshot 
-      ? `<img src="${order.screenshot}" onclick="viewImage('${order.id}')" 
-              class="w-full max-h-48 object-contain rounded-lg border border-gold-500/30 cursor-pointer mb-2">`
+      ? `<img src="${order.screenshot}" onclick="viewImage('${order.id}')" class="w-full max-h-48 object-contain rounded-lg border border-gold-500/30 cursor-pointer mb-2">`
       : `<div class="mb-2 p-2 bg-yellow-900/20 border border-yellow-500/30 rounded-lg text-xs text-yellow-400">⚠️ No screenshot</div>`;
 
     let details = '';
@@ -661,7 +622,6 @@ function renderOrders() {
   }).join('');
 }
 
-// ============ LOAD USERS ============
 window.loadUsers = async function() {
   try {
     const snap = await getDocs(collection(db, 'users'));
@@ -722,7 +682,6 @@ function renderUsers() {
   `).join('');
 }
 
-// ============ USER MODAL ============
 window.openUserModal = function(uid) {
   const user = allUsers.find(u => u.uid === uid);
   if (!user) return;
@@ -809,7 +768,6 @@ window.deleteUser = async function(uid, email) {
   }
 }
 
-// ============ UPDATE STATUS ============
 window.updateStatus = async function(orderId, newStatus) {
   if (!confirm(`Change status to "${newStatus}"?`)) return;
   try {
@@ -820,7 +778,6 @@ window.updateStatus = async function(orderId, newStatus) {
   }
 }
 
-// ============ IMAGE VIEWER ============
 window.viewImage = function(orderId) {
   const order = allOrders.find(o => o.id === orderId);
   if (order && order.screenshot) {
@@ -837,7 +794,6 @@ window.closeImage = function() {
   document.body.style.overflow = '';
 }
 
-// ============ HELPERS ============
 function getStatusClass(status) {
   if (status === 'Completed') return 'status-completed';
   if (status === 'Rejected') return 'status-rejected';
